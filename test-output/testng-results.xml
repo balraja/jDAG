@@ -1,0 +1,16 @@
+<testng-results>
+  <reporter-output>
+  </reporter-output>
+  <suite name="Dryad" duration-ms="47" started-at="2010-09-19T21:51:06Z" finished-at="2010-09-19T21:51:06Z">
+    <groups>
+    </groups>
+    <test name="org.jdryad.persistence.file.test.FilePersistenceTest" duration-ms="47" started-at="2010-09-19T21:51:06Z" finished-at="2010-09-19T21:51:06Z">
+      <class name="org.jdryad.persistence.file.test.FilePersistenceTest">
+        <test-method status="PASS" signature="testWrite()" name="testWrite" duration-ms="32" started-at="2010-09-19T21:51:06Z" finished-at="2010-09-19T21:51:06Z">
+        </test-method>
+        <test-method status="PASS" signature="testRead()" name="testRead" duration-ms="15" started-at="2010-09-19T21:51:06Z" depends-on-methods="org.jdryad.persistence.file.test.FilePersistenceTest.testWrite" finished-at="2010-09-19T21:51:06Z">
+        </test-method>
+      </class>
+    </test>
+  </suite>
+</testng-results>
