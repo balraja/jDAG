@@ -148,7 +148,6 @@ public class FilePersistenceTest
         while (itr.hasNext()) {
             readData.add(itr.next());
         }
-        System.out.println(readData);
         AssertJUnit.assertEquals(TOTAL_RECORDS, readData.size());
         AssertJUnit.assertEquals(readData, myRecords);
     }
