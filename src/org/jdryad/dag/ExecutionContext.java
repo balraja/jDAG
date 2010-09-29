@@ -14,6 +14,4 @@ public interface ExecutionContext
      * task outputs.
      */
     public IOFactory getIOFactory();
-
-    public OPKeyGenerator getKeyGenerator();
 }

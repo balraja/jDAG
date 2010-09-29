@@ -48,7 +48,7 @@ public class UDFSpecification
     /**
      * Returns the value of isPartInput
      */
-    public boolean isIsPartInput()
+    public boolean worksOnSplitInput()
     {
         return myIsPartInput;
     }

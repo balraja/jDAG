@@ -3,8 +3,8 @@ package org.jdryad.dag;
 import com.google.common.base.Preconditions;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * A simple task that splits a given big input into multiple small outputs.
@@ -28,7 +28,7 @@ public class MapperFunction implements UserDefinedFunction
      * {@inheritDoc}
      */
     @Override
-    public boolean process(Set<IOKey> inputs, Set<IOKey> outputs,
+    public boolean process(List<IOKey> inputs, List<IOKey> outputs,
             ExecutionContext graphContext)
     {
         Preconditions.checkArgument(!inputs.isEmpty());

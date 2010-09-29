@@ -80,7 +80,7 @@ public class GraphBuilder
             // TODO Add support for user defined split ratio.
             ArrayList<IOKey> outputs = new ArrayList<IOKey>();
             for (int i = 0; i < ioSpec.getNumSplits(); i++) {
-                IOKey opKey = myIOKeyFactory.makeKey(vertexID, i);
+                myIOKeyFactory.makeKey(vertexID, i);
             }
             myInputToSplitVertex.put(ioSpec.getIdentifier(), vertexID);
             inVertices.add(
@@ -93,8 +93,14 @@ public class GraphBuilder
         ExecutionGraph graph =
             new ExecutionGraph(graphID, new HashSet<Vertex>(inVertices));
         for (UDFSpecification udfSpec : specification.getFunctions()) {
-
+             if (udfSpec.worksOnSplitInput()) {
+                 processParallelFunctionSpec(udfSpec, graph);
+             }
+             else {
+                 processCombineFunctionSpec(udfSpec, graph);
+             }
         }
+        return graph;
     }
 
     /**
@@ -109,6 +115,7 @@ public class GraphBuilder
         new ArrayList<Pair<VertexID,IOKey>>();
     }
 
+    /** Returns the <code>IOKey</code>s corresponding to the input that's split */
     private List<Pair<VertexID, IOKey>> getIOSplits(
             String ioIdentifier, ExecutionGraph executionGraph)
     {
@@ -123,6 +130,10 @@ public class GraphBuilder
         return splitInputs;
     }
 
+    /**
+     * Returns the <code>IOKey</code>s corresponding to a function's
+     * output.
+     */
     private List<Pair<VertexID, IOKey>> getParallelFunctionOutputs(
             String functionIdentifier, ExecutionGraph executionGraph)
     {

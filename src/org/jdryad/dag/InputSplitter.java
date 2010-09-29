@@ -1,6 +1,6 @@
 package org.jdryad.dag;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * Defines the contract for a function that splits the input across multiple
@@ -15,5 +15,5 @@ public interface InputSplitter
     public IOKey getOutput(Record record,
                            int position,
                            IOKey input,
-                           Set<IOKey> outputs);
+                           List<IOKey> outputs);
 }
