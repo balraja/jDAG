@@ -14,33 +14,32 @@ import org.jdryad.dag.IOKey;
 import org.jdryad.dag.Record;
 import org.jdryad.dag.IOKey.SourceType;
 import org.jdryad.persistence.file.FileIOFactory;
-
 import org.testng.AssertJUnit;
 import org.testng.annotations.Test;
 
 /**
  * A simple test for testing the persistence to the files.
- * 
+ *
  * @author Balraja Subbiah
  * @version $Id:$
  */
 public class FilePersistenceTest
 {
     private static final int TOTAL_RECORDS = 10;
-    
+
     private List<TestFileRecord> myRecords;
-    
+
     /** A simple record for testing the way we write to files */
     private static class TestFileRecord implements Record
     {
         private int myRecordID;
-        
+
         /** CTOR */
         public TestFileRecord()
         {
             this(-1);
         }
-        
+
         /** CTOR */
         public TestFileRecord(int recordID)
         {
@@ -92,7 +91,7 @@ public class FilePersistenceTest
         public void readExternal(ObjectInput in) throws IOException,
             ClassNotFoundException
         {
-            myRecordID = in.readInt();            
+            myRecordID = in.readInt();
         }
 
         /**
@@ -104,7 +103,7 @@ public class FilePersistenceTest
             out.writeInt(myRecordID);
         }
     }
-    
+
     /**
      * CTOR
      */
@@ -115,20 +114,20 @@ public class FilePersistenceTest
             myRecords.add(new TestFileRecord(i));
         }
     }
-    
+
     /** Factory method for making a key to the file */
     private IOKey makeKey()
     {
         return new IOKey(SourceType.FILE, "C:\\temp\\test1.txt");
     }
-    
+
     /** Factory method for making a IOFactory for reading data */
     public IOFactory makeIOFactory()
     {
         return new FileIOFactory();
     }
-    
-    @Test(testName="writeTest")
+
+    @Test(testName="writeTest", groups={"persistence"})
     public void testWrite()
     {
         FunctionOutput output = makeIOFactory().makeOutput(makeKey());
@@ -137,8 +136,10 @@ public class FilePersistenceTest
         }
         output.done();
     }
-    
-    @Test(testName="readTest", dependsOnMethods={"testWrite"})
+
+    @Test(testName="readTest",
+          dependsOnMethods={"testWrite"},
+          groups={"persistence"})
     public void testRead()
     {
         FunctionInput in = makeIOFactory().makeInput(makeKey());

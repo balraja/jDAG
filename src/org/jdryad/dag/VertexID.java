@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * The class to be used for identifying a vertex.
- * 
+ *
  * @author Balraja Subbiah
  * @version $Id:$
  */
@@ -77,4 +77,15 @@ public class VertexID implements Serializable
             return false;
         return true;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString()
+    {
+        return "VertexID [myName=" + myName + "]";
+    }
+
+
 }

@@ -1,10 +1,11 @@
 package org.jdryad.dag;
 
-import java.util.Set;
-
-import org.apache.commons.collections.set.ListOrderedSet;
+import java.util.List;
 
 /**
+ * A simple factory class that can be used for creating different types of
+ * splitter for inputs.
+ *
  * @author Balraja Subbiah
  * @version $Id:$
  */
@@ -36,11 +37,10 @@ public class InputSplitterFactory
         public IOKey getOutput(Record record,
                                int position,
                                IOKey input,
-                               Set<IOKey> outputs)
+                               List<IOKey> outputs)
         {
-            ListOrderedSet setAsList = ListOrderedSet.decorate(outputs);
             int index = position % (outputs.size());
-            return (IOKey) setAsList.get(index);
+            return outputs.get(index);
         }
     }
 
@@ -58,11 +58,10 @@ public class InputSplitterFactory
         public IOKey getOutput(Record record,
                                int position,
                                IOKey input,
-                               Set<IOKey> outputs)
+                               List<IOKey> outputs)
         {
-            ListOrderedSet setAsList = ListOrderedSet.decorate(outputs);
             int index = (position / (outputs.size()));
-            return (IOKey) setAsList.get(index);
+            return outputs.get(index);
         }
     }
 

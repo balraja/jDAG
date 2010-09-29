@@ -1,14 +1,15 @@
 <testng-results>
   <reporter-output>
   </reporter-output>
-  <suite name="Dryad" duration-ms="47" started-at="2010-09-19T21:51:06Z" finished-at="2010-09-19T21:51:06Z">
+  <suite name="jDAG" duration-ms="78" started-at="2010-09-30T00:26:23Z" finished-at="2010-09-30T00:26:23Z">
     <groups>
+      <group name="dag">
+        <method signature="org.jdryad.dag.test.GraphBuilderTest.graphBuilderTest()" name="graphBuilderTest" class="org.jdryad.dag.test.GraphBuilderTest"/>
+      </group>
     </groups>
-    <test name="org.jdryad.persistence.file.test.FilePersistenceTest" duration-ms="47" started-at="2010-09-19T21:51:06Z" finished-at="2010-09-19T21:51:06Z">
-      <class name="org.jdryad.persistence.file.test.FilePersistenceTest">
-        <test-method status="PASS" signature="testWrite()" name="testWrite" duration-ms="32" started-at="2010-09-19T21:51:06Z" finished-at="2010-09-19T21:51:06Z">
-        </test-method>
-        <test-method status="PASS" signature="testRead()" name="testRead" duration-ms="15" started-at="2010-09-19T21:51:06Z" depends-on-methods="org.jdryad.persistence.file.test.FilePersistenceTest.testWrite" finished-at="2010-09-19T21:51:06Z">
+    <test name="org.jdryad.dag.test.GraphBuilderTest" duration-ms="78" started-at="2010-09-30T00:26:23Z" finished-at="2010-09-30T00:26:23Z">
+      <class name="org.jdryad.dag.test.GraphBuilderTest">
+        <test-method status="PASS" signature="graphBuilderTest()" name="graphBuilderTest" duration-ms="47" started-at="2010-09-30T00:26:23Z" finished-at="2010-09-30T00:26:23Z">
         </test-method>
       </class>
     </test>

@@ -80,7 +80,7 @@ public class GraphBuilder
             // TODO Add support for user defined split ratio.
             ArrayList<IOKey> outputs = new ArrayList<IOKey>();
             for (int i = 0; i < ioSpec.getNumSplits(); i++) {
-                myIOKeyFactory.makeKey(vertexID, i);
+                outputs.add(myIOKeyFactory.makeKey(vertexID, i));
             }
             myInputToSplitVertex.put(ioSpec.getIdentifier(), vertexID);
             inVertices.add(
@@ -111,8 +111,44 @@ public class GraphBuilder
         UDFSpecification spec, ExecutionGraph executionGraph)
     {
         // A combiner can have only one input.
-        Preconditions.checkArgument(spec.getInputSources().size() == 1);
-        new ArrayList<Pair<VertexID,IOKey>>();
+        Preconditions.checkArgument(
+           spec.getInputSources().size() == 1,
+           "Get more than one argument for combiner function "
+           + spec.getName());
+
+        List<Pair<VertexID, IOKey>> parameters = null;
+        for (String paramID : spec.getInputSources()) {
+            if (myInputToSplitVertex.containsKey(paramID)) {
+                // The input is a split input
+                parameters = getIOSplits(paramID, executionGraph);
+            }
+            else {
+                // Its a o/p from a parallel function.
+                parameters =
+                    getParallelFunctionOutputs(paramID, executionGraph);
+            }
+        }
+
+        UserDefinedFunction function =
+            myUDFFactory.makeFunction(spec.getName());
+        List<Edge> edges = new ArrayList<Edge>();
+        ArrayList<IOKey> inputs = new ArrayList<IOKey>();
+        VertexID vertexID = new VertexID(spec.getName() + ".MERGER");
+        for (Pair<VertexID, IOKey> param : parameters) {
+            inputs.add(param.getSecond());
+            edges.add(new Edge(param.getFirst(),
+                               vertexID,
+                               param.getSecond()));
+        }
+        IOKey opKey = myIOKeyFactory.makeKey(vertexID.getName() + " OUT");
+        executionGraph.addVertex(
+             new SimpleVertex(vertexID,
+                              function,
+                              inputs,
+                              Collections.singletonList(opKey)));
+        executionGraph.addEdges(edges);
+        myFunctionToParallelVertices.put(spec.getName(),
+                                         Collections.singletonList(vertexID));
     }
 
     /** Returns the <code>IOKey</code>s corresponding to the input that's split */
@@ -198,5 +234,6 @@ public class GraphBuilder
             executionGraph.addEdges(edges);
             parallelVertices.add(vertexID);
         }
+        myFunctionToParallelVertices.put(spec.getName(), parallelVertices);
     }
 }

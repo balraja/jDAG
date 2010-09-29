@@ -141,7 +141,7 @@ public class ExecutionGraph
         }
         outgoingEdges.add(edge);
         List<Edge> incomingEdges = myIncomingEdges.get(edge.getSource());
-        if (outgoingEdges == null) {
+        if (incomingEdges == null) {
             incomingEdges = new ArrayList<Edge>();
             myIncomingEdges.put(edge.getDestination(), incomingEdges);
         }
