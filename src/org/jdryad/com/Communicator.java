@@ -13,7 +13,7 @@ import java.util.concurrent.Executor;
 public interface Communicator
 {
     /** Sends message to the given host */
-    public void sendMessage(HostID host);
+    public void sendMessage(HostID host, Message m);
 
     /** Creates a group for group communication */
     public void createGroup(String groupName);
@@ -23,7 +23,7 @@ public interface Communicator
     public void attachTOGroup(String groupName);
 
     /** Sends message to the all the hosts specified by the given group */
-    public void sendMessage(String groupName);
+    public void sendMessage(String groupName, Message m);
 
     /**
      * Attaches a reactor for the given type of message. When a message of this

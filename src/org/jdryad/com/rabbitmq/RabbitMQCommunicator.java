@@ -1,21 +1,31 @@
 package org.jdryad.com.rabbitmq;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
+
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DefaultConsumer;
+import com.rabbitmq.client.Envelope;
+import com.rabbitmq.client.MessageProperties;
+import com.rabbitmq.client.AMQP.BasicProperties;
 
 import java.io.IOException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.ThreadFactory;
 
 import org.jdryad.com.Communicator;
 import org.jdryad.com.HostID;
+import org.jdryad.com.Message;
+import org.jdryad.com.MessageMarshaller;
 import org.jdryad.com.MessageMarshallerFasctory;
 import org.jdryad.com.Reactor;
-import org.jdryad.common.NamedThreadFactory;
+import org.jdryad.common.Pair;
 
 /**
  * </p>
@@ -52,11 +62,43 @@ public class RabbitMQCommunicator implements Communicator
 
     private final Connection myActiveConnection;
 
+    private final Multimap<Integer, Pair<Reactor, Executor>>
+        myMessageToReactorMap;
+
+    /**
+     * Wraps a <code>Reactor</code> so that it can be scheduled on a
+     * Executor.
+     */
+    private static class ExecutableReactor implements Runnable
+    {
+        private final Reactor myReactor;
+
+        private final Message myMessage;
+
+        /**
+         * CTOR
+         */
+        public ExecutableReactor(Message message, Reactor reactor)
+        {
+            myMessage = message;
+            myReactor = reactor;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void run()
+        {
+            myReactor.process(myMessage);
+        }
+    }
+
     /**
      * An implementation of <code>Consumer</code> that invokes appropriate
      * <code>Reactor</code> based on the incoming message type
      */
-    private static class ReactorConsumer extends DefaultConsumer
+    private class ReactorConsumer extends DefaultConsumer
     {
         /**
          * CTOR
@@ -64,6 +106,34 @@ public class RabbitMQCommunicator implements Communicator
         public ReactorConsumer(Channel channel)
         {
             super(channel);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void handleDelivery(String consumerTag, Envelope envelope,
+                BasicProperties properties, byte[] body) throws IOException
+        {
+            MessageMarshaller marshaller =
+                myMarshallerFasctory.makeMarshaller();
+            Message m = marshaller.unmarshal(body);
+
+            synchronized(myMessageToReactorMap) {
+                for (Pair<Reactor, Executor> reactorExecPair :
+                        myMessageToReactorMap.get(
+                            Integer.valueOf(m.getMessageType())))
+                {
+                    ExecutableReactor reactor =
+                        new ExecutableReactor(m, reactorExecPair.getFirst());
+                    if (reactorExecPair.getSecond() != null) {
+                        reactorExecPair.getSecond().execute(reactor);
+                    }
+                    else {
+                        myCommExecutor.execute(reactor);
+                    }
+                }
+            }
         }
     }
 
@@ -120,49 +190,23 @@ public class RabbitMQCommunicator implements Communicator
         factory.setUsername(config.getUserName());
         factory.setPassword(config.getPassword());
         factory.setVirtualHost(config.getVirtualHost());
+
+        myMessageToReactorMap =
+            HashMultimap.<Integer, Pair<Reactor, Executor>>create();
+
+        ThreadFactoryBuilder tfBuilder = new ThreadFactoryBuilder();
+        ThreadFactory namedFactory =
+            tfBuilder.setNameFormat(RabbitMQCommunicator.class.getSimpleName())
+                     .build();
         myCommExecutor =
-            Executors.newSingleThreadExecutor(
-                new NamedThreadFactory(RabbitMQCommunicator.class));
+            Executors.newSingleThreadExecutor(namedFactory);
 
         try {
             myActiveConnection = factory.newConnection();
             Channel c = myActiveConnection.createChannel();
             myChannel = new LockableChannel(c);
-
-            myChannel.lock();
-            if (config.shouldDeclareGlobalExchange()) {
-                // The global exchange should be durable.
-                myChannel.getChannel().exchangeDeclare(
-                    config.getGlobalExchange(),
-                    CONST_FIXED_EXCHANGE_TYPE,
-                    true);
-            }
-
-            myChannel.getChannel().queueDeclare(
-                config.getHostName(),
-                true,
-                true,
-                false,
-                null);
-
-            // Now attach the new quuqe with the default exchange and the
-            // routing key is same as the quque name.
-            myChannel.getChannel().queueBind(
-                config.getHostName(),
-                config.getGlobalExchange(),
-                config.getHostName());
-
-            myChannel.getChannel().basicConsume(config.getHostName(),
-                                                new ReactorConsumer(
-                                                    myChannel.getChannel()));
-            myChannel.unlock();
-
         }
         catch (IOException e) {
-            // TODO Auto-generated catch block
-             throw new RuntimeException(e);
-        }
-        catch (InterruptedException e) {
             // TODO Auto-generated catch block
              throw new RuntimeException(e);
         }
@@ -174,27 +218,43 @@ public class RabbitMQCommunicator implements Communicator
     @Override
     public void attachReactor(int type, Reactor r)
     {
-        // TODO Auto-generated method stub
-
+        synchronized (myMessageToReactorMap) {
+            myMessageToReactorMap.put(type,
+                                       new Pair<Reactor, Executor>(r, null));
+        }
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void attachReactor(int type, Reactor r, Executor executor)
+    public void attachReactor(int type, Reactor r, Executor e)
     {
-        // TODO Auto-generated method stub
-
+        synchronized (myMessageToReactorMap) {
+            myMessageToReactorMap.put(type,
+                                       new Pair<Reactor, Executor>(r, e));
+        }
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void sendMessage(HostID host)
+    public void sendMessage(HostID host, Message m)
     {
-        // TODO Auto-generated method stub
+        MessageMarshaller marshaller = myMarshallerFasctory.makeMarshaller();
+        byte[] payload = marshaller.marshal(m);
+
+        try {
+            myChannel.lock();
+            myChannel.getChannel().basicPublish(
+                    myCOnfiguration.getGlobalExchange(), host.getIdentifier(),
+                    MessageProperties.MINIMAL_PERSISTENT_BASIC, payload);
+            myChannel.unlock();
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
@@ -202,7 +262,7 @@ public class RabbitMQCommunicator implements Communicator
      * {@inheritDoc}
      */
     @Override
-    public void sendMessage(String groupName)
+    public void sendMessage(String groupName, Message m)
     {
         // TODO Auto-generated method stub
 
@@ -223,6 +283,60 @@ public class RabbitMQCommunicator implements Communicator
      */
     @Override
     public void createGroup(String groupName)
+    {
+        // TODO Auto-generated method stub
+
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void start()
+    {
+
+        try {
+            myChannel.lock();
+            if (myCOnfiguration.shouldDeclareGlobalExchange()) {
+                // The global exchange should be durable.
+                myChannel.getChannel().exchangeDeclare(
+                    myCOnfiguration.getGlobalExchange(),
+                    CONST_FIXED_EXCHANGE_TYPE,
+                    true);
+            }
+
+            myChannel.getChannel().queueDeclare(
+                myCOnfiguration.getHostName(),
+                true,
+                true,
+                false,
+                null);
+
+            // Now attach the new quuqe with the default exchange and the
+            // routing key is same as the quque name.
+            myChannel.getChannel().queueBind(
+                myCOnfiguration.getHostName(),
+                myCOnfiguration.getGlobalExchange(),
+                myCOnfiguration.getHostName());
+
+            myChannel.getChannel().basicConsume(myCOnfiguration.getHostName(),
+                                                new ReactorConsumer(
+                                                    myChannel.getChannel()));
+            myChannel.unlock();
+        }
+        catch (InterruptedException e) {
+             throw new RuntimeException(e);
+        }
+        catch (IOException e) {
+             throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void stop()
     {
         // TODO Auto-generated method stub
 
