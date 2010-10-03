@@ -4,5 +4,8 @@
 	<classpathentry including="**/*.java" kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.iam.jdt.core.mavenClasspathContainer"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="C:/Users/dell/.m2/repository/com/rabbitmq/amqp-client/2.1.0/amqp-client-2.1.0.jar"/>
+	<classpathentry kind="lib" path="C:/projects/jDAG/externallibraries/protobuf-java-2.3.0.jar"/>
+	<classpathentry kind="lib" path="C:/software/apache/commons-configuration-1.6/commons-configuration-1.6.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

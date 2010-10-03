@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>jDAG</groupId>
   <artifactId>jDAG</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>0.1</version>
   <build>
     <sourceDirectory>src</sourceDirectory>
     <testSourceDirectory>test</testSourceDirectory>
@@ -14,28 +14,67 @@
           <target>1.6</target>
         </configuration>
       </plugin>
+      <plugin>
+      <artifactId>maven-antrun-plugin</artifactId>
+      <executions>
+        <execution>
+          <id>generate-messages</id>
+          <phase>generate-sources</phase>
+          <configuration>
+            <tasks>
+              <exec executable="protoc">
+                    <arg value="--java_out=src"/>
+                    <arg value="src/org/jdryad/com/messages/messages.proto"/>
+              </exec>
+            </tasks>
+            <sourceRoot>target/generated-sources</sourceRoot>
+          </configuration>
+          <goals>
+            <goal>run</goal>
+          </goals>
+        </execution>
+      </executions>
+    </plugin>
     </plugins>
   </build>
   <dependencies>
     <dependency>
-      <groupId>commons-collections-3.2.1</groupId>
-      <artifactId>commons-collections-3.2.1</artifactId>
-      <version>1.0</version>
+        <groupId>com.google.protobuf</groupId>
+        <artifactId>protobuf-java</artifactId>
+        <version>2.3.0</version>
     </dependency>
-    <dependency>
-      <groupId>guava-r06</groupId>
-      <artifactId>guava-r06</artifactId>
-      <version>1.0</version>
-    </dependency>
-    <dependency>
-      <groupId>testng-5.14</groupId>
-      <artifactId>testng-5.14</artifactId>
-      <version>1.0</version>
-    </dependency>
-    <dependency>
-      <groupId>commons-lang-2.5</groupId>
-      <artifactId>commons-lang-2.5</artifactId>
-      <version>1.0</version>
-    </dependency>
+	<dependency>
+	    <groupId>com.rabbitmq</groupId>
+	    <artifactId>amqp-client</artifactId>
+	    <version>2.1.0</version>
+	</dependency>
+  	<dependency>
+  		<groupId>commons-collections-3.2.1</groupId>
+  		<artifactId>commons-collections-3.2.1</artifactId>
+  		<version>1.0</version>
+  		<type>jar</type>
+  		<optional>false</optional>
+  	</dependency>
+  	<dependency>
+  		<groupId>guava-r06</groupId>
+  		<artifactId>guava-r06</artifactId>
+  		<version>1.0</version>
+  		<type>jar</type>
+  		<optional>false</optional>
+  	</dependency>
+  	<dependency>
+  		<groupId>testng-5.14</groupId>
+  		<artifactId>testng-5.14</artifactId>
+  		<version>1.0</version>
+  		<type>jar</type>
+  		<optional>false</optional>
+  	</dependency>
+  	<dependency>
+  		<groupId>commons-lang-2.5</groupId>
+  		<artifactId>commons-lang-2.5</artifactId>
+  		<version>1.0</version>
+  		<type>jar</type>
+  		<optional>false</optional>
+  	</dependency>
   </dependencies>
 </project>

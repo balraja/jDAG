@@ -1,0 +1,8 @@
+package org.jdryad.com.messages;
+
+option java_outer_classname = "MessageProtos";
+
+message PingMessage {
+  required string name = 1;
+  required int32 messageType = 2;
+}

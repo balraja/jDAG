@@ -1,41 +1,21 @@
-package org.jdryad.dag;
+package org.jdryad.com;
 
 /**
- * Type to be used for representing the keys used for identifying the
- * i/p or o/p sources.
- * 
+ * Type for representing an unique identifier corresponding to a host.
+ *
  * @author Balraja Subbiah
  * @version $Id:$
  */
-public class IOKey
+public class HostID
 {
-    /** An enum to denote the type of the i/p or o/p source */
-    public static enum SourceType {
-        FILE,
-        DB,
-        CASSANDRA
-    }
-    
-    private final SourceType mySourceType;
-    
     private final String myIdentifier;
 
     /**
      * CTOR
      */
-    public IOKey(SourceType sourceType, String identifier)
+    public HostID(String identifier)
     {
-        super();
-        mySourceType = sourceType;
         myIdentifier = identifier;
-    }
-
-    /**
-     * Returns the value of sourceType
-     */
-    public SourceType getSourceType()
-    {
-        return mySourceType;
     }
 
     /**
@@ -56,8 +36,6 @@ public class IOKey
         int result = 1;
         result = prime * result
                 + ((myIdentifier == null) ? 0 : myIdentifier.hashCode());
-        result = prime * result
-                + ((mySourceType == null) ? 0 : mySourceType.hashCode());
         return result;
     }
 
@@ -73,18 +51,12 @@ public class IOKey
             return false;
         if (getClass() != obj.getClass())
             return false;
-        IOKey other = (IOKey) obj;
+        HostID other = (HostID) obj;
         if (myIdentifier == null) {
             if (other.myIdentifier != null)
                 return false;
         }
         else if (!myIdentifier.equals(other.myIdentifier))
-            return false;
-        if (mySourceType == null) {
-            if (other.mySourceType != null)
-                return false;
-        }
-        else if (!mySourceType.equals(other.mySourceType))
             return false;
         return true;
     }
@@ -95,8 +67,6 @@ public class IOKey
     @Override
     public String toString()
     {
-        return "Key [myIdentifier=" + myIdentifier + ", mySourceType="
-                + mySourceType + "]";
+        return "HostID [myIdentifier=" + myIdentifier + "]";
     }
-    
 }
