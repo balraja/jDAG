@@ -1,6 +1,6 @@
 package org.jdryad.dag.builder;
 
-import org.jdryad.dag.InputSplitterFactory.SplitterType;
+import org.jdryad.dag.SimpleInputSplitterFactory.SplitterType;
 
 /**
  * @author Balraja Subbiah

@@ -16,7 +16,7 @@ public class SimpleVertex implements Vertex
 {
     private VertexID myID;
 
-    private UserDefinedFunction myUserDefinedFunction;
+    private String myUDFIdentifier;
 
     private List<IOKey> myInputs;
 
@@ -28,7 +28,7 @@ public class SimpleVertex implements Vertex
     public SimpleVertex()
     {
         myID = null;
-        myUserDefinedFunction = null;
+        myUDFIdentifier = null;
         myInputs = null;
         myOutputs = null;
     }
@@ -36,11 +36,11 @@ public class SimpleVertex implements Vertex
     /**
      * CTOR
      */
-    public SimpleVertex(VertexID id, UserDefinedFunction userDefinedFunction,
+    public SimpleVertex(VertexID id, String udfIdentifier,
             List<IOKey> inputs, List<IOKey> outputs)
     {
         myID = id;
-        myUserDefinedFunction = userDefinedFunction;
+        myUDFIdentifier = udfIdentifier;
         myInputs = inputs;
         myOutputs = outputs;
     }
@@ -56,9 +56,9 @@ public class SimpleVertex implements Vertex
     /**
      * Returns the value of userDefinedFunction
      */
-    public UserDefinedFunction getUserDefinedFunction()
+    public String getUDFIdentifier()
     {
-        return myUserDefinedFunction;
+        return myUDFIdentifier;
     }
 
     /**
@@ -78,22 +78,15 @@ public class SimpleVertex implements Vertex
     }
 
     /**
-     * Sets the value of userDefinedFunction.
-     */
-    public void setUserDefinedFunction(UserDefinedFunction userDefinedFunction)
-    {
-        myUserDefinedFunction = userDefinedFunction;
-    }
-
-    /**
      * {@inheritDoc}
      */
+    @SuppressWarnings("unchecked")
     @Override
     public void readExternal(ObjectInput in) throws IOException,
             ClassNotFoundException
     {
         myID = (VertexID) in.readObject();
-        myUserDefinedFunction = (UserDefinedFunction) in.readObject();
+        myUDFIdentifier = in.readUTF();
         myInputs = (List<IOKey>) in.readObject();
         myOutputs = (List<IOKey>) in.readObject();
     }
@@ -105,7 +98,7 @@ public class SimpleVertex implements Vertex
     public void writeExternal(ObjectOutput out) throws IOException
     {
         out.writeObject(myID);
-        out.writeObject(myUserDefinedFunction);
+        out.writeObject(myUDFIdentifier);
         out.writeObject(myInputs);
         out.writeObject(myOutputs);
     }
@@ -116,9 +109,28 @@ public class SimpleVertex implements Vertex
     @Override
     public ExecutionResult execute(ExecutionContext context)
     {
-        // TODO fix null.
-        myUserDefinedFunction.process(myInputs, myOutputs, context);
-        return ExecutionResult.SUCCESS;
+        UDFFactory factory = context.makeUDFFactory();
+        UDFIdentityGenerator identityGenerator = new UDFIdentityGenerator();
+        UserDefinedFunction function = null;
+        if (identityGenerator.isSimpleFunction(myUDFIdentifier)) {
+            function =
+                factory.makeUDF(
+                    identityGenerator.getFunctionIdentifier(myUDFIdentifier));
+        }
+        else {
+            InputSplitter splitter =
+                factory.makeInputSplitter(
+                    identityGenerator.getMapperIdentifier(myUDFIdentifier));
+            function = new MapperFunction(splitter);
+        }
+
+        try {
+            function.process(myInputs, myOutputs, context);
+            return ExecutionResult.SUCCESS;
+        }
+        catch (Exception e) {
+            return ExecutionResult.EROR;
+        }
     }
 }
 

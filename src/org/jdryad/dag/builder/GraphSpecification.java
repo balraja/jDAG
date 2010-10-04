@@ -3,7 +3,7 @@ package org.jdryad.dag.builder;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.jdryad.dag.InputSplitterFactory.SplitterType;
+import org.jdryad.dag.SimpleInputSplitterFactory.SplitterType;
 
 /**
  * A simple type that describes the task graph to be built.
@@ -37,9 +37,9 @@ public class GraphSpecification
 
     /** Adds a specification for a function and its input */
     public GraphSpecification addUDFSpecification(
-        String function, Set<String> inputs, boolean isPartial)
+        String function, String alias, Set<String> inputs, boolean isPartial)
     {
-        myFunctions.add(new UDFSpecification(function, inputs, isPartial));
+        myFunctions.add(new UDFSpecification(function, alias, inputs, isPartial));
         return this;
     }
 

@@ -5,7 +5,7 @@ package org.jdryad.com;
  * @version $Id:$
  *
  */
-public interface MessageMarshallerFasctory
+public interface MessageMarshallerFactory
 {
     public MessageMarshaller makeMarshaller();
 }

@@ -14,11 +14,8 @@ import org.jdryad.dag.Edge;
 import org.jdryad.dag.ExecutionGraph;
 import org.jdryad.dag.ExecutionGraphID;
 import org.jdryad.dag.IOKey;
-import org.jdryad.dag.InputSplitter;
-import org.jdryad.dag.InputSplitterFactory;
-import org.jdryad.dag.InputVertex;
 import org.jdryad.dag.SimpleVertex;
-import org.jdryad.dag.UserDefinedFunction;
+import org.jdryad.dag.UDFIdentityGenerator;
 import org.jdryad.dag.Vertex;
 import org.jdryad.dag.VertexID;
 
@@ -40,7 +37,7 @@ public class GraphBuilder
 
     private final IOKeyFactory myIOKeyFactory;
 
-    private final UDFFactory myUDFFactory;
+    private final UDFIdentityGenerator myUdfIdentityGenerator;
 
     private final Map<String, VertexID> myInputToSplitVertex;
 
@@ -49,10 +46,10 @@ public class GraphBuilder
     /**
      * CTOR
      */
-    public GraphBuilder(IOKeyFactory iOKeyFactory, UDFFactory uDFFactory)
+    public GraphBuilder(IOKeyFactory iOKeyFactory)
     {
         myIOKeyFactory = iOKeyFactory;
-        myUDFFactory = uDFFactory;
+        myUdfIdentityGenerator = new UDFIdentityGenerator();
         myInputToSplitVertex = new HashMap<String, VertexID>();
         myFunctionToParallelVertices =
             new HashMap<String, List<VertexID>>();
@@ -68,13 +65,11 @@ public class GraphBuilder
         Preconditions.checkArgument(
             !specification.getFunctions().isEmpty());
 
-        ArrayList<InputVertex> inVertices = new ArrayList<InputVertex>();
+        ArrayList<Vertex> inVertices = new ArrayList<Vertex>();
         for (InputSpecification ioSpec : specification.getInputSpecs()) {
             IOKey input =
                 myIOKeyFactory.makeKey(ioSpec.getIdentifier());
             // TODO Add support for user defined split function.
-            InputSplitter splitter =
-                InputSplitterFactory.makeSpliter(ioSpec.getSplitter());
             VertexID vertexID =
                 new VertexID(ioSpec.getIdentifier() + SPLIT_VERTEX_SUFFIX);
             // TODO Add support for user defined split ratio.
@@ -84,10 +79,11 @@ public class GraphBuilder
             }
             myInputToSplitVertex.put(ioSpec.getIdentifier(), vertexID);
             inVertices.add(
-                new InputVertex(vertexID,
-                                input,
-                                outputs,
-                                splitter));
+                new SimpleVertex(vertexID,
+                                 myUdfIdentityGenerator.getMapperIdentifier(
+                                     ioSpec.getSplitter()),
+                                 Collections.singletonList(input),
+                                 outputs));
         }
 
         ExecutionGraph graph =
@@ -104,7 +100,7 @@ public class GraphBuilder
     }
 
     /**
-     * Creates vertices for a function thats to be executed in parallel for
+     * Creates vertices for a function that's to be executed in parallel for
      * splits of inputs.
      */
     private void processCombineFunctionSpec(
@@ -129,8 +125,9 @@ public class GraphBuilder
             }
         }
 
-        UserDefinedFunction function =
-            myUDFFactory.makeFunction(spec.getName());
+        String udfId =
+            myUdfIdentityGenerator.getFunctionIdentifier(
+                spec.getIdentifier());
         List<Edge> edges = new ArrayList<Edge>();
         ArrayList<IOKey> inputs = new ArrayList<IOKey>();
         VertexID vertexID = new VertexID(spec.getName() + ".MERGER");
@@ -143,7 +140,7 @@ public class GraphBuilder
         IOKey opKey = myIOKeyFactory.makeKey(vertexID.getName() + " OUT");
         executionGraph.addVertex(
              new SimpleVertex(vertexID,
-                              function,
+                              udfId,
                               inputs,
                               Collections.singletonList(opKey)));
         executionGraph.addEdges(edges);
@@ -209,9 +206,9 @@ public class GraphBuilder
             }
         }
 
-        UserDefinedFunction function =
-            myUDFFactory.makeFunction(spec.getName());
-
+        String udfIdentifier =
+            myUdfIdentityGenerator.getFunctionIdentifier(
+                spec.getIdentifier());
         int firstParamSplitSize = parameters.get(0).size();
         ArrayList<VertexID> parallelVertices = new ArrayList<VertexID>();
         for (int i = 0; i < firstParamSplitSize; i++) {
@@ -228,7 +225,7 @@ public class GraphBuilder
             IOKey opKey = myIOKeyFactory.makeKey(vertexID, i);
             executionGraph.addVertex(
                  new SimpleVertex(vertexID,
-                                  function,
+                                  udfIdentifier,
                                   inputs,
                                   Collections.singletonList(opKey)));
             executionGraph.addEdges(edges);

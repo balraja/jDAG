@@ -27,6 +27,12 @@ public interface Vertex extends Externalizable
     public List<IOKey> getOutputs();
 
     /**
+     * Returns the unique identifier corresponding to a function that will be
+     * executed as part of this vertex.
+     */
+    public String getUDFIdentifier();
+
+    /**
      * Executes the function on a remote vertex and returns the result of
      * execution.
      */

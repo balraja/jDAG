@@ -4,11 +4,11 @@ import com.google.common.collect.Sets;
 
 import org.jdryad.dag.ExecutionGraph;
 import org.jdryad.dag.ExecutionGraphID;
-import org.jdryad.dag.InputSplitterFactory.SplitterType;
+import org.jdryad.dag.SimpleInputSplitterFactory.SplitterType;
 import org.jdryad.dag.builder.FileIOKeyFactory;
 import org.jdryad.dag.builder.GraphBuilder;
 import org.jdryad.dag.builder.GraphSpecification;
-import org.jdryad.dag.builder.ReflectionUDFFactory;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -27,10 +27,12 @@ public class GraphBuilderTest
              .addInput("File2", SplitterType.DIRECT, 3) // split into 3 parts
              .addUDFSpecification(                      // Apply sum on partial
                  "org.jdryad.dag.test.SumListFunction",     // inputs
+                 "partial add",
                  Sets.newHashSet("File1", "File2"),
                  true)
              .addUDFSpecification(                      // combine the sum from
-                 "org.jdryad.dag.test.SumFunction",     // partial ops.
+                 "org.jdryad.dag.test.SumListFunction",     // partial ops.
+                 "combine",
                  Sets.newHashSet("org.jdryad.dag.test.SumListFunction"),
                  false);
          return spec;
@@ -41,8 +43,7 @@ public class GraphBuilderTest
      {
          GraphSpecification spec = makeGraphSpecification();
          GraphBuilder builder =
-             new GraphBuilder(new FileIOKeyFactory(),
-                              new ReflectionUDFFactory());
+             new GraphBuilder(new FileIOKeyFactory());
          ExecutionGraph graph =
              builder.build(spec, new ExecutionGraphID("TestGraph"));
          Assert.assertEquals(graph.getInputs().size(), 2);

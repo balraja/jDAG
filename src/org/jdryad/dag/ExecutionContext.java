@@ -13,5 +13,11 @@ public interface ExecutionContext
      * Provides access to IOFactory that in turn be used for taskInputs and
      * task outputs.
      */
-    public IOFactory getIOFactory();
+    public IOFactory makeIOFactory();
+
+    /**
+     * Returns the <code>UDFFactory<code> to be used for creating the
+     * function that needs to be executed.
+     */
+    public UDFFactory makeUDFFactory();
 }

@@ -13,6 +13,8 @@ public class UDFSpecification
 {
     private final String myName;
 
+    private final String myIdentifier;
+
     private final Set<String> myInputSources;
 
     private final boolean myIsPartInput;
@@ -20,13 +22,23 @@ public class UDFSpecification
     /**
      * CTOR
      */
-    public UDFSpecification(String name,
+    public UDFSpecification(String identifier,
+                            String name,
                             Set<String> inputSources,
                             boolean isPartInput)
     {
+        myIdentifier = identifier;
         myName = name;
         myInputSources = inputSources;
         myIsPartInput = isPartInput;
+    }
+
+    /**
+     * Returns the value of identifier
+     */
+    public String getIdentifier()
+    {
+        return myIdentifier;
     }
 
     /**

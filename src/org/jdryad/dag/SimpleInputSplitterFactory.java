@@ -9,7 +9,7 @@ import java.util.List;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-public class InputSplitterFactory
+public class SimpleInputSplitterFactory
 {
     /**
      * An enum to denote the various split functions that can be created
@@ -81,7 +81,7 @@ public class InputSplitterFactory
     }
 
     /** private ctor */
-    private InputSplitterFactory()
+    private SimpleInputSplitterFactory()
     {
     }
 }

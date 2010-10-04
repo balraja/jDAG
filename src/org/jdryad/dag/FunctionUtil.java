@@ -25,7 +25,7 @@ public class FunctionUtil
     {
         HashMap<IOKey, FunctionOutput> outputMap =
             new HashMap<IOKey, FunctionOutput>();
-        IOFactory ioFactory = context.getIOFactory();
+        IOFactory ioFactory = context.makeIOFactory();
         for (IOKey key : keys) {
             outputMap.put(key, ioFactory.makeOutput(key));
         }

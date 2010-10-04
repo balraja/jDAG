@@ -23,7 +23,7 @@ import org.jdryad.com.Communicator;
 import org.jdryad.com.HostID;
 import org.jdryad.com.Message;
 import org.jdryad.com.MessageMarshaller;
-import org.jdryad.com.MessageMarshallerFasctory;
+import org.jdryad.com.MessageMarshallerFactory;
 import org.jdryad.com.Reactor;
 import org.jdryad.common.Pair;
 
@@ -56,7 +56,7 @@ public class RabbitMQCommunicator implements Communicator
 
     private final LockableChannel myChannel;
 
-    private final MessageMarshallerFasctory myMarshallerFasctory;
+    private final MessageMarshallerFactory myMarshallerFasctory;
 
     private final ExecutorService myCommExecutor;
 
@@ -180,7 +180,7 @@ public class RabbitMQCommunicator implements Communicator
      * CTOR
      */
     public RabbitMQCommunicator(RabbitMQConfiguration config,
-                                MessageMarshallerFasctory mmFactory)
+                                MessageMarshallerFactory mmFactory)
     {
         myCOnfiguration = config;
         myMarshallerFasctory = mmFactory;
@@ -207,7 +207,6 @@ public class RabbitMQCommunicator implements Communicator
             myChannel = new LockableChannel(c);
         }
         catch (IOException e) {
-            // TODO Auto-generated catch block
              throw new RuntimeException(e);
         }
     }
@@ -338,8 +337,17 @@ public class RabbitMQCommunicator implements Communicator
     @Override
     public void stop()
     {
-        // TODO Auto-generated method stub
-
+        try {
+            myChannel.lock();
+            myActiveConnection.close();
+            myChannel.unlock();
+        }
+        catch (InterruptedException e) {
+             throw new RuntimeException(e);
+        }
+        catch (IOException e) {
+             throw new RuntimeException(e);
+        }
+        myCommExecutor.shutdown();
     }
-
 }

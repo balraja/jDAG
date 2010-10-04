@@ -35,7 +35,7 @@ public class MapperFunction implements UserDefinedFunction
         Preconditions.checkArgument(!outputs.isEmpty());
         Preconditions.checkArgument(inputs.size() == 1);
 
-        IOFactory ioFactory = graphContext.getIOFactory();
+        IOFactory ioFactory = graphContext.makeIOFactory();
         IOKey inKey = inputs.iterator().next();
         FunctionInput in = ioFactory.makeInput(inputs.iterator().next());
         Map<IOKey, FunctionOutput> keyToOPMap = FunctionUtil.makeMap(outputs,
@@ -44,7 +44,7 @@ public class MapperFunction implements UserDefinedFunction
         int count = 1;
         while (inItr.hasNext()) {
             Record r = inItr.next();
-            IOKey k = mySplitter.getOutput(r, count, inKey, outputs);
+            IOKey k = mySplitter.getOutput(r, count++, inKey, outputs);
             if (k != null) {
                 FunctionOutput output = keyToOPMap.get(k);
                 if (output != null) {
