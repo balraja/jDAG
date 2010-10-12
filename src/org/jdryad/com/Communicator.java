@@ -29,13 +29,13 @@ public interface Communicator
      * Attaches a reactor for the given type of message. When a message of this
      * type arrives, the reactor will be executed in the communicator's thread.
      */
-    public void attachReactor(int type, Reactor r);
+    public void attachReactor(MessageType type, Reactor r);
 
     /**
      * Attaches a reactor for the given type of message.  When a message of this
      * type arrives, the reactor will be executed in the given executor thread.
      */
-    public void attachReactor(int type, Reactor r, Executor executor);
+    public void attachReactor(MessageType type, Reactor r, Executor executor);
 
     /** Starts the communicator */
     public void start();

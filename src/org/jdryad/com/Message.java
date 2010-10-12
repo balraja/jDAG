@@ -12,5 +12,5 @@ public interface Message
     public HostID getHostID();
 
     /** The type with which the message is tagged */
-    public int getMessageType();
+    public MessageType getMessageType();
 }

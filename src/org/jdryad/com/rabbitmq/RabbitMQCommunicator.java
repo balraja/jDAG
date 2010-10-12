@@ -24,6 +24,7 @@ import org.jdryad.com.HostID;
 import org.jdryad.com.Message;
 import org.jdryad.com.MessageMarshaller;
 import org.jdryad.com.MessageMarshallerFactory;
+import org.jdryad.com.MessageType;
 import org.jdryad.com.Reactor;
 import org.jdryad.common.Pair;
 
@@ -62,7 +63,7 @@ public class RabbitMQCommunicator implements Communicator
 
     private final Connection myActiveConnection;
 
-    private final Multimap<Integer, Pair<Reactor, Executor>>
+    private final Multimap<MessageType, Pair<Reactor, Executor>>
         myMessageToReactorMap;
 
     /**
@@ -121,8 +122,7 @@ public class RabbitMQCommunicator implements Communicator
 
             synchronized(myMessageToReactorMap) {
                 for (Pair<Reactor, Executor> reactorExecPair :
-                        myMessageToReactorMap.get(
-                            Integer.valueOf(m.getMessageType())))
+                        myMessageToReactorMap.get(m.getMessageType()))
                 {
                     ExecutableReactor reactor =
                         new ExecutableReactor(m, reactorExecPair.getFirst());
@@ -192,7 +192,7 @@ public class RabbitMQCommunicator implements Communicator
         factory.setVirtualHost(config.getVirtualHost());
 
         myMessageToReactorMap =
-            HashMultimap.<Integer, Pair<Reactor, Executor>>create();
+            HashMultimap.<MessageType, Pair<Reactor, Executor>>create();
 
         ThreadFactoryBuilder tfBuilder = new ThreadFactoryBuilder();
         ThreadFactory namedFactory =
@@ -215,7 +215,7 @@ public class RabbitMQCommunicator implements Communicator
      * {@inheritDoc}
      */
     @Override
-    public void attachReactor(int type, Reactor r)
+    public void attachReactor(MessageType type, Reactor r)
     {
         synchronized (myMessageToReactorMap) {
             myMessageToReactorMap.put(type,
@@ -227,7 +227,7 @@ public class RabbitMQCommunicator implements Communicator
      * {@inheritDoc}
      */
     @Override
-    public void attachReactor(int type, Reactor r, Executor e)
+    public void attachReactor(MessageType type, Reactor r, Executor e)
     {
         synchronized (myMessageToReactorMap) {
             myMessageToReactorMap.put(type,

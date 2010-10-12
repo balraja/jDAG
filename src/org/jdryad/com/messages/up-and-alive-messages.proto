@@ -1,0 +1,11 @@
+package org.jdryad.com.messages;
+
+option java_outer_classname = "UpAndLiveProtos";
+
+message WiredUpAndAliveMessage {
+
+  required int32 messageType = 1;
+  required string hostID = 2;
+  required uint64 aliveMillis = 3;
+  
+}

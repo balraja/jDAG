@@ -3,8 +3,8 @@
 
 package org.jdryad.com.messages;
 
-public final class ExecuteVertexMessageHolder {
-  private ExecuteVertexMessageHolder() {}
+public final class ExecuteVertexProtos {
+  private ExecuteVertexProtos() {}
   public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistry registry) {
   }
@@ -27,12 +27,12 @@ public final class ExecuteVertexMessageHolder {
     
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return org.jdryad.com.messages.ExecuteVertexMessageHolder.internal_static_org_jdryad_com_messages_ExecuteVertexMessage_descriptor;
+      return org.jdryad.com.messages.ExecuteVertexProtos.internal_static_org_jdryad_com_messages_ExecuteVertexMessage_descriptor;
     }
     
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return org.jdryad.com.messages.ExecuteVertexMessageHolder.internal_static_org_jdryad_com_messages_ExecuteVertexMessage_fieldAccessorTable;
+      return org.jdryad.com.messages.ExecuteVertexProtos.internal_static_org_jdryad_com_messages_ExecuteVertexMessage_fieldAccessorTable;
     }
     
     public static final class IOKey extends
@@ -54,12 +54,12 @@ public final class ExecuteVertexMessageHolder {
       
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return org.jdryad.com.messages.ExecuteVertexMessageHolder.internal_static_org_jdryad_com_messages_ExecuteVertexMessage_IOKey_descriptor;
+        return org.jdryad.com.messages.ExecuteVertexProtos.internal_static_org_jdryad_com_messages_ExecuteVertexMessage_IOKey_descriptor;
       }
       
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return org.jdryad.com.messages.ExecuteVertexMessageHolder.internal_static_org_jdryad_com_messages_ExecuteVertexMessage_IOKey_fieldAccessorTable;
+        return org.jdryad.com.messages.ExecuteVertexProtos.internal_static_org_jdryad_com_messages_ExecuteVertexMessage_IOKey_fieldAccessorTable;
       }
       
       // required int32 typeId = 1;
@@ -115,41 +115,41 @@ public final class ExecuteVertexMessageHolder {
         return size;
       }
       
-      public static org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey parseFrom(
+      public static org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey parseFrom(
           com.google.protobuf.ByteString data)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return newBuilder().mergeFrom(data).buildParsed();
       }
-      public static org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey parseFrom(
+      public static org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey parseFrom(
           com.google.protobuf.ByteString data,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return newBuilder().mergeFrom(data, extensionRegistry)
                  .buildParsed();
       }
-      public static org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey parseFrom(byte[] data)
+      public static org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey parseFrom(byte[] data)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return newBuilder().mergeFrom(data).buildParsed();
       }
-      public static org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey parseFrom(
+      public static org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey parseFrom(
           byte[] data,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return newBuilder().mergeFrom(data, extensionRegistry)
                  .buildParsed();
       }
-      public static org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey parseFrom(java.io.InputStream input)
+      public static org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey parseFrom(java.io.InputStream input)
           throws java.io.IOException {
         return newBuilder().mergeFrom(input).buildParsed();
       }
-      public static org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey parseFrom(
+      public static org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey parseFrom(
           java.io.InputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
         return newBuilder().mergeFrom(input, extensionRegistry)
                  .buildParsed();
       }
-      public static org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey parseDelimitedFrom(java.io.InputStream input)
+      public static org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey parseDelimitedFrom(java.io.InputStream input)
           throws java.io.IOException {
         Builder builder = newBuilder();
         if (builder.mergeDelimitedFrom(input)) {
@@ -158,7 +158,7 @@ public final class ExecuteVertexMessageHolder {
           return null;
         }
       }
-      public static org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey parseDelimitedFrom(
+      public static org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey parseDelimitedFrom(
           java.io.InputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
@@ -169,12 +169,12 @@ public final class ExecuteVertexMessageHolder {
           return null;
         }
       }
-      public static org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey parseFrom(
+      public static org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey parseFrom(
           com.google.protobuf.CodedInputStream input)
           throws java.io.IOException {
         return newBuilder().mergeFrom(input).buildParsed();
       }
-      public static org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey parseFrom(
+      public static org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey parseFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
@@ -184,25 +184,25 @@ public final class ExecuteVertexMessageHolder {
       
       public static Builder newBuilder() { return Builder.create(); }
       public Builder newBuilderForType() { return newBuilder(); }
-      public static Builder newBuilder(org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey prototype) {
+      public static Builder newBuilder(org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey prototype) {
         return newBuilder().mergeFrom(prototype);
       }
       public Builder toBuilder() { return newBuilder(this); }
       
       public static final class Builder extends
           com.google.protobuf.GeneratedMessage.Builder<Builder> {
-        private org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey result;
+        private org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey result;
         
-        // Construct using org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey.newBuilder()
+        // Construct using org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey.newBuilder()
         private Builder() {}
         
         private static Builder create() {
           Builder builder = new Builder();
-          builder.result = new org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey();
+          builder.result = new org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey();
           return builder;
         }
         
-        protected org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey internalGetResult() {
+        protected org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey internalGetResult() {
           return result;
         }
         
@@ -211,7 +211,7 @@ public final class ExecuteVertexMessageHolder {
             throw new IllegalStateException(
               "Cannot call clear() after build().");
           }
-          result = new org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey();
+          result = new org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey();
           return this;
         }
         
@@ -221,24 +221,24 @@ public final class ExecuteVertexMessageHolder {
         
         public com.google.protobuf.Descriptors.Descriptor
             getDescriptorForType() {
-          return org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey.getDescriptor();
+          return org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey.getDescriptor();
         }
         
-        public org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey getDefaultInstanceForType() {
-          return org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey.getDefaultInstance();
+        public org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey getDefaultInstanceForType() {
+          return org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey.getDefaultInstance();
         }
         
         public boolean isInitialized() {
           return result.isInitialized();
         }
-        public org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey build() {
+        public org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey build() {
           if (result != null && !isInitialized()) {
             throw newUninitializedMessageException(result);
           }
           return buildPartial();
         }
         
-        private org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey buildParsed()
+        private org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey buildParsed()
             throws com.google.protobuf.InvalidProtocolBufferException {
           if (!isInitialized()) {
             throw newUninitializedMessageException(
@@ -247,27 +247,27 @@ public final class ExecuteVertexMessageHolder {
           return buildPartial();
         }
         
-        public org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey buildPartial() {
+        public org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey buildPartial() {
           if (result == null) {
             throw new IllegalStateException(
               "build() has already been called on this Builder.");
           }
-          org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey returnMe = result;
+          org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey returnMe = result;
           result = null;
           return returnMe;
         }
         
         public Builder mergeFrom(com.google.protobuf.Message other) {
-          if (other instanceof org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey) {
-            return mergeFrom((org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey)other);
+          if (other instanceof org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey) {
+            return mergeFrom((org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey)other);
           } else {
             super.mergeFrom(other);
             return this;
           }
         }
         
-        public Builder mergeFrom(org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey other) {
-          if (other == org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey.getDefaultInstance()) return this;
+        public Builder mergeFrom(org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey other) {
+          if (other == org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey.getDefaultInstance()) return this;
           if (other.hasTypeId()) {
             setTypeId(other.getTypeId());
           }
@@ -356,7 +356,7 @@ public final class ExecuteVertexMessageHolder {
       
       static {
         defaultInstance = new IOKey(true);
-        org.jdryad.com.messages.ExecuteVertexMessageHolder.internalForceInit();
+        org.jdryad.com.messages.ExecuteVertexProtos.internalForceInit();
         defaultInstance.initFields();
       }
       
@@ -379,25 +379,25 @@ public final class ExecuteVertexMessageHolder {
     
     // repeated .org.jdryad.com.messages.ExecuteVertexMessage.IOKey inputs = 3;
     public static final int INPUTS_FIELD_NUMBER = 3;
-    private java.util.List<org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey> inputs_ =
+    private java.util.List<org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey> inputs_ =
       java.util.Collections.emptyList();
-    public java.util.List<org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey> getInputsList() {
+    public java.util.List<org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey> getInputsList() {
       return inputs_;
     }
     public int getInputsCount() { return inputs_.size(); }
-    public org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey getInputs(int index) {
+    public org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey getInputs(int index) {
       return inputs_.get(index);
     }
     
     // repeated .org.jdryad.com.messages.ExecuteVertexMessage.IOKey outputs = 4;
     public static final int OUTPUTS_FIELD_NUMBER = 4;
-    private java.util.List<org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey> outputs_ =
+    private java.util.List<org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey> outputs_ =
       java.util.Collections.emptyList();
-    public java.util.List<org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey> getOutputsList() {
+    public java.util.List<org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey> getOutputsList() {
       return outputs_;
     }
     public int getOutputsCount() { return outputs_.size(); }
-    public org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey getOutputs(int index) {
+    public org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey getOutputs(int index) {
       return outputs_.get(index);
     }
     
@@ -406,10 +406,10 @@ public final class ExecuteVertexMessageHolder {
     public final boolean isInitialized() {
       if (!hasMessageType) return false;
       if (!hasUdfIdentifier) return false;
-      for (org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey element : getInputsList()) {
+      for (org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey element : getInputsList()) {
         if (!element.isInitialized()) return false;
       }
-      for (org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey element : getOutputsList()) {
+      for (org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey element : getOutputsList()) {
         if (!element.isInitialized()) return false;
       }
       return true;
@@ -424,10 +424,10 @@ public final class ExecuteVertexMessageHolder {
       if (hasUdfIdentifier()) {
         output.writeString(2, getUdfIdentifier());
       }
-      for (org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey element : getInputsList()) {
+      for (org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey element : getInputsList()) {
         output.writeMessage(3, element);
       }
-      for (org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey element : getOutputsList()) {
+      for (org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey element : getOutputsList()) {
         output.writeMessage(4, element);
       }
       getUnknownFields().writeTo(output);
@@ -447,11 +447,11 @@ public final class ExecuteVertexMessageHolder {
         size += com.google.protobuf.CodedOutputStream
           .computeStringSize(2, getUdfIdentifier());
       }
-      for (org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey element : getInputsList()) {
+      for (org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey element : getInputsList()) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(3, element);
       }
-      for (org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey element : getOutputsList()) {
+      for (org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey element : getOutputsList()) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(4, element);
       }
@@ -460,41 +460,41 @@ public final class ExecuteVertexMessageHolder {
       return size;
     }
     
-    public static org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage parseFrom(
+    public static org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data).buildParsed();
     }
-    public static org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage parseFrom(
+    public static org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data, extensionRegistry)
                .buildParsed();
     }
-    public static org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage parseFrom(byte[] data)
+    public static org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data).buildParsed();
     }
-    public static org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage parseFrom(
+    public static org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data, extensionRegistry)
                .buildParsed();
     }
-    public static org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage parseFrom(java.io.InputStream input)
+    public static org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return newBuilder().mergeFrom(input).buildParsed();
     }
-    public static org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage parseFrom(
+    public static org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return newBuilder().mergeFrom(input, extensionRegistry)
                .buildParsed();
     }
-    public static org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage parseDelimitedFrom(java.io.InputStream input)
+    public static org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       Builder builder = newBuilder();
       if (builder.mergeDelimitedFrom(input)) {
@@ -503,7 +503,7 @@ public final class ExecuteVertexMessageHolder {
         return null;
       }
     }
-    public static org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage parseDelimitedFrom(
+    public static org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -514,12 +514,12 @@ public final class ExecuteVertexMessageHolder {
         return null;
       }
     }
-    public static org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage parseFrom(
+    public static org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return newBuilder().mergeFrom(input).buildParsed();
     }
-    public static org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage parseFrom(
+    public static org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -529,25 +529,25 @@ public final class ExecuteVertexMessageHolder {
     
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage prototype) {
+    public static Builder newBuilder(org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
     
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> {
-      private org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage result;
+      private org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage result;
       
-      // Construct using org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.newBuilder()
+      // Construct using org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.newBuilder()
       private Builder() {}
       
       private static Builder create() {
         Builder builder = new Builder();
-        builder.result = new org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage();
+        builder.result = new org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage();
         return builder;
       }
       
-      protected org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage internalGetResult() {
+      protected org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage internalGetResult() {
         return result;
       }
       
@@ -556,7 +556,7 @@ public final class ExecuteVertexMessageHolder {
           throw new IllegalStateException(
             "Cannot call clear() after build().");
         }
-        result = new org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage();
+        result = new org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage();
         return this;
       }
       
@@ -566,24 +566,24 @@ public final class ExecuteVertexMessageHolder {
       
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.getDescriptor();
+        return org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.getDescriptor();
       }
       
-      public org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage getDefaultInstanceForType() {
-        return org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.getDefaultInstance();
+      public org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage getDefaultInstanceForType() {
+        return org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.getDefaultInstance();
       }
       
       public boolean isInitialized() {
         return result.isInitialized();
       }
-      public org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage build() {
+      public org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage build() {
         if (result != null && !isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return buildPartial();
       }
       
-      private org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage buildParsed()
+      private org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage buildParsed()
           throws com.google.protobuf.InvalidProtocolBufferException {
         if (!isInitialized()) {
           throw newUninitializedMessageException(
@@ -592,7 +592,7 @@ public final class ExecuteVertexMessageHolder {
         return buildPartial();
       }
       
-      public org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage buildPartial() {
+      public org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage buildPartial() {
         if (result == null) {
           throw new IllegalStateException(
             "build() has already been called on this Builder.");
@@ -605,22 +605,22 @@ public final class ExecuteVertexMessageHolder {
           result.outputs_ =
             java.util.Collections.unmodifiableList(result.outputs_);
         }
-        org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage returnMe = result;
+        org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage returnMe = result;
         result = null;
         return returnMe;
       }
       
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage) {
-          return mergeFrom((org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage)other);
+        if (other instanceof org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage) {
+          return mergeFrom((org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
       
-      public Builder mergeFrom(org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage other) {
-        if (other == org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage other) {
+        if (other == org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.getDefaultInstance()) return this;
         if (other.hasMessageType()) {
           setMessageType(other.getMessageType());
         }
@@ -629,13 +629,13 @@ public final class ExecuteVertexMessageHolder {
         }
         if (!other.inputs_.isEmpty()) {
           if (result.inputs_.isEmpty()) {
-            result.inputs_ = new java.util.ArrayList<org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey>();
+            result.inputs_ = new java.util.ArrayList<org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey>();
           }
           result.inputs_.addAll(other.inputs_);
         }
         if (!other.outputs_.isEmpty()) {
           if (result.outputs_.isEmpty()) {
-            result.outputs_ = new java.util.ArrayList<org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey>();
+            result.outputs_ = new java.util.ArrayList<org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey>();
           }
           result.outputs_.addAll(other.outputs_);
         }
@@ -673,13 +673,13 @@ public final class ExecuteVertexMessageHolder {
               break;
             }
             case 26: {
-              org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey.Builder subBuilder = org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey.newBuilder();
+              org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey.Builder subBuilder = org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey.newBuilder();
               input.readMessage(subBuilder, extensionRegistry);
               addInputs(subBuilder.buildPartial());
               break;
             }
             case 34: {
-              org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey.Builder subBuilder = org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey.newBuilder();
+              org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey.Builder subBuilder = org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey.newBuilder();
               input.readMessage(subBuilder, extensionRegistry);
               addOutputs(subBuilder.buildPartial());
               break;
@@ -729,47 +729,47 @@ public final class ExecuteVertexMessageHolder {
       }
       
       // repeated .org.jdryad.com.messages.ExecuteVertexMessage.IOKey inputs = 3;
-      public java.util.List<org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey> getInputsList() {
+      public java.util.List<org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey> getInputsList() {
         return java.util.Collections.unmodifiableList(result.inputs_);
       }
       public int getInputsCount() {
         return result.getInputsCount();
       }
-      public org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey getInputs(int index) {
+      public org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey getInputs(int index) {
         return result.getInputs(index);
       }
-      public Builder setInputs(int index, org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey value) {
+      public Builder setInputs(int index, org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey value) {
         if (value == null) {
           throw new NullPointerException();
         }
         result.inputs_.set(index, value);
         return this;
       }
-      public Builder setInputs(int index, org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey.Builder builderForValue) {
+      public Builder setInputs(int index, org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey.Builder builderForValue) {
         result.inputs_.set(index, builderForValue.build());
         return this;
       }
-      public Builder addInputs(org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey value) {
+      public Builder addInputs(org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey value) {
         if (value == null) {
           throw new NullPointerException();
         }
         if (result.inputs_.isEmpty()) {
-          result.inputs_ = new java.util.ArrayList<org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey>();
+          result.inputs_ = new java.util.ArrayList<org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey>();
         }
         result.inputs_.add(value);
         return this;
       }
-      public Builder addInputs(org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey.Builder builderForValue) {
+      public Builder addInputs(org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey.Builder builderForValue) {
         if (result.inputs_.isEmpty()) {
-          result.inputs_ = new java.util.ArrayList<org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey>();
+          result.inputs_ = new java.util.ArrayList<org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey>();
         }
         result.inputs_.add(builderForValue.build());
         return this;
       }
       public Builder addAllInputs(
-          java.lang.Iterable<? extends org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey> values) {
+          java.lang.Iterable<? extends org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey> values) {
         if (result.inputs_.isEmpty()) {
-          result.inputs_ = new java.util.ArrayList<org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey>();
+          result.inputs_ = new java.util.ArrayList<org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey>();
         }
         super.addAll(values, result.inputs_);
         return this;
@@ -780,47 +780,47 @@ public final class ExecuteVertexMessageHolder {
       }
       
       // repeated .org.jdryad.com.messages.ExecuteVertexMessage.IOKey outputs = 4;
-      public java.util.List<org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey> getOutputsList() {
+      public java.util.List<org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey> getOutputsList() {
         return java.util.Collections.unmodifiableList(result.outputs_);
       }
       public int getOutputsCount() {
         return result.getOutputsCount();
       }
-      public org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey getOutputs(int index) {
+      public org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey getOutputs(int index) {
         return result.getOutputs(index);
       }
-      public Builder setOutputs(int index, org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey value) {
+      public Builder setOutputs(int index, org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey value) {
         if (value == null) {
           throw new NullPointerException();
         }
         result.outputs_.set(index, value);
         return this;
       }
-      public Builder setOutputs(int index, org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey.Builder builderForValue) {
+      public Builder setOutputs(int index, org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey.Builder builderForValue) {
         result.outputs_.set(index, builderForValue.build());
         return this;
       }
-      public Builder addOutputs(org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey value) {
+      public Builder addOutputs(org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey value) {
         if (value == null) {
           throw new NullPointerException();
         }
         if (result.outputs_.isEmpty()) {
-          result.outputs_ = new java.util.ArrayList<org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey>();
+          result.outputs_ = new java.util.ArrayList<org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey>();
         }
         result.outputs_.add(value);
         return this;
       }
-      public Builder addOutputs(org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey.Builder builderForValue) {
+      public Builder addOutputs(org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey.Builder builderForValue) {
         if (result.outputs_.isEmpty()) {
-          result.outputs_ = new java.util.ArrayList<org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey>();
+          result.outputs_ = new java.util.ArrayList<org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey>();
         }
         result.outputs_.add(builderForValue.build());
         return this;
       }
       public Builder addAllOutputs(
-          java.lang.Iterable<? extends org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey> values) {
+          java.lang.Iterable<? extends org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey> values) {
         if (result.outputs_.isEmpty()) {
-          result.outputs_ = new java.util.ArrayList<org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey>();
+          result.outputs_ = new java.util.ArrayList<org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey>();
         }
         super.addAll(values, result.outputs_);
         return this;
@@ -835,7 +835,7 @@ public final class ExecuteVertexMessageHolder {
     
     static {
       defaultInstance = new ExecuteVertexMessage(true);
-      org.jdryad.com.messages.ExecuteVertexMessageHolder.internalForceInit();
+      org.jdryad.com.messages.ExecuteVertexProtos.internalForceInit();
       defaultInstance.initFields();
     }
     
@@ -869,8 +869,8 @@ public final class ExecuteVertexMessageHolder {
       "uteVertexMessage.IOKey\022D\n\007outputs\030\004 \003(\0132" +
       "3.org.jdryad.com.messages.ExecuteVertexM" +
       "essage.IOKey\032-\n\005IOKey\022\016\n\006typeId\030\001 \002(\005\022\024\n" +
-      "\014ioIdentifier\030\002 \002(\tB\034B\032ExecuteVertexMess" +
-      "ageHolder"
+      "\014ioIdentifier\030\002 \002(\tB\025B\023ExecuteVertexProt" +
+      "os"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -883,16 +883,16 @@ public final class ExecuteVertexMessageHolder {
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_org_jdryad_com_messages_ExecuteVertexMessage_descriptor,
               new java.lang.String[] { "MessageType", "UdfIdentifier", "Inputs", "Outputs", },
-              org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.class,
-              org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.Builder.class);
+              org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.class,
+              org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.Builder.class);
           internal_static_org_jdryad_com_messages_ExecuteVertexMessage_IOKey_descriptor =
             internal_static_org_jdryad_com_messages_ExecuteVertexMessage_descriptor.getNestedTypes().get(0);
           internal_static_org_jdryad_com_messages_ExecuteVertexMessage_IOKey_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_org_jdryad_com_messages_ExecuteVertexMessage_IOKey_descriptor,
               new java.lang.String[] { "TypeId", "IoIdentifier", },
-              org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey.class,
-              org.jdryad.com.messages.ExecuteVertexMessageHolder.ExecuteVertexMessage.IOKey.Builder.class);
+              org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey.class,
+              org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey.Builder.class);
           return null;
         }
       };
