@@ -1,0 +1,17 @@
+package org.jdryad.com.messages;
+
+option java_outer_classname = "ExecuteVertexProtos";
+
+message ExecuteVertexMessage {
+
+  required string udfIdentifier = 1;
+  
+  message IOKey {
+      required int32 typeId = 1;
+      required string ioIdentifier = 2;
+  }
+
+  repeated IOKey inputs = 2;
+  repeated IOKey outputs = 3;
+  
+}

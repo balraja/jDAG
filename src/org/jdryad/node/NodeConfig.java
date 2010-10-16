@@ -9,7 +9,7 @@ import org.jdryad.config.Source;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-@Source(path="config/node.properties", prefix="jdag.rabbitmq")
+@Source(prefix="jdag.node")
 public interface NodeConfig
 {
     /** Returns the type of the communication factory to be used */
@@ -19,5 +19,11 @@ public interface NodeConfig
      * Returns the name of the group via which the node details can be passed
      * on to the master.
      */
-    public String getDiscoveryGroupName();
+    public String getMasterHostID();
+
+    /**
+     * The interval abt which the heart beats are supposed to be sent to the
+     * master.
+     */
+    public int getHeartBeatInterval();
 }

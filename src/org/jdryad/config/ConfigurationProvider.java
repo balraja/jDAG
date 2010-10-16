@@ -7,8 +7,6 @@ import java.lang.reflect.Proxy;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 
-import sun.security.krb5.Config;
-
 /**
  * A class that proxies the configuration interface and provides configuration
  * details from the underlying properties file using apache configuration.
@@ -25,6 +23,7 @@ public class ConfigurationProvider implements InvocationHandler
     /**
      * CTOR
      * @throws ConfigurationException
+     * @throws ConfigurationException
      */
     private ConfigurationProvider(String src, String basePrefix)
         throws ConfigurationException
@@ -38,7 +37,6 @@ public class ConfigurationProvider implements InvocationHandler
      */
     @Override
     public Object invoke(Object proxy, Method method, Object[] args)
-                         throws Throwable
     {
         PropertyDef def = method.getAnnotation(PropertyDef.class);
         String property = myBasePrefix + "." + def.name();
@@ -58,14 +56,15 @@ public class ConfigurationProvider implements InvocationHandler
      * property configuration.
      */
     @SuppressWarnings("unchecked")
-    public static <T> T makeConfiguration(Class<T> configDefinitionClass)
+    public static <T> T makeConfiguration(Class<T> configDefinitionClass,
+                                          String propertyFile)
     {
         Source s = configDefinitionClass.getAnnotation(Source.class);
         try {
             return (T) Proxy.newProxyInstance(
-                Config.class.getClassLoader(),
+                configDefinitionClass.getClassLoader(),
                 new Class<?>[]{configDefinitionClass},
-                new ConfigurationProvider(s.path(), s.prefix()));
+                new ConfigurationProvider(propertyFile, s.prefix()));
         }
         catch (IllegalArgumentException e) {
              throw new RuntimeException(e);

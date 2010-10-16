@@ -8,9 +8,9 @@ package org.jdryad.com;
  */
 public interface Message
 {
-    /** The host from which this message has been sent */
-    public HostID getHostID();
-
     /** The type with which the message is tagged */
     public MessageType getMessageType();
+
+    /** The actual data that is sent as aprt of this message */
+    public Object getPayload();
 }

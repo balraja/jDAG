@@ -33,7 +33,7 @@ import org.jdryad.common.Pair;
  * An implementation of <code>Communicator</code> that internally uses RabbitMQ
  * for implementing the communication protocol.
  *
- * A basic documentation for active mq can be found in
+ * A basic documentation for rabbit mq can be found in
  * <a href="http://www.rabbitmq.com/api-guide.html">APIGuide</a> and
  * <a href="http://www.infoq.com/articles/AMQP-RabbitMQ">InfoQ</code>
  *
@@ -158,7 +158,7 @@ public class RabbitMQCommunicator implements Communicator
         /**
          * Returns the value of channel
          */
-        public Channel getChannel()
+        public Channel getRabbitMQChannel()
         {
             return myChannel;
         }
@@ -246,7 +246,7 @@ public class RabbitMQCommunicator implements Communicator
 
         try {
             myChannel.lock();
-            myChannel.getChannel().basicPublish(
+            myChannel.getRabbitMQChannel().basicPublish(
                     myCOnfiguration.getGlobalExchange(), host.getIdentifier(),
                     MessageProperties.MINIMAL_PERSISTENT_BASIC, payload);
             myChannel.unlock();
@@ -254,37 +254,6 @@ public class RabbitMQCommunicator implements Communicator
         catch (Exception e) {
             throw new RuntimeException(e);
         }
-
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void sendMessage(String groupName, Message m)
-    {
-        // TODO Auto-generated method stub
-
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void attachTOGroup(String groupName)
-    {
-        // TODO Auto-generated method stub
-
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void createGroup(String groupName)
-    {
-        // TODO Auto-generated method stub
-
     }
 
     /**
@@ -298,13 +267,13 @@ public class RabbitMQCommunicator implements Communicator
             myChannel.lock();
             if (myCOnfiguration.shouldDeclareGlobalExchange()) {
                 // The global exchange should be durable.
-                myChannel.getChannel().exchangeDeclare(
+                myChannel.getRabbitMQChannel().exchangeDeclare(
                     myCOnfiguration.getGlobalExchange(),
                     CONST_FIXED_EXCHANGE_TYPE,
                     true);
             }
 
-            myChannel.getChannel().queueDeclare(
+            myChannel.getRabbitMQChannel().queueDeclare(
                 myCOnfiguration.getHostName(),
                 true,
                 true,
@@ -313,14 +282,14 @@ public class RabbitMQCommunicator implements Communicator
 
             // Now attach the new quuqe with the default exchange and the
             // routing key is same as the quque name.
-            myChannel.getChannel().queueBind(
+            myChannel.getRabbitMQChannel().queueBind(
                 myCOnfiguration.getHostName(),
                 myCOnfiguration.getGlobalExchange(),
                 myCOnfiguration.getHostName());
 
-            myChannel.getChannel().basicConsume(myCOnfiguration.getHostName(),
+            myChannel.getRabbitMQChannel().basicConsume(myCOnfiguration.getHostName(),
                                                 new ReactorConsumer(
-                                                    myChannel.getChannel()));
+                                                    myChannel.getRabbitMQChannel()));
             myChannel.unlock();
         }
         catch (InterruptedException e) {

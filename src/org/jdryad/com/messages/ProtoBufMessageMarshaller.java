@@ -1,7 +1,6 @@
 package org.jdryad.com.messages;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import com.google.protobuf.InvalidProtocolBufferException;
 
 import org.jdryad.com.Message;
 import org.jdryad.com.MessageMarshaller;
@@ -11,7 +10,6 @@ import org.jdryad.com.MessageMarshaller;
  *
  * @author Balraja Subbiah
  * @version $Id:$
- *
  */
 public class ProtoBufMessageMarshaller implements MessageMarshaller
 {
@@ -21,28 +19,24 @@ public class ProtoBufMessageMarshaller implements MessageMarshaller
     @Override
     public byte[] marshal(Message message)
     {
-        try {
-            JDryadMessageType type = (JDryadMessageType) message.getMessageType();
-            ByteArrayOutputStream bout = new ByteArrayOutputStream();
+        SimpleMessage wireMessage = (SimpleMessage) message;
+        JDAGMessageType type = (JDAGMessageType) message.getMessageType();
 
-            switch (type)  {
-            case UP_AND_ALIVE_MESSAGE:
-                UpAndAlive upAndAlive = (UpAndAlive) message;
-                UpAndLiveProtos.WiredUpAndAliveMessage wiredMessage =
-                    UpAndLiveProtos.WiredUpAndAliveMessage
-                                   .newBuilder()
-                                   .setMessageType(type.asInteger())
-                                   .setHostID(upAndAlive.getHostID().getIdentifier())
-                                   .setAliveMillis(upAndAlive.getUpMillis())
-                                   .build();
-                wiredMessage.writeTo(bout);
-                return bout.toByteArray();
-            }
-            return null;
+        switch (type)  {
+        case UP_AND_ALIVE_MESSAGE:
+            UpAndLiveProtos.UpAndAliveMessage upAndAliveMessage =
+                (UpAndLiveProtos.UpAndAliveMessage)
+                    wireMessage.getPayload();
+            WiredMessageProtos.WiredMessage wiredMessage =
+                WiredMessageProtos.WiredMessage
+                                  .newBuilder()
+                                  .setMessageType(type.asInteger())
+                                  .setPayload(upAndAliveMessage.toByteString())
+                                  .build();
+
+            return wiredMessage.toByteArray();
         }
-        catch (IOException e) {
-             throw new RuntimeException(e);
-        }
+        throw new IllegalArgumentException("Unknown message type " + type);
     }
 
     /**
@@ -51,8 +45,22 @@ public class ProtoBufMessageMarshaller implements MessageMarshaller
     @Override
     public Message unmarshal(byte[] binaryMsg)
     {
-        // TODO Auto-generated method stub
-        return null;
+        try {
+            WiredMessageProtos.WiredMessage messageOnWire =
+                WiredMessageProtos.WiredMessage.parseFrom(binaryMsg);
+            JDAGMessageType type =
+                JDAGMessageType.fromInteger(messageOnWire.getMessageType());
+            Object payload = null;
+            switch (type)  {
+            case UP_AND_ALIVE_MESSAGE:
+                payload =
+                    UpAndLiveProtos.UpAndAliveMessage.parseFrom(
+                        messageOnWire.getPayload());
+            }
+            return new SimpleMessage(type, payload);
+        }
+        catch (InvalidProtocolBufferException e) {
+             throw new RuntimeException(e);
+        }
     }
-
 }

@@ -11,7 +11,7 @@ import org.jdryad.config.Source;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-@Source(path="config/rabbitmq.properties", prefix="jdag.rabbitmq")
+@Source(prefix="jdag.rabbitmq")
 public interface RabbitMQConfiguration
 {
     @PropertyDef(resultType=ExpectedResult.BOOLEAN, name="declareGlobalExchange")

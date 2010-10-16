@@ -1,0 +1,9 @@
+package org.jdryad.com.messages;
+
+option java_outer_classname = "UpAndLiveProtos";
+
+message UpAndAliveMessage {
+
+  required uint64 aliveMillis = 2;
+  
+}
