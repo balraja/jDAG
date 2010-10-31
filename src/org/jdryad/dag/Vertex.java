@@ -31,10 +31,4 @@ public interface Vertex extends Externalizable
      * executed as part of this vertex.
      */
     public String getUDFIdentifier();
-
-    /**
-     * Executes the function on a remote vertex and returns the result of
-     * execution.
-     */
-    public ExecutionResult execute(ExecutionContext context);
 }

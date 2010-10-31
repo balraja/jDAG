@@ -102,35 +102,4 @@ public class SimpleVertex implements Vertex
         out.writeObject(myInputs);
         out.writeObject(myOutputs);
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public ExecutionResult execute(ExecutionContext context)
-    {
-        UDFFactory factory = context.makeUDFFactory();
-        UDFIdentityGenerator identityGenerator = new UDFIdentityGenerator();
-        UserDefinedFunction function = null;
-        if (identityGenerator.isSimpleFunction(myUDFIdentifier)) {
-            function =
-                factory.makeUDF(
-                    identityGenerator.getFunctionIdentifier(myUDFIdentifier));
-        }
-        else {
-            InputSplitter splitter =
-                factory.makeInputSplitter(
-                    identityGenerator.getMapperIdentifier(myUDFIdentifier));
-            function = new MapperFunction(splitter);
-        }
-
-        try {
-            function.process(myInputs, myOutputs, context);
-            return ExecutionResult.SUCCESS;
-        }
-        catch (Exception e) {
-            return ExecutionResult.EROR;
-        }
-    }
 }
-

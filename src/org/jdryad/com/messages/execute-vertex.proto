@@ -4,14 +4,16 @@ option java_outer_classname = "ExecuteVertexProtos";
 
 message ExecuteVertexMessage {
 
-  required string udfIdentifier = 1;
+  required string vertexId = 1;
+  
+  required string udfIdentifier = 2
   
   message IOKey {
       required int32 typeId = 1;
       required string ioIdentifier = 2;
   }
 
-  repeated IOKey inputs = 2;
-  repeated IOKey outputs = 3;
+  repeated IOKey inputs = 3;
+  repeated IOKey outputs = 4;
   
 }

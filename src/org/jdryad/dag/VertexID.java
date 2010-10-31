@@ -10,7 +10,9 @@ import java.io.Serializable;
  */
 public class VertexID implements Serializable
 {
-    private String myName;
+	private static final long serialVersionUID = -9172393936458409145L;
+	
+	private String myName;
 
     /**
      * CTOR

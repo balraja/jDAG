@@ -84,7 +84,7 @@ public class SimpleScheduler implements Scheduler
         myDoneVertices.add(vertexID);
     }
 
-    /** Returns tru if the vertex has been marked done */
+    /** Returns true if the vertex has been marked done */
     public boolean isDOne(VertexID vertexID)
     {
         return myDoneVertices.contains(vertexID);
