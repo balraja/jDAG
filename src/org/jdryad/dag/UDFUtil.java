@@ -10,9 +10,9 @@ import java.util.Map;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-public class FunctionUtil
+public class UDFUtil
 {
-    private FunctionUtil()
+    private UDFUtil()
     {
     }
 

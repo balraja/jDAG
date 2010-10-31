@@ -35,15 +35,15 @@ public class NodeExecutor
     private final Communicator myCommunicator;
 
     private final NodeConfig myConfig;
-    
+
     private final PaceMaker myPaceMaker;
-    
+
     private final ExecutorService myExecutorService;
-    
+
     private final ExecutionContext myExecutionContext;
-    
+
     private final Map<VertexID, Future<ExecutionResult>> myFunToExecutionStatusMap;
-    
+
     /**
      * Responsible for sending heartbeats to the master.
      */
@@ -84,17 +84,18 @@ public class NodeExecutor
                                            JDAGMessageType.UP_AND_ALIVE_MESSAGE,
                                            payload));
         }
-        
+
         /**
          * Starts sending heartbeats to the master.
          */
         public void start()
         {
         	myStartTime = System.currentTimeMillis();
-        	myScheduler.scheduleAtFixedRate(PaceMaker.this, 10, 10, TimeUnit.SECONDS);
+        	myScheduler.scheduleAtFixedRate(
+        	    PaceMaker.this, 10, 10, TimeUnit.SECONDS);
         }
     }
-    
+
     /** Reactor for <node>ExecuteVertex</code> messages */
     private class ExecuteVertexReactor implements Reactor
     {
@@ -102,14 +103,14 @@ public class NodeExecutor
     	 * {@inheritDoc}
     	 */
 		@Override
-		public void process(Message m) 
+		public void process(Message m)
 		{
-			ExecuteVertexMessage message = 
+			ExecuteVertexMessage message =
 				(ExecuteVertexMessage)
 				    ((SimpleMessage) m).getPayload();
-			ExecutableVertex v = 
+			ExecutableVertex v =
 				new ExecutableVertex(message, myExecutionContext);
-			Future<ExecutionResult> result = 
+			Future<ExecutionResult> result =
 			    myExecutorService.submit(v);
 			myFunToExecutionStatusMap.put(v.getID(), result);
 		}
@@ -128,16 +129,16 @@ public class NodeExecutor
         myFunToExecutionStatusMap =
         	new HashMap<VertexID, Future<ExecutionResult>>();
     }
-    
+
     /**
-     * Starts the executor responsible for executing the functions sent in by 
+     * Starts the executor responsible for executing the functions sent in by
      * the master.
      */
     public void start()
     {
     	myPaceMaker.start();
-    	myCommunicator.attachReactor(JDAGMessageType.EXECUTE_VERTEX_MESSAGE, 
+    	myCommunicator.attachReactor(JDAGMessageType.EXECUTE_VERTEX_MESSAGE,
     			                     new ExecuteVertexReactor());
-    			
+
     }
 }

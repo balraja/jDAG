@@ -15,7 +15,7 @@ import org.jdryad.dag.VertexID;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-public class SimpleScheduler implements Scheduler
+public class TopologicalSortSchedule implements Schedule
 {
     /**
      * The <code>ExecutionGraph</code> from which we process the vertices.
@@ -31,7 +31,7 @@ public class SimpleScheduler implements Scheduler
     /**
      * CTOR
      */
-    public SimpleScheduler(ExecutionGraph graph)
+    public TopologicalSortSchedule(ExecutionGraph graph)
     {
         myGraph = graph;
         myReturnedVertices = new HashSet<VertexID>();
@@ -85,8 +85,17 @@ public class SimpleScheduler implements Scheduler
     }
 
     /** Returns true if the vertex has been marked done */
-    public boolean isDOne(VertexID vertexID)
+    public boolean isDone(VertexID vertexID)
     {
         return myDoneVertices.contains(vertexID);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isCompleted()
+    {
+
     }
 }

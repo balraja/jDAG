@@ -21,7 +21,6 @@ public enum JDAGMessageType implements MessageType
 
     private final int myIntegerRepresentation;
 
-
     /**
      * CTOR
      */

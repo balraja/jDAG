@@ -12,5 +12,5 @@ public enum ExecutionResult
     SUCCESS,
 
     /** Denotes that execution has failed */
-    EROR
+    ERROR
 }

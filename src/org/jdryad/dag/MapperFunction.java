@@ -38,7 +38,7 @@ public class MapperFunction implements UserDefinedFunction
         IOFactory ioFactory = graphContext.makeIOFactory();
         IOKey inKey = inputs.iterator().next();
         FunctionInput in = ioFactory.makeInput(inputs.iterator().next());
-        Map<IOKey, FunctionOutput> keyToOPMap = FunctionUtil.makeMap(outputs,
+        Map<IOKey, FunctionOutput> keyToOPMap = UDFUtil.makeMap(outputs,
                 graphContext);
         Iterator<Record> inItr = in.getIterator();
         int count = 1;

@@ -1,12 +1,14 @@
 package org.jdryad.com.messages;
 
+import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 
 import org.jdryad.com.Message;
 import org.jdryad.com.MessageMarshaller;
 
 /**
- * A simple message marshaller that translates
+ * A simple message marshaller that translates the messages sent to/from
+ * using google's protocol buffers.
  *
  * @author Balraja Subbiah
  * @version $Id:$
@@ -21,22 +23,25 @@ public class ProtoBufMessageMarshaller implements MessageMarshaller
     {
         SimpleMessage wireMessage = (SimpleMessage) message;
         JDAGMessageType type = (JDAGMessageType) message.getMessageType();
-
+        ByteString wiredMessagePayload = null;
         switch (type)  {
         case UP_AND_ALIVE_MESSAGE:
-            UpAndLiveProtos.UpAndAliveMessage upAndAliveMessage =
-                (UpAndLiveProtos.UpAndAliveMessage)
-                    wireMessage.getPayload();
-            WiredMessageProtos.WiredMessage wiredMessage =
-                WiredMessageProtos.WiredMessage
-                                  .newBuilder()
-                                  .setMessageType(type.asInteger())
-                                  .setPayload(upAndAliveMessage.toByteString())
-                                  .build();
+           wiredMessagePayload =
+                ((UpAndLiveProtos.UpAndAliveMessage)
+                    wireMessage.getPayload()).toByteString();
 
-            return wiredMessage.toByteArray();
+        case EXECUTE_VERTEX_MESSAGE:
+            wiredMessagePayload =
+                ((ExecuteVertexProtos.ExecuteVertexMessage)
+                    wireMessage.getPayload()).toByteString();
         }
-        throw new IllegalArgumentException("Unknown message type " + type);
+        WiredMessageProtos.WiredMessage wiredMessage =
+            WiredMessageProtos.WiredMessage
+                              .newBuilder()
+                              .setMessageType(type.asInteger())
+                              .setPayload(wiredMessagePayload)
+                              .build();
+        return wiredMessage.toByteArray();
     }
 
     /**
@@ -55,6 +60,10 @@ public class ProtoBufMessageMarshaller implements MessageMarshaller
             case UP_AND_ALIVE_MESSAGE:
                 payload =
                     UpAndLiveProtos.UpAndAliveMessage.parseFrom(
+                        messageOnWire.getPayload());
+            case EXECUTE_VERTEX_MESSAGE:
+                payload =
+                    ExecuteVertexProtos.ExecuteVertexMessage.parseFrom(
                         messageOnWire.getPayload());
             }
             return new SimpleMessage(type, payload);

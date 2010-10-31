@@ -9,7 +9,7 @@ import org.jdryad.dag.VertexID;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-public interface Scheduler
+public interface Schedule
 {
     /**
      * When called returns the next vertex to be executed. If all the
@@ -21,8 +21,11 @@ public interface Scheduler
     /**
      * Notifies that the given vertex id has been successfully executed.
      * Based on these notifications that the scheduler will give appropriate
-     * vertices when {@link Scheduler#getVertexForExecution()} is called
+     * vertices when {@link Schedule#getVertexForExecution()} is called
      * next.
      */
     public void notifyDone(VertexID vertexID);
+
+    /** Returns true if the complete graph has been scheduled */
+    public boolean isCompleted();
 }
