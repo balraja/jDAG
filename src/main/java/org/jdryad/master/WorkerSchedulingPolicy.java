@@ -2,8 +2,7 @@ package org.jdryad.master;
 
 import org.jdryad.com.HostID;
 import org.jdryad.com.messages.UpAndLiveProtos.UpAndAliveMessage;
-import org.jdryad.dag.ExecutionGraphID;
-import org.jdryad.dag.VertexID;
+import org.jdryad.dag.GraphVertexID;
 
 /**
  * The type that defines the contract for scheduling vertices over the
@@ -24,13 +23,10 @@ public interface WorkerSchedulingPolicy
      * Returns the identifier for a worker node to which graph vertices
      * can be scheduled or null if a worker is not free.
      */
-    public HostID getWorkerNode(ExecutionGraphID graphID,
-                                VertexID vertexID);
+    public HostID getWorkerNode(GraphVertexID graphVertexID);
 
     /**
      * Removes the vertex to host mapping.
      */
-    public void removeVertexToHostMapping(HostID host,
-                                          ExecutionGraphID graphID,
-                                          VertexID vertex);
+    public void removeVertexToHostMapping(GraphVertexID graphVertexID);
 }

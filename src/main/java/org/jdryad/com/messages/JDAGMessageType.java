@@ -14,7 +14,8 @@ import org.jdryad.com.MessageType;
 public enum JDAGMessageType implements MessageType
 {
     UP_AND_ALIVE_MESSAGE(1),
-    EXECUTE_VERTEX_MESSAGE(2);
+    EXECUTE_VERTEX_MESSAGE(2),
+    EXECUTE_VERTEX_STATUS_MESSAGE(3);
 
     private static final Map<Integer, JDAGMessageType> myInt2TypeMap =
         new HashMap<Integer, JDAGMessageType>();

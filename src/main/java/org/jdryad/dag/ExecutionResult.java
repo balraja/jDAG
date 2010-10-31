@@ -9,8 +9,32 @@ package org.jdryad.dag;
 public enum ExecutionResult
 {
     /** Denotes that execution has completed successfully */
-    SUCCESS,
+    SUCCESS(1),
 
     /** Denotes that execution has failed */
-    ERROR
+    ERROR(2);
+
+    private final int myIntegerRepresentation;
+
+    /**
+     * CTOR
+     */
+    private ExecutionResult(int integerRepresentation)
+    {
+        myIntegerRepresentation = integerRepresentation;
+    }
+
+    public int getIntegerRepresentation()
+    {
+        return myIntegerRepresentation;
+    }
+
+    public static ExecutionResult getExecutionResult(int integerRepresentation)
+    {
+        switch(integerRepresentation) {
+        case 1: return ExecutionResult.SUCCESS;
+        case 2: return ExecutionResult.ERROR;
+        }
+        return null;
+    }
 }

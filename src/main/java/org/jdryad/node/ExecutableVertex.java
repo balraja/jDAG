@@ -37,7 +37,7 @@ public class ExecutableVertex extends SimpleVertex
 	public ExecutableVertex(ExecuteVertexMessage executeVertexMessage,
 			                ExecutionContext executionContext)
 	{
-		super(new VertexID(""),
+		super(new VertexID(executeVertexMessage.getVertexId()),
               executeVertexMessage.getUdfIdentifier(),
 			  transform(executeVertexMessage.getInputsList()),
 			  transform(executeVertexMessage.getOutputsList()));
@@ -85,7 +85,7 @@ public class ExecutableVertex extends SimpleVertex
             function.process(getInputs(), getOutputs(), context);
             return ExecutionResult.SUCCESS;
         }
-        catch (Exception e) {
+        catch (Throwable e) {
             return ExecutionResult.ERROR;
         }
     }

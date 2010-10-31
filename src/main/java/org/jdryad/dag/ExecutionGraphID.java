@@ -2,7 +2,7 @@ package org.jdryad.dag;
 
 /**
  * Type that defines an unique id assigned for a task graph.
- * 
+ *
  * @author Balraja Subbiah
  * @version $Id:$
  */
@@ -18,6 +18,11 @@ public class ExecutionGraphID
     {
         super();
         myID = iD;
+    }
+
+    public String getID()
+    {
+        return myID;
     }
 
     /**
@@ -62,5 +67,5 @@ public class ExecutionGraphID
     {
         return "TaskGraphID [myID=" + myID + "]";
     }
-    
+
 }

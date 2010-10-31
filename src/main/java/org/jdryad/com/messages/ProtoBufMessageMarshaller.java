@@ -29,11 +29,18 @@ public class ProtoBufMessageMarshaller implements MessageMarshaller
            wiredMessagePayload =
                 ((UpAndLiveProtos.UpAndAliveMessage)
                     wireMessage.getPayload()).toByteString();
+           break;
 
         case EXECUTE_VERTEX_MESSAGE:
             wiredMessagePayload =
                 ((ExecuteVertexProtos.ExecuteVertexMessage)
                     wireMessage.getPayload()).toByteString();
+            break;
+        case EXECUTE_VERTEX_STATUS_MESSAGE:
+            wiredMessagePayload =
+                ((ExecuteVertexStatusProtos.ExecuteVertexStatusMessage)
+                     wireMessage.getPayload()).toByteString();
+            break;
         }
         WiredMessageProtos.WiredMessage wiredMessage =
             WiredMessageProtos.WiredMessage
@@ -61,10 +68,17 @@ public class ProtoBufMessageMarshaller implements MessageMarshaller
                 payload =
                     UpAndLiveProtos.UpAndAliveMessage.parseFrom(
                         messageOnWire.getPayload());
+                break;
             case EXECUTE_VERTEX_MESSAGE:
                 payload =
                     ExecuteVertexProtos.ExecuteVertexMessage.parseFrom(
                         messageOnWire.getPayload());
+                break;
+            case EXECUTE_VERTEX_STATUS_MESSAGE:
+                payload =
+                    ExecuteVertexStatusProtos.ExecuteVertexStatusMessage
+                                             .parseFrom(messageOnWire.getPayload());
+                break;
             }
             return new SimpleMessage(type, payload);
         }

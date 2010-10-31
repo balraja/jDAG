@@ -23,10 +23,11 @@
           <configuration>
              <tasks>
               <exec executable="protoc">
-                    <arg value="--java_out=src"/>
+                    <arg value="--java_out=src/main/java/"/>
                     <arg value="src/main/java/org/jdryad/com/messages/execute-vertex.proto"/>
+                    <arg value="src/main/java/org/jdryad/com/messages/execute-vertex-status.proto"/>
                     <arg value="src/main/java/org/jdryad/com/messages/up-and-alive.proto"/>
-                     <arg value="src/main/java/org/jdryad/com/messages/wired-message.proto"/>
+                    <arg value="src/main/java/org/jdryad/com/messages/wired-message.proto"/>
               </exec>
             </tasks>
             <sourceRoot>target/generated-sources</sourceRoot>
