@@ -1,0 +1,10 @@
+package org.jdryad.com.messages;
+
+option java_outer_classname = "WiredMessageProtos";
+
+message WiredMessage {
+
+  required int32 messageType = 1;
+  required bytes payload = 2;
+  
+}

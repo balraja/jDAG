@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry including="**/*.java" kind="src" output="target/test-classes" path="test"/>
-	<classpathentry including="**/*.java" kind="src" path="src"/>
+	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="lib" path="C:/Users/dell/.m2/repository/com/rabbitmq/amqp-client/2.1.0/amqp-client-2.1.0.jar"/>
 	<classpathentry kind="lib" path="C:/projects/jDAG/externallibraries/protobuf-java-2.3.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
