@@ -17,10 +17,16 @@ import org.jdryad.com.HostID;
 import org.jdryad.com.Message;
 import org.jdryad.com.Reactor;
 import org.jdryad.com.messages.JDAGMessageType;
+import org.jdryad.com.messages.ProtobufMessageMarshallerFactory;
 import org.jdryad.com.messages.SimpleMessage;
 import org.jdryad.com.messages.UpAndLiveProtos;
 import org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage;
 import org.jdryad.com.messages.ExecuteVertexStatusProtos.ExecuteVertexStatusMessage;
+import org.jdryad.com.rabbitmq.RabbitMQCommunicator;
+import org.jdryad.com.rabbitmq.RabbitMQConfiguration;
+import org.jdryad.common.Application;
+import org.jdryad.common.ApplicationExecutor;
+import org.jdryad.config.ConfigurationProvider;
 import org.jdryad.dag.ExecutionContext;
 import org.jdryad.dag.ExecutionGraphID;
 import org.jdryad.dag.ExecutionResult;
@@ -34,8 +40,12 @@ import org.jdryad.dag.VertexID;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-public class NodeExecutor
+public class NodeExecutor implements Application
 {
+    private static final String NODE_CONFIG_FILE = "node/config.properties";
+
+    private static final String COMM_CONFIG_FILE = "node/commConfig.properties";
+
     private final Communicator myCommunicator;
 
     private final NodeConfig myConfig;
@@ -198,5 +208,35 @@ public class NodeExecutor
     	myCommunicator.attachReactor(JDAGMessageType.EXECUTE_VERTEX_MESSAGE,
     			                     new ExecuteVertexReactor());
 
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void stop()
+    {
+        // TODO Auto-generated method stub
+
+    }
+
+    /**
+     * The main method.
+     */
+    public static void main(String[] args)
+    {
+        NodeConfig nodeConfig =
+            ConfigurationProvider.makeConfiguration(
+                NodeConfig.class, NODE_CONFIG_FILE);
+        RabbitMQConfiguration commConfig =
+            ConfigurationProvider.makeConfiguration(
+                RabbitMQConfiguration.class, COMM_CONFIG_FILE);
+        RabbitMQCommunicator comm =
+            new RabbitMQCommunicator(commConfig,
+                                     new ProtobufMessageMarshallerFactory());
+        NodeExecutor exec = new NodeExecutor(comm, nodeConfig);
+        ApplicationExecutor applicationExecutor =
+            new ApplicationExecutor(exec);
+        applicationExecutor.run();
     }
 }

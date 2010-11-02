@@ -6,7 +6,7 @@
 	<classpathentry kind="lib" path="C:/projects/jDAG/externallibraries/protobuf-java-2.3.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="C:/software/apache/guava-r06/guava-r06.jar"/>
-	<classpathentry kind="lib" path="C:/software/apache/commons-configuration-1.6/commons-configuration-1.6.jar"/>
+	<classpathentry kind="lib" path="C:/software/apache/commons-configuration-1.6/commons-configuration-1.6.jar" sourcepath="C:/software/apache/commons-configuration-1.6-src/commons-configuration-1.6-src/src/java"/>
 	<classpathentry kind="lib" path="C:/software/apache/commons-lang-2.5/commons-lang-2.5.jar"/>
 	<classpathentry kind="lib" path="C:/software/apache/commons-collections-3.2.1/commons-collections-3.2.1.jar"/>
 	<classpathentry kind="lib" path="C:/software/apache/commons-primitives-1.0/commons-primitives-1.0.jar"/>

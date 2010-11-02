@@ -17,10 +17,16 @@ import org.jdryad.com.Message;
 import org.jdryad.com.Reactor;
 import org.jdryad.com.messages.ExecuteVertexProtos;
 import org.jdryad.com.messages.JDAGMessageType;
+import org.jdryad.com.messages.ProtobufMessageMarshallerFactory;
 import org.jdryad.com.messages.SimpleMessage;
 import org.jdryad.com.messages.UpAndLiveProtos;
 import org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage;
 import org.jdryad.com.messages.ExecuteVertexStatusProtos.ExecuteVertexStatusMessage;
+import org.jdryad.com.rabbitmq.RabbitMQCommunicator;
+import org.jdryad.com.rabbitmq.RabbitMQConfiguration;
+import org.jdryad.common.Application;
+import org.jdryad.common.ApplicationExecutor;
+import org.jdryad.config.ConfigurationProvider;
 import org.jdryad.dag.ExecutionGraph;
 import org.jdryad.dag.ExecutionGraphID;
 import org.jdryad.dag.ExecutionResult;
@@ -39,8 +45,10 @@ import org.jdryad.node.NodeExecutor;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-public class GraphExecutor
+public class GraphExecutor implements Application
 {
+    private static final String COMM_CONFIG_FILE = "master/commConfig.properties";
+
     private final WorkerSchedulingPolicy myWorkerSchedulingPolicy;
 
     private final Map<ExecutionGraphID, Schedule> myGraph2ScheduleMap;
@@ -106,6 +114,10 @@ public class GraphExecutor
         }
     }
 
+    /**
+     * A simple function that schedules the next vertex from the graph on
+     * a worker node.
+     */
     private class VertexSchedulingTask implements Runnable
     {
         private final ExecutionGraphID myGraphID;
@@ -181,6 +193,16 @@ public class GraphExecutor
         myCommunicator.start();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void stop()
+    {
+        // TODO Auto-generated method stub
+
+    }
+
     private List<ExecuteVertexProtos.ExecuteVertexMessage.IOKey> makeIOKeys(
         List<IOKey> ioKeys)
     {
@@ -201,21 +223,32 @@ public class GraphExecutor
     }
 
     /**
-     * A simple function that schedules the next vertex from the graph on
-     * a worker node.
-     */
-    public void executeVertexFromGraph(ExecutionGraphID graphID)
-    {
-
-    }
-
-    /**
      * Executes the graph over the worker vertices.
      */
     public void execute(ExecutionGraph graph)
     {
         Schedule schedule = new TopologicalSortSchedule(graph);
         myGraph2ScheduleMap.put(graph.getID(), schedule);
-        executeVertexFromGraph(graph.getID());
+        myScheduler.schedule(
+            new VertexSchedulingTask(graph.getID()),
+            10,
+            TimeUnit.SECONDS);
+    }
+
+    public static void main(String[] args)
+    {
+        RabbitMQConfiguration commConfig =
+            ConfigurationProvider.makeConfiguration(
+                RabbitMQConfiguration.class, COMM_CONFIG_FILE);
+        RabbitMQCommunicator comm =
+            new RabbitMQCommunicator(commConfig,
+                                     new ProtobufMessageMarshallerFactory());
+        GraphExecutor executor =
+            new GraphExecutor(
+                new BoundedWorkerSchedulingPolicy(),
+                comm);
+        ApplicationExecutor applicationExecutor =
+            new ApplicationExecutor(executor);
+        applicationExecutor.run();
     }
 }

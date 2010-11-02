@@ -40,13 +40,17 @@ public class ConfigurationProvider implements InvocationHandler
     {
         PropertyDef def = method.getAnnotation(PropertyDef.class);
         String property = myBasePrefix + "." + def.name();
+        String value = System.getProperty(property);
         switch (def.resultType()) {
         case INT:
-            return myPropertiesConfiguration.getInt(property);
+            return value != null ? Integer.parseInt(value)
+                                 : myPropertiesConfiguration.getInt(property);
         case STRING:
-            return myPropertiesConfiguration.getProperty(property);
+            return value != null ? value
+                                 : myPropertiesConfiguration.getProperty(property);
         case BOOLEAN:
-            return myPropertiesConfiguration.getBoolean(property);
+            return value != null ? Boolean.parseBoolean(value)
+                                 : myPropertiesConfiguration.getBoolean(property);
         }
         return null;
     }
