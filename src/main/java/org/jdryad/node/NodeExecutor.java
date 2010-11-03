@@ -85,6 +85,8 @@ public class NodeExecutor implements Application
             UpAndLiveProtos.UpAndAliveMessage payload =
                 UpAndLiveProtos.UpAndAliveMessage
                                .newBuilder()
+                               .setIdentifier(myCommunicator.getMyHostID()
+                                                            .getIdentifier())
                                .setAliveMillis(System.currentTimeMillis() -
                                                   myStartTime)
                                .build();

@@ -60,6 +60,7 @@ public class ApplicationExecutor
             @Override
             public void run() { myApplication.stop(); }
         });
+        t.start();
     }
 
 }

@@ -32,4 +32,7 @@ public interface Communicator
 
     /** Stops the communicator */
     public void stop();
+
+    /** Returns the HostID corresponding to this node */
+    public HostID getMyHostID();
 }

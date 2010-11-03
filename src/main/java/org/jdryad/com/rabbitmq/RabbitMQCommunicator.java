@@ -319,4 +319,13 @@ public class RabbitMQCommunicator implements Communicator
         }
         myCommExecutor.shutdown();
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public HostID getMyHostID()
+    {
+        return new HostID(myCOnfiguration.getHostName());
+    }
 }
