@@ -2,15 +2,23 @@ package org.jdryad.dag.test;
 
 import com.google.common.collect.Sets;
 
+import java.util.List;
+
+import org.jdryad.dag.ExecutionContext;
 import org.jdryad.dag.ExecutionGraph;
 import org.jdryad.dag.ExecutionGraphID;
+import org.jdryad.dag.IOKey;
+import org.jdryad.dag.IOSource;
+import org.jdryad.dag.Record;
+import org.jdryad.dag.UserDefinedFunction;
 import org.jdryad.dag.SimpleInputSplitterFactory.SplitterType;
-import org.jdryad.dag.builder.FileIOKeyFactory;
+import org.jdryad.dag.builder.Collect;
 import org.jdryad.dag.builder.GraphBuilder;
 import org.jdryad.dag.builder.GraphSpecification;
-
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.jdryad.dag.builder.InputSpecification;
+import org.jdryad.dag.builder.Join;
+import org.jdryad.dag.builder.UDFSpecification;
+import org.jdryad.persistence.flatten.LineInterpreter;
 
 /**
  * A simple testcase for <code>GraphBuilder</code>
@@ -20,21 +28,86 @@ import org.testng.annotations.Test;
  */
 public class GraphBuilderTest
 {
+     private static class Add implements UserDefinedFunction
+     {
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public boolean process(List<IOKey> inputs, List<IOKey> outputs,
+                ExecutionContext graphContext)
+        {
+            // TODO Auto-generated method stub
+            return false;
+        }
+
+     }
+
+     private static class Max implements UserDefinedFunction
+     {
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public boolean process(List<IOKey> inputs, List<IOKey> outputs,
+                ExecutionContext graphContext)
+        {
+            // TODO Auto-generated method stub
+            return false;
+        }
+
+     }
+
+     private static class FlattenLineInterpreter implements LineInterpreter
+     {
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String flattenRecord(Record r)
+        {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Record makeRecord(String line)
+        {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+     }
+
      private GraphSpecification makeGraphSpecification()
      {
          GraphSpecification spec = new GraphSpecification();
-         spec.addInput("File1", SplitterType.DIRECT, 3) // Take two files and
-             .addInput("File2", SplitterType.DIRECT, 3) // split into 3 parts
-             .addUDFSpecification(                      // Apply sum on partial
-                 "org.jdryad.dag.test.SumListFunction",     // inputs
-                 "partial add",
-                 Sets.newHashSet("File1", "File2"),
-                 true)
-             .addUDFSpecification(                      // combine the sum from
-                 "org.jdryad.dag.test.SumListFunction",     // partial ops.
-                 "combine",
-                 Sets.newHashSet("org.jdryad.dag.test.SumListFunction"),
-                 false);
+         InputSpecification input1 = spec.addInput("File1");
+         input1.fromSource("File1.txt", IOSource.FLATTEN_FILE)
+               .splitInto(3)
+               .by(SplitterType.DIRECT);
+
+         InputSpecification input2 = spec.addInput("FIle2");
+         input2.fromSource("File2.txt", IOSource.FLATTEN_FILE)
+               .splitInto(3)
+               .by(SplitterType.DIRECT);
+
+         UDFSpecification map = spec.addUDF("TableJoin", Add.class);
+         map.applyOn(new Join(input1, input2))
+            .toProduce("join");
+
+         UDFSpecification reduce = spec.addUDF("Reduce", Max.class);
+         reduce.applyOn(new Collect(map.getFunctionOutput("join")))
+               .toProduce("output")
+               .setOutputIoSource(IOSource.FLATTEN_FILE)
+               .setAttribute("RecordClass", FlattenLineInterpreter.class);
+
          return spec;
      }
 

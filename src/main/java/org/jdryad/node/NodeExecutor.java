@@ -66,8 +66,7 @@ public class NodeExecutor implements Application
      */
     private class PaceMaker implements Runnable
     {
-
-         private long myStartTime;
+        private long myStartTime;
 
          /**
          * CTOR
@@ -218,7 +217,6 @@ public class NodeExecutor implements Application
     @Override
     public void stop()
     {
-        // TODO Auto-generated method stub
 
     }
 

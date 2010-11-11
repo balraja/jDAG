@@ -1,9 +1,10 @@
 package org.jdryad.dag.builder;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.jdryad.dag.SimpleInputSplitterFactory.SplitterType;
+import org.jdryad.dag.UserDefinedFunction;
 
 /**
  * A simple type that describes the task graph to be built.
@@ -14,48 +15,50 @@ import org.jdryad.dag.SimpleInputSplitterFactory.SplitterType;
 public class GraphSpecification
 {
     /** The sources of inputs */
-    private final Set<InputSpecification> myInputSpecs;
+    private final Map<String, InputSpecification> myKey2InputMap;
 
     /** The set of user defined functions */
-    private final Set<UDFSpecification> myFunctions;
+    private final Map<String, UDFSpecification> myKey2UDFMap;
 
     /** CTOR */
     public GraphSpecification()
     {
-        myInputSpecs = new HashSet<InputSpecification>();
-        myFunctions = new HashSet<UDFSpecification>();
+        myKey2InputMap = new HashMap<String, InputSpecification>();
+        myKey2UDFMap = new HashMap<String, UDFSpecification>();
     }
 
     /** Adds input to the graph specification */
-    public GraphSpecification addInput(String inputSrc,
-                                       SplitterType splitter,
-                                       int numSplits)
+    public InputSpecification addInput(String inputIdentifier)
     {
-        myInputSpecs.add(new InputSpecification(inputSrc, splitter, numSplits));
-        return this;
+        InputSpecification input = new InputSpecification(inputIdentifier);
+        myKey2InputMap.put(inputIdentifier, input);
+        return input;
     }
 
     /** Adds a specification for a function and its input */
-    public GraphSpecification addUDFSpecification(
-        String function, String alias, Set<String> inputs, boolean isPartial)
+    public UDFSpecification addUDF(
+        String identifier,
+        Class<? extends UserDefinedFunction> udfClass)
     {
-        myFunctions.add(new UDFSpecification(function, alias, inputs, isPartial));
-        return this;
+        UDFSpecification udf =
+            new UDFSpecification(identifier, udfClass);
+        myKey2UDFMap.put(identifier, udf);
+        return udf;
     }
 
     /**
      * Returns the value of inputSpecs
      */
-    public Set<InputSpecification> getInputSpecs()
+    public Collection<InputSpecification> getInputSpecs()
     {
-        return myInputSpecs;
+        return myKey2InputMap.values();
     }
 
     /**
      * Returns the value of functions
      */
-    public Set<UDFSpecification> getFunctions()
+    public Collection<UDFSpecification> getFunctions()
     {
-        return myFunctions;
+        return myKey2UDFMap.values();
     }
 }

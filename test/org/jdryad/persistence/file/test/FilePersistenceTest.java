@@ -12,7 +12,7 @@ import org.jdryad.dag.FunctionOutput;
 import org.jdryad.dag.IOFactory;
 import org.jdryad.dag.IOKey;
 import org.jdryad.dag.Record;
-import org.jdryad.dag.IOKey.SourceType;
+import org.jdryad.dag.IOSource;
 import org.jdryad.persistence.file.FileIOFactory;
 import org.testng.AssertJUnit;
 import org.testng.annotations.Test;
@@ -118,7 +118,7 @@ public class FilePersistenceTest
     /** Factory method for making a key to the file */
     private IOKey makeKey()
     {
-        return new IOKey(SourceType.FILE, "C:\\temp\\test1.txt");
+        return new IOKey(PersistenceSource.IOSource, "C:\\temp\\test1.txt");
     }
 
     /** Factory method for making a IOFactory for reading data */

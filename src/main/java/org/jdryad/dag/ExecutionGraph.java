@@ -14,14 +14,15 @@ import java.util.Set;
  * Type that defines a job graph that needs to be executed on a distributed
  * cluster
  *
+ * TODO:
+ * 1. Add a check for detecting cycles.
+ *
  * @author subbiahb
  * @version $Id:$
  */
 public class ExecutionGraph
 {
     private final ExecutionGraphID myID;
-
-    private final Set<VertexID> myInputs;
 
     private final Map<VertexID, Vertex> myVertices;
 
@@ -36,20 +37,14 @@ public class ExecutionGraph
     /**
      * CTOR
      */
-    public ExecutionGraph(ExecutionGraphID id, Set<Vertex> inputs)
+    public ExecutionGraph(ExecutionGraphID id)
     {
         myID = id;
-        myInputs = new HashSet<VertexID>();
         myVertices = new HashMap<VertexID, Vertex>();
         myEdges = new HashSet<Edge>();
         myDataToEdgeMap = new HashMap<IOKey, Edge>();
         myOutgoingEdges = new HashMap<VertexID, List<Edge>>();
         myIncomingEdges = new HashMap<VertexID, List<Edge>>();
-
-        for (Vertex v : inputs) {
-            myInputs.add(v.getID());
-            myVertices.put(v.getID(), v);
-        }
     }
 
     /**
@@ -58,14 +53,6 @@ public class ExecutionGraph
     public ExecutionGraphID getID()
     {
         return myID;
-    }
-
-    /**
-     * Returns the value of inputs
-     */
-    public Set<VertexID> getInputs()
-    {
-        return myInputs;
     }
 
     /** Returns Vertex corresponding to the given id */

@@ -1,59 +1,23 @@
 package org.jdryad.dag;
 
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Type to be used for representing the keys used for identifying the
  * i/p or o/p sources.
- * 
+ *
  * @author Balraja Subbiah
  * @version $Id:$
  */
 public class IOKey
 {
-    /** An enum to denote the type of the i/p or o/p source */
-    public static enum SourceType {
-        FILE(1),
-        DB(2),
-        CASSANDRA(3);
-        
-        private static Map<Integer, SourceType> ourID2SrcTypeMap =
-        	new HashMap<Integer, SourceType>();
-        
-        static {
-        	for (SourceType src : values()) {
-        		ourID2SrcTypeMap.put(src.getTypeID(), src);
-        	}
-        }
-        
-        /** Returns the type by identifier */
-        public static SourceType getTypeByID(int identifier)
-        {
-        	return ourID2SrcTypeMap.get(Integer.valueOf(identifier));
-        }
-        
-        private int myTypeId;
-        
-        SourceType(int typeId) 
-        {
-        	myTypeId = typeId;
-		}   
-        
-        public int getTypeID()
-        {
-        	return myTypeId;
-        }
-    }
-    
-    private final SourceType mySourceType;
-    
+    private final IOSource mySourceType;
+
     private final String myIdentifier;
 
     /**
      * CTOR
      */
-    public IOKey(SourceType sourceType, String identifier)
+    public IOKey(IOSource sourceType, String identifier)
     {
         super();
         mySourceType = sourceType;
@@ -63,7 +27,7 @@ public class IOKey
     /**
      * Returns the value of sourceType
      */
-    public SourceType getSourceType()
+    public IOSource getSourceType()
     {
         return mySourceType;
     }
@@ -128,5 +92,5 @@ public class IOKey
         return "Key [myIdentifier=" + myIdentifier + ", mySourceType="
                 + mySourceType + "]";
     }
-    
+
 }

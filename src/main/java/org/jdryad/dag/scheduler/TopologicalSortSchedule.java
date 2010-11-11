@@ -96,6 +96,6 @@ public class TopologicalSortSchedule implements Schedule
     @Override
     public boolean isCompleted()
     {
-
+        for ()
     }
 }

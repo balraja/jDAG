@@ -9,6 +9,7 @@ import java.io.ObjectOutputStream;
 import org.jdryad.dag.FunctionOutput;
 import org.jdryad.dag.IOKey;
 import org.jdryad.dag.Record;
+import org.jdryad.dag.IOSource;
 import org.jdryad.persistence.PersistenceException;
 
 /**
@@ -27,7 +28,7 @@ public class FileOutput implements FunctionOutput
     /** CTOR */
     public FileOutput(IOKey key)
     {
-        assert key.getSourceType() == IOKey.SourceType.FILE;
+        assert key.getSourceType() == PersistenceSource.IOSource;
         // For file sources the identifier corresponds to the file path.
         myFile = new File(key.getIdentifier());
         try {

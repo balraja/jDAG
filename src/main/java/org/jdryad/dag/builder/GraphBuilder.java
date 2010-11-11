@@ -4,29 +4,20 @@ import com.google.common.base.Preconditions;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-
-import org.jdryad.common.Pair;
 import org.jdryad.dag.Edge;
 import org.jdryad.dag.ExecutionGraph;
 import org.jdryad.dag.ExecutionGraphID;
 import org.jdryad.dag.IOKey;
+import org.jdryad.dag.IOSource;
 import org.jdryad.dag.SimpleVertex;
 import org.jdryad.dag.UDFIdentityGenerator;
-import org.jdryad.dag.Vertex;
 import org.jdryad.dag.VertexID;
+import org.jdryad.persistence.medium.PersistenceMedium;
 
 /**
  * A simple type for building graphs. It takes a <code>GraphSpecification</code>
  * and builds a ExecutionGraph from it.
- *
- * TODO:
- * 1. Add functionality where a function can produce multiple outputs to be
- *    feed into multiple other functions.
- * 2. Add a case where an input can be fed into a function without splitting.
  *
  * @author Balraja Subbiah
  * @version $Id:$
@@ -35,29 +26,23 @@ public class GraphBuilder
 {
     public static final String SPLIT_VERTEX_SUFFIX = "splitter";
 
-    private final IOKeyFactory myIOKeyFactory;
+    private final GraphSpecification myGraphSpecification;
+
+    private final ExecutionGraphID myGraphID;
+
+    private final PersistenceMedium myPersistenceMedium;
 
     private final UDFIdentityGenerator myUdfIdentityGenerator;
 
-    private final Map<String, VertexID> myInputToSplitVertex;
-
-    private final Map<String, List<VertexID>> myFunctionToParallelVertices;
+    private final IOSource myIntermediateIOSrc;
 
     /**
      * CTOR
      */
-    public GraphBuilder(IOKeyFactory iOKeyFactory)
-    {
-        myIOKeyFactory = iOKeyFactory;
-        myUdfIdentityGenerator = new UDFIdentityGenerator();
-        myInputToSplitVertex = new HashMap<String, VertexID>();
-        myFunctionToParallelVertices =
-            new HashMap<String, List<VertexID>>();
-    }
-
-    /** Builds the <code>ExecutionGraph</code> from the given specification */
-    public ExecutionGraph build(GraphSpecification specification,
-                                ExecutionGraphID graphID)
+    public GraphBuilder(PersistenceMedium persistenceMedium,
+                        GraphSpecification specification,
+                        ExecutionGraphID graphID,
+                        IOSource intermediateIOSource)
     {
         // Asserts that we have atleast one input to be split.
         Preconditions.checkArgument(
@@ -65,20 +50,31 @@ public class GraphBuilder
         Preconditions.checkArgument(
             !specification.getFunctions().isEmpty());
 
-        ArrayList<Vertex> inVertices = new ArrayList<Vertex>();
-        for (InputSpecification ioSpec : specification.getInputSpecs()) {
+        myPersistenceMedium = persistenceMedium;
+        myIntermediateIOSrc = intermediateIOSource;
+        myGraphID = graphID;
+        myGraphSpecification = specification;
+        myUdfIdentityGenerator = new UDFIdentityGenerator();
+    }
+
+    /** Builds the <code>ExecutionGraph</code> from the given specification */
+    public ExecutionGraph build()
+    {
+        ExecutionGraph graph = new ExecutionGraph(myGraphID);
+        for (InputSpecification ioSpec : myGraphSpecification.getInputSpecs()) {
             IOKey input =
-                myIOKeyFactory.makeKey(ioSpec.getIdentifier());
-            // TODO Add support for user defined split function.
+                myPersistenceMedium.makeKey(ioSpec.getSource(),
+                                            ioSpec.getPersistenceSourceType());
+
             VertexID vertexID =
-                new VertexID(ioSpec.getIdentifier() + SPLIT_VERTEX_SUFFIX);
-            // TODO Add support for user defined split ratio.
+                new VertexID(ioSpec.getIdentifier());
             ArrayList<IOKey> outputs = new ArrayList<IOKey>();
-            for (int i = 0; i < ioSpec.getNumSplits(); i++) {
-                outputs.add(myIOKeyFactory.makeKey(vertexID, i));
+            for (String outputKey : ioSpec.getFragementIds()) {
+                outputs.add(
+                    myPersistenceMedium.makeKey(outputKey,
+                                                myIntermediateIOSrc));
             }
-            myInputToSplitVertex.put(ioSpec.getIdentifier(), vertexID);
-            inVertices.add(
+            graph.addVertex(
                 new SimpleVertex(vertexID,
                                  myUdfIdentityGenerator.getMapperIdentifier(
                                      ioSpec.getSplitter()),
@@ -86,14 +82,13 @@ public class GraphBuilder
                                  outputs));
         }
 
-        ExecutionGraph graph =
-            new ExecutionGraph(graphID, new HashSet<Vertex>(inVertices));
-        for (UDFSpecification udfSpec : specification.getFunctions()) {
-             if (udfSpec.worksOnSplitInput()) {
+
+        for (UDFSpecification udfSpec : myGraphSpecification.getFunctions()) {
+             if (udfSpec.getFunctionInputs().getNumCombinations() > 1) {
                  processParallelFunctionSpec(udfSpec, graph);
              }
              else {
-                 processCombineFunctionSpec(udfSpec, graph);
+                 processSimpleFunctionSpec(udfSpec, graph);
              }
         }
         return graph;
@@ -103,86 +98,50 @@ public class GraphBuilder
      * Creates vertices for a function that's to be executed in parallel for
      * splits of inputs.
      */
-    private void processCombineFunctionSpec(
-        UDFSpecification spec, ExecutionGraph executionGraph)
+    private void processSimpleFunctionSpec(
+        UDFSpecification spec, ExecutionGraph graph)
     {
-        // A combiner can have only one input.
+        // A simple function can have only one input combination
         Preconditions.checkArgument(
-           spec.getInputSources().size() == 1,
+           spec.getFunctionInputs().getNumCombinations() == 1,
            "Get more than one argument for combiner function "
-           + spec.getName());
+           + spec.getIdentifier());
 
-        List<Pair<VertexID, IOKey>> parameters = null;
-        for (String paramID : spec.getInputSources()) {
-            if (myInputToSplitVertex.containsKey(paramID)) {
-                // The input is a split input
-                parameters = getIOSplits(paramID, executionGraph);
-            }
-            else {
-                // Its a o/p from a parallel function.
-                parameters =
-                    getParallelFunctionOutputs(paramID, executionGraph);
-            }
-        }
-
-        String udfId =
+        List<String> params =
+            spec.getFunctionInputs().getInputAt(0);
+        List<String> sources =
+            spec.getFunctionInputs().getFragmentSourcesFor(0);
+        List<IOKey> inputs = new ArrayList<IOKey>();
+        String udfID =
             myUdfIdentityGenerator.getFunctionIdentifier(
-                spec.getIdentifier());
+                spec.getUDFName());
         List<Edge> edges = new ArrayList<Edge>();
-        ArrayList<IOKey> inputs = new ArrayList<IOKey>();
-        VertexID vertexID = new VertexID(spec.getName() + ".MERGER");
-        for (Pair<VertexID, IOKey> param : parameters) {
-            inputs.add(param.getSecond());
-            edges.add(new Edge(param.getFirst(),
+
+        VertexID vertexID = new VertexID(spec.getParallelFunctionIds().get(0));
+        for (String param : params) {
+            IOKey key =  myPersistenceMedium.makeKey(param, myIntermediateIOSrc);
+            inputs.add(key);
+            edges.add(new Edge(new VertexID(sources.get(0)),
                                vertexID,
-                               param.getSecond()));
+                               key));
         }
-        IOKey opKey = myIOKeyFactory.makeKey(vertexID.getName() + " OUT");
-        executionGraph.addVertex(
+
+        ArrayList<IOKey> outputs = new ArrayList<IOKey>();
+        for (FunctionOutput output : spec.getFunctionOutputs()) {
+            outputs.add(
+                myPersistenceMedium.makeKey(
+                    output.getFragementIds().get(0),
+                    spec.getOutputIoSource() != null ?
+                        spec.getOutputIoSource()
+                        : myIntermediateIOSrc));
+        }
+
+        graph.addVertex(
              new SimpleVertex(vertexID,
-                              udfId,
+                              udfID,
                               inputs,
-                              Collections.singletonList(opKey)));
-        executionGraph.addEdges(edges);
-        myFunctionToParallelVertices.put(spec.getName(),
-                                         Collections.singletonList(vertexID));
-    }
-
-    /** Returns the <code>IOKey</code>s corresponding to the input that's split */
-    private List<Pair<VertexID, IOKey>> getIOSplits(
-            String ioIdentifier, ExecutionGraph executionGraph)
-    {
-        // The input is a split input
-        Vertex v = executionGraph.getVertex(
-                       myInputToSplitVertex.get(ioIdentifier));
-        List<Pair<VertexID, IOKey>> splitInputs =
-            new ArrayList<Pair<VertexID,IOKey>>();
-        for (IOKey opKey : v.getOutputs()) {
-            splitInputs.add(new Pair<VertexID, IOKey>(v.getID(), opKey));
-        }
-        return splitInputs;
-    }
-
-    /**
-     * Returns the <code>IOKey</code>s corresponding to a function's
-     * output.
-     */
-    private List<Pair<VertexID, IOKey>> getParallelFunctionOutputs(
-            String functionIdentifier, ExecutionGraph executionGraph)
-    {
-        // Its a o/p from a parallel function.
-        // TODO Here we assume a function to be many to one.
-        // FIx this assumption.
-        List<Pair<VertexID, IOKey>> ops =
-            new ArrayList<Pair<VertexID,IOKey>>();
-        for (VertexID vertexId :
-                 myFunctionToParallelVertices.get(functionIdentifier))
-        {
-            Vertex v = executionGraph.getVertex(vertexId);
-            ops.add(new Pair<VertexID, IOKey>(v.getID(),
-                                              v.getOutputs().get(0)));
-        }
-        return ops;
+                              outputs));
+        graph.addEdges(edges);
     }
 
     /**
@@ -190,47 +149,49 @@ public class GraphBuilder
      * splits of inputs.
      */
     private void processParallelFunctionSpec(
-        UDFSpecification spec, ExecutionGraph executionGraph)
+        UDFSpecification spec, ExecutionGraph graph)
     {
-        ArrayList<List<Pair<VertexID, IOKey>>> parameters =
-            new ArrayList<List<Pair<VertexID,IOKey>>>();
-        for (String paramID : spec.getInputSources()) {
-            if (myInputToSplitVertex.containsKey(paramID)) {
-                // The input is a split input
-                parameters.add(getIOSplits(paramID, executionGraph));
-            }
-            else {
-                // Its a o/p from a parallel function.
-                parameters.add(
-                    getParallelFunctionOutputs(paramID, executionGraph));
-            }
-        }
-
         String udfIdentifier =
             myUdfIdentityGenerator.getFunctionIdentifier(
                 spec.getIdentifier());
-        int firstParamSplitSize = parameters.get(0).size();
-        ArrayList<VertexID> parallelVertices = new ArrayList<VertexID>();
-        for (int i = 0; i < firstParamSplitSize; i++) {
-            VertexID vertexID = new VertexID(spec.getName() + i);
+        List<String> functionIds = spec.getParallelFunctionIds();
+        for (int i = 0;
+             i < spec.getFunctionInputs().getNumCombinations();
+             i++)
+        {
+            VertexID vertexID = new VertexID(functionIds.get(i));
             List<Edge> edges = new ArrayList<Edge>();
             ArrayList<IOKey> inputs = new ArrayList<IOKey>();
-            for (List<Pair<VertexID, IOKey>> param : parameters) {
-                Pair<VertexID, IOKey> inputWithSrc = param.get(i);
-                inputs.add(param.get(i).getSecond());
-                edges.add(new Edge(inputWithSrc.getFirst(),
+            List<String> parameters = spec.getFunctionInputs().getInputAt(i);
+            List<String> sources = spec.getFunctionInputs()
+                                       .getFragmentSourcesFor(i);
+            for (int j = 0; j < parameters.size(); j++)
+            {
+                IOKey key =
+                    myPersistenceMedium.makeKey(parameters.get(j),
+                                                myIntermediateIOSrc);
+                inputs.add(key);
+                edges.add(new Edge(new VertexID(sources.get(j)),
                                    vertexID,
-                                   inputWithSrc.getSecond()));
+                                   key));
             }
-            IOKey opKey = myIOKeyFactory.makeKey(vertexID, i);
-            executionGraph.addVertex(
+
+            ArrayList<IOKey> outputs = new ArrayList<IOKey>();
+            for (FunctionOutput output : spec.getFunctionOutputs()) {
+                outputs.add(
+                    myPersistenceMedium.makeKey(
+                        output.getFragementIds().get(i),
+                        spec.getOutputIoSource() != null ?
+                            spec.getOutputIoSource()
+                            : myIntermediateIOSrc));
+            }
+
+            graph.addVertex(
                  new SimpleVertex(vertexID,
                                   udfIdentifier,
                                   inputs,
-                                  Collections.singletonList(opKey)));
-            executionGraph.addEdges(edges);
-            parallelVertices.add(vertexID);
+                                  outputs));
+            graph.addEdges(edges);
         }
-        myFunctionToParallelVertices.put(spec.getName(), parallelVertices);
     }
 }

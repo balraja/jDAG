@@ -14,11 +14,11 @@ import org.jdryad.dag.IOKey;
 import org.jdryad.dag.InputSplitter;
 import org.jdryad.dag.MapperFunction;
 import org.jdryad.dag.SimpleVertex;
+import org.jdryad.dag.IOSource;
 import org.jdryad.dag.UDFFactory;
 import org.jdryad.dag.UDFIdentityGenerator;
 import org.jdryad.dag.UserDefinedFunction;
 import org.jdryad.dag.VertexID;
-import org.jdryad.dag.IOKey.SourceType;
 
 /**
  * Extends SimpleVertex to support the execution of a function.
@@ -53,7 +53,7 @@ public class ExecutableVertex extends SimpleVertex
 	{
 		ArrayList<IOKey> iokeyList = new ArrayList<IOKey>();
 		for (ExecuteVertexMessage.IOKey key : messageIOKeys) {
-			iokeyList.add(new IOKey(SourceType.getTypeByID(key.getTypeId()),
+			iokeyList.add(new IOKey(IOSource.getTypeByID(key.getTypeId()),
 					                key.getIoIdentifier()));
 		}
 		return iokeyList;
