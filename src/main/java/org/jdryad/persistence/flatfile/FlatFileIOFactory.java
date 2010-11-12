@@ -1,4 +1,4 @@
-package org.jdryad.persistence.flatten;
+package org.jdryad.persistence.flatfile;
 
 import com.google.common.base.Preconditions;
 
@@ -13,9 +13,9 @@ import org.jdryad.dag.IOSource;
  * @version $Id:$
  *
  */
-public class FlattenFileIOFactory implements IOFactory
+public class FlatFileIOFactory implements IOFactory
 {
-    private static final String SEPERATOR = ":";
+
 
     /**
      * {@inheritDoc}
@@ -24,12 +24,12 @@ public class FlattenFileIOFactory implements IOFactory
     public FunctionInput makeInput(IOKey key)
     {
         Preconditions.checkArgument(
-                key.getSourceType() == IOSource.FLATTEN_FILE);
+            key.getSourceType() == IOSource.FLAT_FILE);
         String[] splits = key.getIdentifier().split(SEPERATOR);
         try {
             LineInterpreter lineInterpreter =
                 (LineInterpreter) Class.forName(splits[0]).newInstance();
-            return new FlattenFileInput(lineInterpreter, splits[1]);
+            return new FlatFileInput(lineInterpreter, splits[1]);
         }
         catch (InstantiationException e) {
              throw new RuntimeException(e);
@@ -54,7 +54,7 @@ public class FlattenFileIOFactory implements IOFactory
         try {
             LineInterpreter lineInterpreter =
                 (LineInterpreter) Class.forName(splits[0]).newInstance();
-            return new FlattenFileOutput(lineInterpreter, splits[1]);
+            return new FlatFileOutput(lineInterpreter, splits[1]);
         }
         catch (InstantiationException e) {
              throw new RuntimeException(e);

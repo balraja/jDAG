@@ -1,4 +1,4 @@
-package org.jdryad.persistence.flatten;
+package org.jdryad.persistence.flatfile;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -14,7 +14,7 @@ import org.jdryad.dag.Record;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-public class FlattenFileInput implements FunctionInput
+public class FlatFileInput implements FunctionInput
 {
     private final LineInterpreter myLineInterpreter;
 
@@ -81,7 +81,7 @@ public class FlattenFileInput implements FunctionInput
         }
     }
 
-    public FlattenFileInput(LineInterpreter recordFactory, String fileName)
+    public FlatFileInput(LineInterpreter recordFactory, String fileName)
     {
         myFile = new File(fileName);
         myLineInterpreter = recordFactory;

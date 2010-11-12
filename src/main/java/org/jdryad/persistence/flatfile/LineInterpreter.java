@@ -1,10 +1,10 @@
-package org.jdryad.persistence.flatten;
+package org.jdryad.persistence.flatfile;
 
 import org.jdryad.dag.Record;
 
 /**
- * A typical interface to be used for reading records from a file
- * where the record data is stored line by line.
+ * A typical interface to be used for reading records from a flat file
+ * where the record data is stored in a line.
  *
  * @author Balraja Subbiah
  * @version $Id:$

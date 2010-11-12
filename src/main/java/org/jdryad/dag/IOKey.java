@@ -1,6 +1,5 @@
 package org.jdryad.dag;
 
-
 /**
  * Type to be used for representing the keys used for identifying the
  * i/p or o/p sources.

@@ -1,4 +1,4 @@
-package org.jdryad.persistence.flatten;
+package org.jdryad.persistence.flatfile;
 
 import com.google.common.base.Preconditions;
 
@@ -15,7 +15,7 @@ import org.jdryad.dag.Record;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-public class FlattenFileOutput implements FunctionOutput
+public class FlatFileOutput implements FunctionOutput
 {
     private final PrintWriter myWriter;
 
@@ -24,7 +24,7 @@ public class FlattenFileOutput implements FunctionOutput
     /**
      * CTOR
      */
-    public FlattenFileOutput(LineInterpreter lineInterpreter, String fileName)
+    public FlatFileOutput(LineInterpreter lineInterpreter, String fileName)
     {
         myLineInterpreter = lineInterpreter;
         File f = new File(fileName);

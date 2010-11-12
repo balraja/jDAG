@@ -4,7 +4,7 @@ import java.util.List;
 
 /**
  * A simple type that abstracts out the combinations of input to be processed
- * by the system. If there are more than one combination then each combination
+ * by a function. If there are more than one combination then each combination
  * will be processed in parallel.
  *
  * @author Balraja Subbiah

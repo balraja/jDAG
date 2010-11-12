@@ -18,7 +18,7 @@ import org.jdryad.dag.builder.GraphSpecification;
 import org.jdryad.dag.builder.InputSpecification;
 import org.jdryad.dag.builder.Join;
 import org.jdryad.dag.builder.UDFSpecification;
-import org.jdryad.persistence.flatten.LineInterpreter;
+import org.jdryad.persistence.flatfile.LineInterpreter;
 
 /**
  * A simple testcase for <code>GraphBuilder</code>

@@ -40,4 +40,14 @@ public class Collect implements FunctionInputs
     {
         return 1;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<String> getFragmentSourcesFor(int index)
+    {
+        Preconditions.checkArgument(index == 0);
+        return myFragments.getFragmentSources();
+    }
 }

@@ -10,7 +10,7 @@ import java.util.Map;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-public class UDFUtil
+public final class UDFUtil
 {
     private UDFUtil()
     {

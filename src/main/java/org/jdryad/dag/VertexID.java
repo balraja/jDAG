@@ -11,7 +11,7 @@ import java.io.Serializable;
 public class VertexID implements Serializable
 {
 	private static final long serialVersionUID = -9172393936458409145L;
-	
+
 	private String myName;
 
     /**
@@ -88,6 +88,4 @@ public class VertexID implements Serializable
     {
         return "VertexID [myName=" + myName + "]";
     }
-
-
 }
