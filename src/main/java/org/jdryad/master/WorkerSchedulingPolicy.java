@@ -1,7 +1,7 @@
 package org.jdryad.master;
 
-import org.jdryad.com.HostID;
 import org.jdryad.com.messages.UpAndLiveProtos.UpAndAliveMessage;
+import org.jdryad.commmunicator.HostID;
 import org.jdryad.dag.GraphVertexID;
 
 /**

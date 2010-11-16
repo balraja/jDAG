@@ -1,4 +1,4 @@
-package org.jdryad.com;
+package org.jdryad.commmunicator;
 
 /**
  * Type that defines the basic definition for a piece of code that

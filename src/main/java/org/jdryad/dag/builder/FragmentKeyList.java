@@ -3,8 +3,8 @@ package org.jdryad.dag.builder;
 import java.util.ArrayList;
 
 /**
- * A simple iterator that returns the keys corresponding to the fragements
- * of the data.
+ * A simple iterator that returns keys corresponding to the fragements
+ * of data.
  *
  * @author Balraja Subbiah
  * @version $Id:$

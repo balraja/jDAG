@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage;
+import org.jdryad.communicator.messages.ExecuteVertexProtos.ExecuteVertexMessage;
 import org.jdryad.dag.ExecutionContext;
 import org.jdryad.dag.ExecutionResult;
 import org.jdryad.dag.IOKey;

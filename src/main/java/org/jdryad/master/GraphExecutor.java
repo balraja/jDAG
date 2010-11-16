@@ -11,21 +11,21 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
-import org.jdryad.com.Communicator;
-import org.jdryad.com.HostID;
-import org.jdryad.com.Message;
-import org.jdryad.com.Reactor;
-import org.jdryad.com.messages.ExecuteVertexProtos;
-import org.jdryad.com.messages.JDAGMessageType;
-import org.jdryad.com.messages.ProtobufMessageMarshallerFactory;
-import org.jdryad.com.messages.SimpleMessage;
-import org.jdryad.com.messages.UpAndLiveProtos;
-import org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage;
-import org.jdryad.com.messages.ExecuteVertexStatusProtos.ExecuteVertexStatusMessage;
-import org.jdryad.com.rabbitmq.RabbitMQCommunicator;
-import org.jdryad.com.rabbitmq.RabbitMQConfiguration;
+import org.jdryad.commmunicator.Communicator;
+import org.jdryad.commmunicator.HostID;
+import org.jdryad.commmunicator.Message;
+import org.jdryad.commmunicator.Reactor;
+import org.jdryad.commmunicator.messages.ProtobufMessageMarshallerFactory;
+import org.jdryad.commmunicator.rabbitmq.RabbitMQCommunicator;
+import org.jdryad.commmunicator.rabbitmq.RabbitMQConfiguration;
 import org.jdryad.common.Application;
 import org.jdryad.common.ApplicationExecutor;
+import org.jdryad.communicator.messages.ExecuteVertexProtos;
+import org.jdryad.communicator.messages.JDAGMessageType;
+import org.jdryad.communicator.messages.SimpleMessage;
+import org.jdryad.communicator.messages.UpAndLiveProtos;
+import org.jdryad.communicator.messages.ExecuteVertexProtos.ExecuteVertexMessage;
+import org.jdryad.communicator.messages.ExecuteVertexStatusProtos.ExecuteVertexStatusMessage;
 import org.jdryad.config.ConfigurationProvider;
 import org.jdryad.dag.ExecutionGraph;
 import org.jdryad.dag.ExecutionGraphID;
@@ -147,10 +147,10 @@ public class GraphExecutor implements Application
                                        .newBuilder()
                                        .setUdfIdentifier(vertex.getUDFIdentifier())
                                        .addAllInputs(
-                                           (Iterable<? extends org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey>)
+                                           (Iterable<? extends org.jdryad.communicator.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey>)
                                            makeIOKeys(vertex.getInputs()).iterator())
                                        .addAllOutputs(
-                                           (Iterable<? extends org.jdryad.com.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey>)
+                                           (Iterable<? extends org.jdryad.communicator.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey>)
                                            makeIOKeys(vertex.getOutputs()).iterator())
                                        .build();
                 SimpleMessage simpleMessage =

@@ -44,7 +44,7 @@ public class FileSystem implements PersistenceMedium
     public IOKey makeKey(String key, IOSource source)
     {
         Preconditions.checkArgument(source == IOSource.SERIALIZED_FILE
-                                    || source == IOSource.FLATTEN_FILE);
+                                    || source == IOSource.FLAT_FILE);
         String intermediateFile =
             myRootDirectory + File.separator + key;
         return new IOKey(source, intermediateFile);

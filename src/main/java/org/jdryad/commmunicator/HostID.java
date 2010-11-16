@@ -1,4 +1,4 @@
-package org.jdryad.com;
+package org.jdryad.commmunicator;
 
 /**
  * Type for representing an unique identifier corresponding to a host.

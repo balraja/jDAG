@@ -1,4 +1,4 @@
-package org.jdryad.com;
+package org.jdryad.commmunicator;
 
 /**
  * Type that defines the protocol used for serializing/deserializing

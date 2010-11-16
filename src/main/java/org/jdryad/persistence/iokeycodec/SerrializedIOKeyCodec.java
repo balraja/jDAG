@@ -1,27 +1,27 @@
-package org.jdryad.persistence.flatfile;
+package org.jdryad.persistence.iokeycodec;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.jdryad.common.Pair;
-import org.jdryad.persistence.IOKeyCodec;
 
 /**
+ * The codec to be used for interpreting keys of type
+ * <code>IOSoutce#SERIALIZED_FILE</code>.
+ *
  * @author Balraja Subbiah
  * @version $Id:$
- *
  */
-public class FlatFileCodec implements IOKeyCodec
+public class SerrializedIOKeyCodec implements IOKeyCodec
 {
-    private static final String SEPERATOR = "#";
-
     /**
      * {@inheritDoc}
      */
     @Override
     public Pair<String, List<Object>> getDecodedKey(String encodedKey)
     {
-        // TODO Auto-generated method stub
-        return null;
+        return new Pair<String, List<Object>>(
+            encodedKey, Collections.emptyList());
     }
 
     /**
@@ -30,8 +30,7 @@ public class FlatFileCodec implements IOKeyCodec
     @Override
     public String getEncodedKey(String identifier, Object... attributes)
     {
-        // TODO Auto-generated method stub
-        return null;
+        return identifier;
     }
 
 }

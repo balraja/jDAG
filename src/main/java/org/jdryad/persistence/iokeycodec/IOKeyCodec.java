@@ -1,4 +1,4 @@
-package org.jdryad.persistence;
+package org.jdryad.persistence.iokeycodec;
 
 import java.util.List;
 

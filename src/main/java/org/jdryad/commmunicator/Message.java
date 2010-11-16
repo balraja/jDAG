@@ -1,4 +1,4 @@
-package org.jdryad.com;
+package org.jdryad.commmunicator;
 
 /**
  * A tagged type to denote a message being sent on wire.

@@ -1,4 +1,4 @@
-package org.jdryad.com;
+package org.jdryad.commmunicator;
 
 /**
  * A simple type that abstracts the type of messages sent over wire.

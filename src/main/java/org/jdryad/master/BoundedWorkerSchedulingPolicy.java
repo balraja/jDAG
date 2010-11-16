@@ -8,8 +8,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.jdryad.com.HostID;
-import org.jdryad.com.messages.UpAndLiveProtos.UpAndAliveMessage;
+import org.jdryad.commmunicator.HostID;
+import org.jdryad.communicator.messages.UpAndLiveProtos.UpAndAliveMessage;
 import org.jdryad.dag.ExecutionGraphID;
 import org.jdryad.dag.GraphVertexID;
 

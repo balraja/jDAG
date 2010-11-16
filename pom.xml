@@ -1,11 +1,66 @@
-<?xml version="1.0" encoding="UTF-8"?><project>
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+	
+  <name>jDAG</name>
+  <url></url>
+
+  <licenses>
+    <license>
+      <name>Apache 2</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+      <comments>A business-friendly OSS license</comments>
+    </license>
+  </licenses>
+
+  <organization>
+    <name>OpenSource</name>
+    <url>http://www.sonatype.com</url>
+  </organization>
+
+  <developers>
+    <developer>
+      <name>Balraja Subbiah</name>
+      <email>balrajasubbiah@gmail.com</email>
+      <organization>OpenSource</organization>
+      <roles>
+        <role>project lead and sole developer</role>
+      </roles>
+    </developer>
+  </developers>
+  
   <modelVersion>4.0.0</modelVersion>
   <groupId>jDAG</groupId>
   <artifactId>jDAG</artifactId>
   <version>0.1</version>
+  <packaging>jar</packaging>
+  
   <build>
-    <sourceDirectory>src</sourceDirectory>
-    <testSourceDirectory>test</testSourceDirectory>
+	<directory>${project.basedir}/target</directory>
+	<outputDirectory>
+		${project.build.directory}/classes
+    </outputDirectory>
+	<finalName>${project.artifactId}-${project.version}</finalName>
+	<testOutputDirectory>
+		${project.build.directory}/test-classes
+    </testOutputDirectory>
+	<sourceDirectory>
+		${project.basedir}/src/main/java
+    </sourceDirectory>
+	<scriptSourceDirectory>src/main/scripts</scriptSourceDirectory>
+	<testSourceDirectory>
+		${project.basedir}/src/test/java
+    </testSourceDirectory>
+	<resources>
+		<resource>
+			<directory>${project.basedir}/src/main/resources</directory>
+		</resource>
+	</resources>
+	<testResources>
+		<testResource>
+			<directory>${project.basedir}/src/test/resources</directory>
+		</testResource>
+	</testResources>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -40,17 +95,13 @@
     </plugin>
     </plugins>
   </build>
+  
   <dependencies>
     <dependency>
         <groupId>com.google.protobuf</groupId>
         <artifactId>protobuf-java</artifactId>
         <version>2.3.0</version>
     </dependency>
-	<dependency>
-	    <groupId>com.rabbitmq</groupId>
-	    <artifactId>amqp-client</artifactId>
-	    <version>2.1.0</version>
-	</dependency>
   	<dependency>
   		<groupId>commons-collections-3.2.1</groupId>
   		<artifactId>commons-collections-3.2.1</artifactId>
@@ -89,5 +140,28 @@
         <artifactId>guice</artifactId>
         <version>2.0</version>
     </dependency>
+	<dependency>
+		<groupId>org.hornetq</groupId>
+		<artifactId>hornetq-core-client</artifactId>
+		<version>2.0.0.GA</version>
+		<scope>compile</scope>
+	</dependency>
+	<dependency>
+		<groupId>org.hornetq</groupId>
+		<artifactId>hornetq-jms-client</artifactId>
+		<version>2.0.0.GA</version>
+		<scope>compile</scope>
+	</dependency>
+	<dependency>
+		<groupId>org.hornetq</groupId>
+		<artifactId>hornetq-transports</artifactId>
+		<version>2.0.0.GA</version>
+		<scope>compile</scope>
+	</dependency>
+	<dependency>
+		<groupId>org.jboss.netty</groupId>
+		<artifactId>netty</artifactId>
+		<version>3.1.0.GA</version>
+	</dependency>  
   </dependencies>
 </project>
