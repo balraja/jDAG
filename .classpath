@@ -1,20 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src/main/java"/>
-	<classpathentry kind="lib" path="C:/projects/jDAG/externallibraries/protobuf-java-2.3.0.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="C:/software/apache/guava-r06/guava-r06.jar"/>
-	<classpathentry kind="lib" path="C:/software/apache/commons-configuration-1.6/commons-configuration-1.6.jar" sourcepath="C:/software/apache/commons-configuration-1.6-src/commons-configuration-1.6-src/src/java"/>
-	<classpathentry kind="lib" path="C:/software/apache/commons-lang-2.5/commons-lang-2.5.jar"/>
-	<classpathentry kind="lib" path="C:/software/apache/commons-collections-3.2.1/commons-collections-3.2.1.jar"/>
-	<classpathentry kind="lib" path="C:/software/apache/commons-primitives-1.0/commons-primitives-1.0.jar"/>
-	<classpathentry kind="lib" path="C:/software/jboss/hornetq-2.1.1.Final/lib/hornetq-bootstrap.jar"/>
-	<classpathentry kind="lib" path="C:/software/jboss/hornetq-2.1.1.Final/lib/hornetq-core.jar" sourcepath="C:/software/jboss/hornetq-2.1.1.Final/hornetq-2.1.2.Final-src/hornetq-2.1.2.Final-src/src/main"/>
-	<classpathentry kind="lib" path="C:/software/jboss/hornetq-2.1.1.Final/lib/hornetq-core-client.jar"/>
-	<classpathentry kind="lib" path="C:/software/jboss/hornetq-2.1.1.Final/lib/netty.jar"/>
-	<classpathentry kind="lib" path="C:/software/codestyle/testng-5.14/testng-5.14.jar"/>
-	<classpathentry kind="lib" path="C:/software/jboss/hornetq-2.1.1.Final/lib/hornetq-logging.jar"/>
-	<classpathentry kind="lib" path="C:/software/jboss/hornetq-2.1.1.Final/lib/jboss-jms-api.jar"/>
-	<classpathentry kind="lib" path="C:/software/google/guice-2.0/guice-2.0.jar"/>
+	<classpathentry kind="src" output="target/classes" path="src/main/java"/>
+	<classpathentry kind="src" path="src/test/java"/>
+	<classpathentry excluding="**" kind="src" output="target/classes" path="src/main/resources"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
