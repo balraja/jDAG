@@ -1,4 +1,4 @@
-package org.jdryad.com.messages;
+package org.jdryad.communicator.messages;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;

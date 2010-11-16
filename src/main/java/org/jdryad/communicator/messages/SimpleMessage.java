@@ -1,4 +1,4 @@
-package org.jdryad.com.messages;
+package org.jdryad.communicator.messages;
 
 import org.jdryad.commmunicator.Message;
 import org.jdryad.commmunicator.MessageType;

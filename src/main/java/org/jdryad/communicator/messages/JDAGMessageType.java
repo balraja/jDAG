@@ -1,4 +1,4 @@
-package org.jdryad.com.messages;
+package org.jdryad.communicator.messages;
 
 import java.util.HashMap;
 import java.util.Map;
