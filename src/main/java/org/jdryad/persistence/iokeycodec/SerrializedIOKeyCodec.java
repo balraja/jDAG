@@ -7,7 +7,7 @@ import org.jdryad.common.Pair;
 
 /**
  * The codec to be used for interpreting keys of type
- * <code>IOSoutce#SERIALIZED_FILE</code>.
+ * <code>IOSource#SERIALIZED_FILE</code>.
  *
  * @author Balraja Subbiah
  * @version $Id:$
