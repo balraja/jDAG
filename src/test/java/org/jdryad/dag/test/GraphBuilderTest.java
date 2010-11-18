@@ -1,7 +1,5 @@
 package org.jdryad.dag.test;
 
-import com.google.common.collect.Sets;
-
 import java.util.List;
 
 import org.jdryad.dag.ExecutionContext;
@@ -89,12 +87,12 @@ public class GraphBuilderTest
      {
          GraphSpecification spec = new GraphSpecification();
          InputSpecification input1 = spec.addInput("File1");
-         input1.fromSource("File1.txt", IOSource.FLATTEN_FILE)
+         input1.fromSource("File1.txt", IOSource.FLAT_FILE)
                .splitInto(3)
                .by(SplitterType.DIRECT);
 
          InputSpecification input2 = spec.addInput("FIle2");
-         input2.fromSource("File2.txt", IOSource.FLATTEN_FILE)
+         input2.fromSource("File2.txt", IOSource.FLAT_FILE)
                .splitInto(3)
                .by(SplitterType.DIRECT);
 
@@ -105,7 +103,7 @@ public class GraphBuilderTest
          UDFSpecification reduce = spec.addUDF("Reduce", Max.class);
          reduce.applyOn(new Collect(map.getFunctionOutput("join")))
                .toProduce("output")
-               .setOutputIoSource(IOSource.FLATTEN_FILE)
+               .setOutputIoSource(IOSource.FLAT_FILE)
                .setAttribute("RecordClass", FlattenLineInterpreter.class);
 
          return spec;

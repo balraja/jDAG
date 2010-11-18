@@ -1,5 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project>
+<?xml version="1.0" encoding="UTF-8" ?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                      http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	
   <name>jDAG</name>
   <url></url>
@@ -15,7 +18,6 @@
 
   <organization>
     <name>OpenSource</name>
-    <url>http://www.sonatype.com</url>
   </organization>
 
   <developers>
@@ -62,6 +64,30 @@
 		</testResource>
 	</testResources>
     <plugins>
+    <plugin>
+	   <artifactId>maven-clean-plugin</artifactId>
+	   <version>2.4.1</version>
+	   <configuration>
+		<filesets>
+			<fileset>
+				<directory>${basedir}/src/main/java/org/jdryad/communicator/messages/</directory>
+				<includes>
+					<include>*Protos.java</include>
+				</includes>
+				<followSymlinks>false</followSymlinks>
+			</fileset>
+		  </filesets>
+	    </configuration>
+	     <executions>
+          <execution>
+            <id>auto-clean</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>clean</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
@@ -79,10 +105,10 @@
              <tasks>
               <exec executable="protoc">
                     <arg value="--java_out=src/main/java/"/>
-                    <arg value="src/main/java/org/jdryad/com/messages/execute-vertex.proto"/>
-                    <arg value="src/main/java/org/jdryad/com/messages/execute-vertex-status.proto"/>
-                    <arg value="src/main/java/org/jdryad/com/messages/up-and-alive.proto"/>
-                    <arg value="src/main/java/org/jdryad/com/messages/wired-message.proto"/>
+                    <arg value="src/main/java/org/jdryad/communicator/messages/execute-vertex.proto"/>
+                    <arg value="src/main/java/org/jdryad/communicator/messages/execute-vertex-status.proto"/>
+                    <arg value="src/main/java/org/jdryad/communicator/messages/up-and-alive.proto"/>
+                    <arg value="src/main/java/org/jdryad/communicator/messages/wired-message.proto"/>
               </exec>
             </tasks>
             <sourceRoot>target/generated-sources</sourceRoot>
@@ -134,10 +160,6 @@
     </profile>
   </profiles>
 
-  <activeProfiles>
-    <activeProfile>jboss-public-repository</activeProfile>
-  </activeProfiles>
-  
   <dependencies>
     <dependency>
         <groupId>com.google.protobuf</groupId>
