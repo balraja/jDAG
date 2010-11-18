@@ -12,6 +12,8 @@ import org.jdryad.dag.FunctionOutput;
 import org.jdryad.dag.Record;
 
 /**
+ * Implements <code>FunctionOutput</code> that writes data to a flat file.
+ *
  * @author Balraja Subbiah
  * @version $Id:$
  */
@@ -55,5 +57,4 @@ public class FlatFileOutput implements FunctionOutput
     {
         myWriter.println(myLineInterpreter.flattenRecord(r));
     }
-
 }

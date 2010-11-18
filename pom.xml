@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-                      http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project>
 	
   <name>jDAG</name>
   <url></url>
@@ -78,15 +75,6 @@
 			</fileset>
 		  </filesets>
 	    </configuration>
-	     <executions>
-          <execution>
-            <id>auto-clean</id>
-            <phase>initialize</phase>
-            <goals>
-              <goal>clean</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -121,44 +109,6 @@
     </plugin>
     </plugins>
   </build>
-  
-  <profiles>
-    <profile>
-      <id>jboss-public-repository</id>
-      <repositories>
-        <repository>
-          <id>jboss-public-repository-group</id>
-          <name>JBoss Public Maven Repository Group</name>
-          <url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url>
-          <layout>default</layout>
-          <releases>
-            <enabled>true</enabled>
-            <updatePolicy>never</updatePolicy>
-          </releases>
-          <snapshots>
-            <enabled>true</enabled>
-            <updatePolicy>never</updatePolicy>
-          </snapshots>
-        </repository>
-      </repositories>
-      <pluginRepositories>
-        <pluginRepository>
-          <id>jboss-public-repository-group</id>
-          <name>JBoss Public Maven Repository Group</name>
-          <url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url>
-          <layout>default</layout>
-          <releases>
-            <enabled>true</enabled>
-            <updatePolicy>never</updatePolicy>
-          </releases>
-          <snapshots>
-            <enabled>true</enabled>
-            <updatePolicy>never</updatePolicy>
-          </snapshots>
-        </pluginRepository>
-      </pluginRepositories>
-    </profile>
-  </profiles>
 
   <dependencies>
     <dependency>
@@ -211,21 +161,13 @@
 	</dependency>  
 	<dependency>
 		<groupId>org.hornetq</groupId>
-		<artifactId>hornetq-core-client</artifactId>
-		<version>2.0.0.GA</version>
-		<scope>compile</scope>
+		<artifactId>hornetq-jms</artifactId>
+		<version>2.1.2.Final</version>
     </dependency>
 	<dependency>
-		<groupId>org.hornetq</groupId>
-		<artifactId>hornetq-jms-client</artifactId>
-		<version>2.0.0.GA</version>
-		<scope>compile</scope>
+		  <groupId>org.hornetq</groupId>
+		  <artifactId>hornetq-core</artifactId>
+		  <version>2.1.2.Final</version>
 	</dependency>
-	<dependency>
-		<groupId>org.hornetq</groupId>
-		<artifactId>hornetq-transports</artifactId>
-		<version>2.0.0.GA</version>
-		<scope>compile</scope>
-	</dependency>  
   </dependencies>
 </project>

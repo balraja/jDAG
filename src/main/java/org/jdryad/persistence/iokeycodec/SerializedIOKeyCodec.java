@@ -12,7 +12,7 @@ import org.jdryad.common.Pair;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-public class SerrializedIOKeyCodec implements IOKeyCodec
+public class SerializedIOKeyCodec implements IOKeyCodec
 {
     /**
      * {@inheritDoc}
@@ -32,5 +32,4 @@ public class SerrializedIOKeyCodec implements IOKeyCodec
     {
         return identifier;
     }
-
 }

@@ -84,7 +84,7 @@ public class ExecutionGraph
     }
 
     /**
-     * Returns all incoming vertices for the given vertex.
+     * Returns all incoming edges for the given vertex.
      */
     public List<Edge> getIncomingEdge(VertexID id)
     {

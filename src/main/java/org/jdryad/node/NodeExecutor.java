@@ -1,6 +1,9 @@
 package org.jdryad.node;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.google.inject.Guice;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,9 +19,6 @@ import org.jdryad.commmunicator.Communicator;
 import org.jdryad.commmunicator.HostID;
 import org.jdryad.commmunicator.Message;
 import org.jdryad.commmunicator.Reactor;
-import org.jdryad.commmunicator.messages.ProtobufMessageMarshallerFactory;
-import org.jdryad.commmunicator.rabbitmq.RabbitMQCommunicator;
-import org.jdryad.commmunicator.rabbitmq.RabbitMQConfiguration;
 import org.jdryad.common.Application;
 import org.jdryad.common.ApplicationExecutor;
 import org.jdryad.communicator.messages.JDAGMessageType;
@@ -26,7 +26,6 @@ import org.jdryad.communicator.messages.SimpleMessage;
 import org.jdryad.communicator.messages.UpAndLiveProtos;
 import org.jdryad.communicator.messages.ExecuteVertexProtos.ExecuteVertexMessage;
 import org.jdryad.communicator.messages.ExecuteVertexStatusProtos.ExecuteVertexStatusMessage;
-import org.jdryad.config.ConfigurationProvider;
 import org.jdryad.dag.ExecutionContext;
 import org.jdryad.dag.ExecutionGraphID;
 import org.jdryad.dag.ExecutionResult;
@@ -43,8 +42,6 @@ import org.jdryad.dag.VertexID;
 public class NodeExecutor implements Application
 {
     private static final String NODE_CONFIG_FILE = "node/config.properties";
-
-    private static final String COMM_CONFIG_FILE = "node/commConfig.properties";
 
     private final Communicator myCommunicator;
 
@@ -178,6 +175,7 @@ public class NodeExecutor implements Application
     /**
      * CTOR
      */
+    @Inject
     public NodeExecutor(Communicator communicator, NodeConfig config)
     {
         myCommunicator = communicator;
@@ -225,16 +223,8 @@ public class NodeExecutor implements Application
      */
     public static void main(String[] args)
     {
-        NodeConfig nodeConfig =
-            ConfigurationProvider.makeConfiguration(
-                NodeConfig.class, NODE_CONFIG_FILE);
-        RabbitMQConfiguration commConfig =
-            ConfigurationProvider.makeConfiguration(
-                RabbitMQConfiguration.class, COMM_CONFIG_FILE);
-        RabbitMQCommunicator comm =
-            new RabbitMQCommunicator(commConfig,
-                                     new ProtobufMessageMarshallerFactory());
-        NodeExecutor exec = new NodeExecutor(comm, nodeConfig);
+        Injector injector = Guice.createInjector(new NodeModule());
+        NodeExecutor exec = injector.getInstance(NodeExecutor.class);
         ApplicationExecutor applicationExecutor =
             new ApplicationExecutor(exec);
         applicationExecutor.run();

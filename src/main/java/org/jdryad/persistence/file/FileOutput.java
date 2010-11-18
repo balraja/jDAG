@@ -13,7 +13,9 @@ import org.jdryad.dag.IOSource;
 import org.jdryad.persistence.PersistenceException;
 
 /**
- * 
+ * Implements <code>FunctionOutput</code> to read data from files where
+ * <code>Record</code>s are stored ina serialization format.
+ *
  * @author Balraja Subbiah
  * @version $Id:$
  */
@@ -21,14 +23,14 @@ public class FileOutput implements FunctionOutput
 {
     /** The random access file where data is stored */
     private final File myFile;
-    
+
     /** The o/p stream to which the objects are written */
     private final ObjectOutputStream myObjectOut;
-    
+
     /** CTOR */
     public FileOutput(IOKey key)
     {
-        assert key.getSourceType() == PersistenceSource.IOSource;
+        assert key.getSourceType() == IOSource.SERIALIZED_FILE;
         // For file sources the identifier corresponds to the file path.
         myFile = new File(key.getIdentifier());
         try {

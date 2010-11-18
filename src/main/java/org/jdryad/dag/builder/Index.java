@@ -1,8 +1,6 @@
 package org.jdryad.dag.builder;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,9 +13,9 @@ import java.util.List;
  */
 public class Index implements FunctionInputs
 {
-    private final List<String> myDataFragments1;
+    private final DataFragments myDataFragments1;
 
-    private final List<String> myDataFragments2;
+    private final DataFragments myDataFragments2;
 
     /**
      * CTOR
@@ -27,8 +25,8 @@ public class Index implements FunctionInputs
         Preconditions.checkArgument(
             fragments1.getNumFragments()
                 == fragments2.getNumFragments());
-        myDataFragments1 = Lists.newArrayList(fragments1.getFragementIds());
-        myDataFragments2 = Lists.newArrayList(fragments2.getFragementIds());
+        myDataFragments1 = fragments1;
+        myDataFragments2 = fragments2;
     }
 
     /**
@@ -38,8 +36,8 @@ public class Index implements FunctionInputs
     public List<String> getInputAt(int index)
     {
         ArrayList<String> parameterList = new ArrayList<String>();
-        parameterList.add(myDataFragments1.get(index));
-        parameterList.add(myDataFragments2.get(index));
+        parameterList.add(myDataFragments1.getFragementIds().get(index));
+        parameterList.add(myDataFragments2.getFragementIds().get(index));
         return parameterList;
     }
 
@@ -49,6 +47,18 @@ public class Index implements FunctionInputs
     @Override
     public int getNumCombinations()
     {
-        return myDataFragments1.size();
+        return myDataFragments1.getNumFragments();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<String> getFragmentSourcesFor(int index)
+    {
+        ArrayList<String> sourceList = new ArrayList<String>();
+        sourceList.add(myDataFragments1.getFragmentSources().get(index));
+        sourceList.add(myDataFragments2.getFragmentSources().get(index));
+        return sourceList;
     }
 }

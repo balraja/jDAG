@@ -44,12 +44,13 @@ public class TopologicalSortSchedule implements Schedule
     @Override
     public Vertex getVertexForExecution()
     {
-        for (VertexID inputVertex : myGraph.getInputs()) {
-            if (!myDoneVertices.contains(inputVertex)
-                && !myReturnedVertices.contains(inputVertex))
+        for (Vertex inputVertex : myGraph.getVertices()) {
+            if (!myDoneVertices.contains(inputVertex.getID())
+                && !myReturnedVertices.contains(inputVertex.getID())
+                && myGraph.getIncomingEdge(inputVertex.getID()).isEmpty())
             {
-                    myReturnedVertices.add(inputVertex);
-                    return myGraph.getVertex(inputVertex);
+                    myReturnedVertices.add(inputVertex.getID());
+                    return inputVertex;
             }
         }
         // If it comes here then it means all the input vertices are done.
@@ -96,6 +97,6 @@ public class TopologicalSortSchedule implements Schedule
     @Override
     public boolean isCompleted()
     {
-        for ()
+        return myDoneVertices.size() == myGraph.getVertices().size();
     }
 }

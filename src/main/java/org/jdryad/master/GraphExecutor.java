@@ -1,6 +1,9 @@
 package org.jdryad.master;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.google.inject.Guice;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,9 +18,6 @@ import org.jdryad.commmunicator.Communicator;
 import org.jdryad.commmunicator.HostID;
 import org.jdryad.commmunicator.Message;
 import org.jdryad.commmunicator.Reactor;
-import org.jdryad.commmunicator.messages.ProtobufMessageMarshallerFactory;
-import org.jdryad.commmunicator.rabbitmq.RabbitMQCommunicator;
-import org.jdryad.commmunicator.rabbitmq.RabbitMQConfiguration;
 import org.jdryad.common.Application;
 import org.jdryad.common.ApplicationExecutor;
 import org.jdryad.communicator.messages.ExecuteVertexProtos;
@@ -26,7 +26,6 @@ import org.jdryad.communicator.messages.SimpleMessage;
 import org.jdryad.communicator.messages.UpAndLiveProtos;
 import org.jdryad.communicator.messages.ExecuteVertexProtos.ExecuteVertexMessage;
 import org.jdryad.communicator.messages.ExecuteVertexStatusProtos.ExecuteVertexStatusMessage;
-import org.jdryad.config.ConfigurationProvider;
 import org.jdryad.dag.ExecutionGraph;
 import org.jdryad.dag.ExecutionGraphID;
 import org.jdryad.dag.ExecutionResult;
@@ -170,6 +169,7 @@ public class GraphExecutor implements Application
     /**
      * CTOR
      */
+    @Inject
     public GraphExecutor(WorkerSchedulingPolicy schedulingPolicy,
                          Communicator communicator)
     {
@@ -237,16 +237,9 @@ public class GraphExecutor implements Application
 
     public static void main(String[] args)
     {
-        RabbitMQConfiguration commConfig =
-            ConfigurationProvider.makeConfiguration(
-                RabbitMQConfiguration.class, COMM_CONFIG_FILE);
-        RabbitMQCommunicator comm =
-            new RabbitMQCommunicator(commConfig,
-                                     new ProtobufMessageMarshallerFactory());
+        Injector injector = Guice.createInjector(new MasterExecutorModule());
         GraphExecutor executor =
-            new GraphExecutor(
-                new BoundedWorkerSchedulingPolicy(),
-                comm);
+            injector.getInstance(GraphExecutor.class);
         ApplicationExecutor applicationExecutor =
             new ApplicationExecutor(executor);
         applicationExecutor.run();

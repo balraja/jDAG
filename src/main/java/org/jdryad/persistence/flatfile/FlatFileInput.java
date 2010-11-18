@@ -11,6 +11,8 @@ import org.jdryad.dag.FunctionInput;
 import org.jdryad.dag.Record;
 
 /**
+ * Implements <code>FunctionInput</code> that reads data from a flat file.
+ *
  * @author Balraja Subbiah
  * @version $Id:$
  */
@@ -81,6 +83,9 @@ public class FlatFileInput implements FunctionInput
         }
     }
 
+    /**
+     * CTOR
+     */
     public FlatFileInput(LineInterpreter recordFactory, String fileName)
     {
         myFile = new File(fileName);
