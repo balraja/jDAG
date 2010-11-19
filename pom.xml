@@ -67,7 +67,7 @@
 	   <configuration>
 		<filesets>
 			<fileset>
-				<directory>${basedir}/src/main/java/org/jdryad/communicator/messages/</directory>
+				<directory>${basedir}/src/main/java/org/augur/communicator/messages/</directory>
 				<includes>
 					<include>*Protos.java</include>
 				</includes>
@@ -93,10 +93,10 @@
              <tasks>
               <exec executable="protoc">
                     <arg value="--java_out=src/main/java/"/>
-                    <arg value="src/main/java/org/jdryad/communicator/messages/execute-vertex.proto"/>
-                    <arg value="src/main/java/org/jdryad/communicator/messages/execute-vertex-status.proto"/>
-                    <arg value="src/main/java/org/jdryad/communicator/messages/up-and-alive.proto"/>
-                    <arg value="src/main/java/org/jdryad/communicator/messages/wired-message.proto"/>
+                    <arg value="src/main/java/org/augur/communicator/messages/execute-vertex.proto"/>
+                    <arg value="src/main/java/org/augur/communicator/messages/execute-vertex-status.proto"/>
+                    <arg value="src/main/java/org/augur/communicator/messages/up-and-alive.proto"/>
+                    <arg value="src/main/java/org/augur/communicator/messages/wired-message.proto"/>
               </exec>
             </tasks>
             <sourceRoot>target/generated-sources</sourceRoot>

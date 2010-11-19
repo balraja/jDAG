@@ -1,0 +1,11 @@
+package org.augur.communicator.messages;
+
+option java_outer_classname = "UpAndLiveProtos";
+
+message UpAndAliveMessage {
+
+  required string identifier = 1;
+
+  required uint64 aliveMillis = 2;
+  
+}
