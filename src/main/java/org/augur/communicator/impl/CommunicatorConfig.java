@@ -10,7 +10,7 @@ import org.augur.config.Source;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-@Source(prefix="jdag.communicator")
+@Source(prefix="augur.communicator")
 public interface CommunicatorConfig
 {
     @PropertyDef(name="portNumber", resultType=ExpectedResult.INT)

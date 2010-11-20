@@ -8,7 +8,9 @@ package org.augur.config;
  */
 public @interface PropertyDef
 {
+    /** The type to which the data has to be parsed to */
     public ExpectedResult resultType();
 
+    /** The name of the property */
     public String name();
 }

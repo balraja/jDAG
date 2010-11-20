@@ -22,14 +22,21 @@ public class ConfigurationProvider implements InvocationHandler
 
     /**
      * CTOR
-     * @throws ConfigurationException
-     * @throws ConfigurationException
      */
     private ConfigurationProvider(String src, String basePrefix)
         throws ConfigurationException
     {
         myPropertiesConfiguration = new PropertiesConfiguration(src);
         myBasePrefix = basePrefix;
+    }
+
+    /**
+     * CTOR
+     */
+    private ConfigurationProvider(String basePrefix)
+    {
+        myBasePrefix = basePrefix;
+        myPropertiesConfiguration = null;
     }
 
     /**
@@ -44,13 +51,19 @@ public class ConfigurationProvider implements InvocationHandler
         switch (def.resultType()) {
         case INT:
             return value != null ? Integer.parseInt(value)
-                                 : myPropertiesConfiguration.getInt(property);
+                                 : myPropertiesConfiguration != null ?
+                                       myPropertiesConfiguration.getInt(property)
+                                       : null;
         case STRING:
             return value != null ? value
-                                 : myPropertiesConfiguration.getProperty(property);
+                                 : myPropertiesConfiguration != null ?
+                                       myPropertiesConfiguration.getProperty(property)
+                                       : null;
         case BOOLEAN:
             return value != null ? Boolean.parseBoolean(value)
-                                 : myPropertiesConfiguration.getBoolean(property);
+                                 : myPropertiesConfiguration != null ?
+                                       myPropertiesConfiguration.getBoolean(property)
+                                       : null;
         }
         return null;
     }
@@ -65,10 +78,15 @@ public class ConfigurationProvider implements InvocationHandler
     {
         Source s = configDefinitionClass.getAnnotation(Source.class);
         try {
+            ConfigurationProvider provider =
+                propertyFile != null ?
+                    new ConfigurationProvider(propertyFile, s.prefix())
+                    : new ConfigurationProvider(s.prefix());
+
             return (T) Proxy.newProxyInstance(
                 configDefinitionClass.getClassLoader(),
                 new Class<?>[]{configDefinitionClass},
-                new ConfigurationProvider(propertyFile, s.prefix()));
+                provider);
         }
         catch (IllegalArgumentException e) {
              throw new RuntimeException(e);

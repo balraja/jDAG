@@ -6,7 +6,8 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 /**
- * A simple class that defines the factory for creating loggers from
+ * A simple class that defines the factory for creating loggers from the class
+ * name.
  *
  * @author Balraja Subbiah
  * @version $Id:$
