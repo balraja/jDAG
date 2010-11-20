@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 /**
  * A marker annotation used for marking the methods that has to be intercepted
- * for persisting the changes.
+ * for persisting the changes after their invocation.
  *
  * @author Balraja Subbiah
  * @version $Id:$

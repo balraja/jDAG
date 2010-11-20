@@ -1,5 +1,7 @@
 package org.augur.common.persistentds;
 
+import com.google.common.base.Preconditions;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -27,17 +29,17 @@ public class PersistenceDSSession
     /**
      * CTOR
      */
-    public PersistenceDSSession(Class<?> persistenceClass,
+    public PersistenceDSSession(String id,
                                 PersistentDSManagerConfig config)
     {
-        myDirectoryName =
-            myConfig.getRootDirectory() + persistenceClass.getSimpleName();
+        myDirectoryName = myConfig.getRootDirectory() + id;
         File directory = new File(myDirectoryName);
         if (!directory.exists()) {
             directory.mkdirs();
         }
         mySnapshotFile = null;
         File[] files = directory.listFiles();
+        Preconditions.checkState(files.length == 1);
         if (files.length == 1) {
             mySnapshotFile = files[0];
         }

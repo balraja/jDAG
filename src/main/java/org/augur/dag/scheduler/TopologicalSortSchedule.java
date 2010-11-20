@@ -3,6 +3,7 @@ package org.augur.dag.scheduler;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.augur.common.persistentds.Persist;
 import org.augur.dag.Edge;
 import org.augur.dag.ExecutionGraph;
 import org.augur.dag.Vertex;
@@ -80,6 +81,7 @@ public class TopologicalSortSchedule implements Schedule
      * {@inheritDoc}
      */
     @Override
+    @Persist
     public void notifyDone(VertexID vertexID)
     {
         myDoneVertices.add(vertexID);

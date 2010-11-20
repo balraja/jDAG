@@ -302,6 +302,7 @@ public class CommunicatorImpl implements Communicator
     @Override
     public void stop()
     {
+        LOG.info("Stopping the communicator");
         try {
             mySession.stop();
             myProducerExecutor.shutdownNow();

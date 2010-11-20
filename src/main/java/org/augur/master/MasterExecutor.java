@@ -6,13 +6,12 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 import org.augur.commmunicator.Communicator;
 import org.augur.commmunicator.HostID;
@@ -20,12 +19,15 @@ import org.augur.commmunicator.Message;
 import org.augur.commmunicator.Reactor;
 import org.augur.common.Application;
 import org.augur.common.ApplicationExecutor;
+import org.augur.common.log.LogFactory;
+import org.augur.common.persistentds.PersistentDSManagerAccessor;
 import org.augur.communicator.messages.ExecuteVertexProtos;
 import org.augur.communicator.messages.JDAGMessageType;
 import org.augur.communicator.messages.SimpleMessage;
 import org.augur.communicator.messages.UpAndLiveProtos;
 import org.augur.communicator.messages.ExecuteVertexProtos.ExecuteVertexMessage;
 import org.augur.communicator.messages.ExecuteVertexStatusProtos.ExecuteVertexStatusMessage;
+import org.augur.communicator.messages.UpAndLiveProtos.UpAndAliveMessage;
 import org.augur.dag.ExecutionGraph;
 import org.augur.dag.ExecutionGraphID;
 import org.augur.dag.ExecutionResult;
@@ -44,15 +46,18 @@ import org.augur.node.NodeExecutor;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-public class GraphExecutor implements Application
+public class MasterExecutor implements Application
 {
-    private final WorkerSchedulingPolicy myWorkerSchedulingPolicy;
+    /** The logger */
+    private final Logger LOG =  LogFactory.getLogger(MasterExecutor.class);
 
-    private final Map<ExecutionGraphID, Schedule> myGraph2ScheduleMap;
+    private final WorkerSchedulingPolicy myWorkerSchedulingPolicy;
 
     private final Communicator myCommunicator;
 
     private final ScheduledExecutorService myScheduler;
+
+    private final ExecutionStateRegistry myStateRegistry;
 
     /**
      * Updates scheduling policy with the latest information from the scheduling
@@ -67,8 +72,12 @@ public class GraphExecutor implements Application
         public void process(Message m)
         {
             SimpleMessage message = (SimpleMessage) m;
-            myWorkerSchedulingPolicy.process(
-                ((UpAndLiveProtos.UpAndAliveMessage) message.getPayload()));
+            UpAndAliveMessage aliveMessage =
+                ((UpAndLiveProtos.UpAndAliveMessage) message.getPayload());
+            HostID fromHost = new HostID(aliveMessage.getIdentifier());
+            if (!myStateRegistry.hasWorker(fromHost)) {
+                myStateRegistry.addWorker(fromHost);
+            }
         }
     }
 
@@ -95,13 +104,9 @@ public class GraphExecutor implements Application
                 VertexID vertexID = new VertexID(status.getVertexId());
                 GraphVertexID graphVertexID =
                     new GraphVertexID(graphID, vertexID);
-                myWorkerSchedulingPolicy.removeVertexToHostMapping(graphVertexID);
-                Schedule schedule = myGraph2ScheduleMap.get(graphID);
-                schedule.notifyDone(vertexID);
-                if (schedule.isCompleted()) {
-                   myGraph2ScheduleMap.remove(graphID);
-                }
-                else {
+                boolean isCompleted =
+                    myStateRegistry.markDone(graphVertexID);
+                if (!isCompleted) {
                     myScheduler.schedule(
                         new VertexSchedulingTask(graphID),
                         10,
@@ -133,12 +138,16 @@ public class GraphExecutor implements Application
         @Override
         public void run()
         {
-            Schedule schedule = myGraph2ScheduleMap.get(myGraphID);
-            Vertex vertex = schedule.getVertexForExecution();
+            Vertex vertex =
+                myStateRegistry.getVertexForExecution(myGraphID);
             HostID hostID =
                 myWorkerSchedulingPolicy.getWorkerNode(
-                    new GraphVertexID(myGraphID, vertex.getID()));
+                    new GraphVertexID(myGraphID, vertex.getID()),
+                    myStateRegistry);
             if (hostID != null) {
+                GraphVertexID gvID =
+                    new GraphVertexID(myGraphID, vertex.getID());
+                myStateRegistry.updateVertex2HostMapping(gvID, hostID);
                 ExecuteVertexMessage executeVertexMessage =
                     ExecuteVertexProtos.ExecuteVertexMessage
                                        .newBuilder()
@@ -168,11 +177,11 @@ public class GraphExecutor implements Application
      * CTOR
      */
     @Inject
-    public GraphExecutor(WorkerSchedulingPolicy schedulingPolicy,
+    public MasterExecutor(WorkerSchedulingPolicy schedulingPolicy,
                          Communicator communicator)
     {
         myWorkerSchedulingPolicy = schedulingPolicy;
-        myGraph2ScheduleMap = new HashMap<ExecutionGraphID, Schedule>();
+        myStateRegistry = new ExecutionStateRegistry();
         myCommunicator = communicator;
         ThreadFactoryBuilder tfBuilder = new ThreadFactoryBuilder();
         ThreadFactory namedFactory =
@@ -184,6 +193,10 @@ public class GraphExecutor implements Application
     /** Starts the communicator */
     public void start()
     {
+        LOG.info("Starting the master");
+        myStateRegistry.initFromSnapshot(
+           PersistentDSManagerAccessor.getPersistentDSManager()
+                                      .getSnapshot(myStateRegistry.ID()));
         myCommunicator.attachReactor(JDAGMessageType.UP_AND_ALIVE_MESSAGE,
                                      new UpAndALiveReactor());
         myCommunicator.attachReactor(JDAGMessageType.EXECUTE_VERTEX_STATUS_MESSAGE,
@@ -197,8 +210,8 @@ public class GraphExecutor implements Application
     @Override
     public void stop()
     {
-        // TODO Auto-generated method stub
-
+        LOG.info("Stopping the master");
+        myCommunicator.stop();
     }
 
     private List<ExecuteVertexProtos.ExecuteVertexMessage.IOKey> makeIOKeys(
@@ -226,7 +239,7 @@ public class GraphExecutor implements Application
     public void execute(ExecutionGraph graph)
     {
         Schedule schedule = new TopologicalSortSchedule(graph);
-        myGraph2ScheduleMap.put(graph.getID(), schedule);
+        myStateRegistry.addSchedule(graph.getID(), schedule);
         myScheduler.schedule(
             new VertexSchedulingTask(graph.getID()),
             10,
@@ -236,8 +249,8 @@ public class GraphExecutor implements Application
     public static void main(String[] args)
     {
         Injector injector = Guice.createInjector(new MasterExecutorModule());
-        GraphExecutor executor =
-            injector.getInstance(GraphExecutor.class);
+        MasterExecutor executor =
+            injector.getInstance(MasterExecutor.class);
         ApplicationExecutor applicationExecutor =
             new ApplicationExecutor(executor);
         applicationExecutor.run();

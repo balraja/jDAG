@@ -1,6 +1,5 @@
 package org.augur.master;
 
-import org.augur.communicator.messages.UpAndLiveProtos.UpAndAliveMessage;
 import org.augur.commmunicator.HostID;
 import org.augur.dag.GraphVertexID;
 
@@ -15,18 +14,9 @@ import org.augur.dag.GraphVertexID;
 public interface WorkerSchedulingPolicy
 {
     /**
-     * Process the heart beats from the worker nodes.
-     */
-    public void process(UpAndAliveMessage upAndAliveMessage);
-
-    /**
      * Returns the identifier for a worker node to which graph vertices
      * can be scheduled or null if a worker is not free.
      */
-    public HostID getWorkerNode(GraphVertexID graphVertexID);
-
-    /**
-     * Removes the vertex to host mapping.
-     */
-    public void removeVertexToHostMapping(GraphVertexID graphVertexID);
+    public HostID getWorkerNode(GraphVertexID graphVertexID,
+                                ExecutionStateRegistry executionStateRegistry);
 }
