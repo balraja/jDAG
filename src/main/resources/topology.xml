@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<master>
+    <name>Master</name>
+    <host>LOCAL</host>
+    <logfile>C:\\temp\\master.log</logfile>
+</master>
+<workers>
+    <worker>
+        <name>Worker1</name>
+        <host>LOCAL</host>
+        <logfile>C:\\temp\\worker1.log</logfile>
+    </worker>
+     <worker>
+        <name>Worker2</name>
+        <host>LOCAL</host>
+        <logfile>C:\\temp\\worker2.log</logfile>
+    </worker>
+</workers>
