@@ -1,5 +1,7 @@
 package org.augur.node;
 
+import org.augur.config.ExpectedResult;
+import org.augur.config.PropertyDef;
 import org.augur.config.Source;
 
 /**
@@ -9,21 +11,20 @@ import org.augur.config.Source;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-@Source(prefix="jdag.node")
+@Source(prefix="augur.node")
 public interface NodeConfig
 {
-    /** Returns the type of the communication factory to be used */
-    public String getCommType();
-
     /**
      * Returns the name of the group via which the node details can be passed
      * on to the master.
      */
+    @PropertyDef(name="masterHostID", resultType=ExpectedResult.STRING)
     public String getMasterHostID();
 
     /**
      * The interval abt which the heart beats are supposed to be sent to the
      * master.
      */
+    @PropertyDef(name="heartBeatInterval", resultType=ExpectedResult.INT)
     public int getHeartBeatInterval();
 }

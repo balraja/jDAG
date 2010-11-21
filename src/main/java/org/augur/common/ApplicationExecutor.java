@@ -58,9 +58,11 @@ public class ApplicationExecutor
         });
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
-            public void run() { myApplication.stop(); }
+            public void run()
+            {
+                myApplication.stop();
+            }
         });
         t.start();
     }
-
 }

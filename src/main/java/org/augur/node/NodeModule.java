@@ -15,7 +15,7 @@ import org.augur.config.ConfigurationProvider;
  */
 public class NodeModule extends AbstractCommModule
 {
-    private static final String NODE_CONFIG_FILE = "node/config.properties";
+    private static final String NODE_CONFIG_FILE = "node.config.properties";
 
     /**
      * {@inheritDoc}

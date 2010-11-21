@@ -246,6 +246,7 @@ public class MasterExecutor implements Application
             TimeUnit.SECONDS);
     }
 
+    /** The starting point of the application */
     public static void main(String[] args)
     {
         Injector injector = Guice.createInjector(new MasterExecutorModule());

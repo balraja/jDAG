@@ -15,7 +15,7 @@ import java.util.logging.SimpleFormatter;
 public final class LogFactory
 {
     /** The property that defines the log file */
-    private static final String PROP_LOG_FILE =
+    public static final String PROP_LOG_FILE =
         "org.jdag.logfile";
 
     private static final FileHandler ourLogFileHandler;

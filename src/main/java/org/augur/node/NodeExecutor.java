@@ -41,8 +41,6 @@ import org.augur.dag.VertexID;
  */
 public class NodeExecutor implements Application
 {
-    private static final String NODE_CONFIG_FILE = "node/config.properties";
-
     private final Communicator myCommunicator;
 
     private final NodeConfig myConfig;
