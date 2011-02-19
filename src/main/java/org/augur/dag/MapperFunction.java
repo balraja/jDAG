@@ -12,7 +12,7 @@ import java.util.Map;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-public class MapperFunction implements UserDefinedFunction
+public class MapperFunction implements UDF
 {
     private final InputSplitter mySplitter;
 

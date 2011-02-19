@@ -3,7 +3,7 @@ package org.augur.node;
 import org.augur.dag.InputSplitter;
 import org.augur.dag.SimpleInputSplitterFactory;
 import org.augur.dag.UDFFactory;
-import org.augur.dag.UserDefinedFunction;
+import org.augur.dag.UDF;
 import org.augur.dag.SimpleInputSplitterFactory.SplitterType;
 
 public class ReflectiveUDFFactory implements UDFFactory 
@@ -22,10 +22,10 @@ public class ReflectiveUDFFactory implements UDFFactory
 	 * {@inheritDoc}
 	 */
 	@Override
-	public UserDefinedFunction makeUDF(String identifier) 
+	public UDF makeUDF(String identifier) 
 	{
 		try {
-			return (UserDefinedFunction) Class.forName(identifier).newInstance();
+			return (UDF) Class.forName(identifier).newInstance();
 		} 
 		catch (InstantiationException e) {
             throw new RuntimeException(e);

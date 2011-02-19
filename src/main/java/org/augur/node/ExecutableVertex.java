@@ -17,7 +17,7 @@ import org.augur.dag.SimpleVertex;
 import org.augur.dag.IOSource;
 import org.augur.dag.UDFFactory;
 import org.augur.dag.UDFIdentityGenerator;
-import org.augur.dag.UserDefinedFunction;
+import org.augur.dag.UDF;
 import org.augur.dag.VertexID;
 
 /**
@@ -67,7 +67,7 @@ public class ExecutableVertex extends SimpleVertex
     {
         UDFFactory factory = context.makeUDFFactory();
         UDFIdentityGenerator identityGenerator = new UDFIdentityGenerator();
-        UserDefinedFunction function = null;
+        UDF function = null;
         if (identityGenerator.isSimpleFunction(getUDFIdentifier())) {
             function =
                 factory.makeUDF(
