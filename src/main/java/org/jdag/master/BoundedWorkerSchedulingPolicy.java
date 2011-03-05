@@ -6,7 +6,7 @@ import com.google.common.collect.Sets.SetView;
 import java.util.Set;
 
 import org.jdag.commmunicator.HostID;
-import org.jdag.graph.GraphVertexID;
+import org.jdag.graph.VertexID;
 
 /**
  * A simple scheduling policy that says at a given point of time only one
@@ -22,8 +22,8 @@ public class BoundedWorkerSchedulingPolicy implements WorkerSchedulingPolicy
      * {@inheritDoc}
      */
     @Override
-    public HostID getWorkerNode(GraphVertexID graphVertexID,
-                                ExecutionStateRegistry stateRegistry)
+    public HostID getWorkerNode(VertexID graphVertexID,
+                                             ExecutionStateRegistry stateRegistry)
     {
         Set<HostID> workers = stateRegistry.getWorkers();
         if (workers.isEmpty()) {

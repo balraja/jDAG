@@ -1,7 +1,7 @@
 package org.jdag.master;
 
 import org.jdag.commmunicator.HostID;
-import org.jdag.graph.GraphVertexID;
+import org.jdag.graph.VertexID;
 
 /**
  * The type that defines the contract for scheduling vertices over the
@@ -17,6 +17,6 @@ public interface WorkerSchedulingPolicy
      * Returns the identifier for a worker node to which graph vertices
      * can be scheduled or null if a worker is not free.
      */
-    public HostID getWorkerNode(GraphVertexID graphVertexID,
-                                ExecutionStateRegistry executionStateRegistry);
+    public HostID getWorkerNode(VertexID graphVertexID,
+                                             ExecutionStateRegistry executionStateRegistry);
 }

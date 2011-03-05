@@ -6,16 +6,12 @@ package org.jdag.node;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import org.jdag.communicator.messages.ExecuteVertexCommand;
-import org.jdag.data.Function;
-import org.jdag.data.FunctionInput;
+import org.jdag.data.Executable;
 import org.jdag.graph.ExecutionContext;
 import org.jdag.graph.ExecutionResult;
-import org.jdag.graph.SimpleVertex;
 import org.jdag.graph.Vertex;
 import org.jdag.graph.VertexID;
 import org.jdag.io.IOKey;
@@ -47,13 +43,11 @@ public class ExecutableVertex  implements Vertex, Callable<ExecutionResult>
      */
     public ExecutionResult execute(ExecutionContext context)
     {
-
         try {
-             Object toBeExecuted = Class.forName(getUDFIdentifier());
-             if (toBeExecuted instanceof Function<?,?>) {
-                 Function<?,?> function = (Function<?,?>) toBeExecuted;
-                 FunctionInput<T>
-             }
+             Executable toBeExecuted =
+                 (Executable) Class.forName(getUDFIdentifier()).newInstance();
+             toBeExecuted.execute(context, getInputs(), getOutputs());
+             return ExecutionResult.SUCCESS;
         }
         catch (Throwable e) {
             return ExecutionResult.ERROR;

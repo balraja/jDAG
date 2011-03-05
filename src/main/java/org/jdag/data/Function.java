@@ -11,7 +11,7 @@ import org.jdag.graph.ExecutionContext;
  * @version $Id:$
  */
 public interface Function<I,O>
-    extends Serializable
+    extends Serializable, Executable
 {
     /**
      * The definition of the function that needs to be executed on a vertex.

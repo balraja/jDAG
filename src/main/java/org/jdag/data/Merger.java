@@ -11,7 +11,7 @@ import org.jdag.graph.ExecutionContext;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-public interface Merger<T>
+public interface Merger<T> extends Executable
 {
     /**
      * Merges the data from different shards into a single collection back.

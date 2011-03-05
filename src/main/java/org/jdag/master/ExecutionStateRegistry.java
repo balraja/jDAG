@@ -16,8 +16,8 @@ import org.jdag.common.persistentds.Persist;
 import org.jdag.common.persistentds.PersistentDS;
 import org.jdag.common.persistentds.Snapshot;
 import org.jdag.graph.GraphID;
-import org.jdag.graph.GraphVertexID;
 import org.jdag.graph.Vertex;
+import org.jdag.graph.VertexID;
 import org.jdag.graph.scheduler.Schedule;
 
 /**
@@ -32,7 +32,7 @@ public class ExecutionStateRegistry implements PersistentDS
 
     private final Set<HostID> myWorkerNodes;
 
-    private final Map<GraphVertexID, HostID> myVertex2HostMap;
+    private final Map<VertexID, HostID> myVertex2HostMap;
 
     private final Map<GraphID, Schedule> myGraph2ScheduleMap;
 
@@ -43,14 +43,14 @@ public class ExecutionStateRegistry implements PersistentDS
     {
         private Set<HostID> myWorkerNodes;
 
-        private Map<GraphVertexID, HostID> myVertex2HostMap;
+        private Map<VertexID, HostID> myVertex2HostMap;
 
         private Map<GraphID, Schedule> myGraph2ScheduleMap;
 
         /** CTOR */
         public ExecutionRegistryState(
             Set<HostID> workerNodes,
-            Map<GraphVertexID, HostID> vertex2HostMap,
+            Map<VertexID, HostID> vertex2HostMap,
             Map<GraphID, Schedule> graph2ScheduleMap)
         {
             super();
@@ -70,7 +70,7 @@ public class ExecutionStateRegistry implements PersistentDS
         /**
          * Returns the value of vertex2HostMap
          */
-        public Map<GraphVertexID, HostID> getVertex2HostMap()
+        public Map<VertexID, HostID> getVertex2HostMap()
         {
             return myVertex2HostMap;
         }
@@ -94,7 +94,7 @@ public class ExecutionStateRegistry implements PersistentDS
             myGraph2ScheduleMap =
                 (Map<GraphID, Schedule>) in.readObject();
             myVertex2HostMap =
-                (Map<GraphVertexID, HostID>) in.readObject();
+                (Map<VertexID, HostID>) in.readObject();
             myWorkerNodes = (Set<HostID>) in.readObject();
         }
 
@@ -116,7 +116,7 @@ public class ExecutionStateRegistry implements PersistentDS
     public ExecutionStateRegistry()
     {
         myWorkerNodes = new HashSet<HostID>();
-        myVertex2HostMap = new HashMap<GraphVertexID, HostID>();
+        myVertex2HostMap = new HashMap<VertexID, HostID>();
         myGraph2ScheduleMap = new HashMap<GraphID, Schedule>();
     }
 
@@ -160,7 +160,7 @@ public class ExecutionStateRegistry implements PersistentDS
      */
     @Persist
     public void updateVertex2HostMapping(
-        GraphVertexID graphVertexID, HostID hostID)
+        VertexID graphVertexID, HostID hostID)
     {
         myVertex2HostMap.put(graphVertexID, hostID);
     }
@@ -169,7 +169,7 @@ public class ExecutionStateRegistry implements PersistentDS
     public Set<HostID> getWorkersForGraph(GraphID graphID)
     {
         HashSet<HostID> hosts = new HashSet<HostID>();
-        for (Map.Entry<GraphVertexID, HostID> entry :
+        for (Map.Entry<VertexID, HostID> entry :
                 myVertex2HostMap.entrySet())
         {
             if (entry.getKey().getGraphID().equals(graphID)) {
@@ -183,7 +183,7 @@ public class ExecutionStateRegistry implements PersistentDS
      * {@inheritDoc}
      */
     @Persist
-    public void removeVertexToHostMapping(GraphVertexID graphVertexID)
+    public void removeVertexToHostMapping(VertexID graphVertexID)
     {
          myVertex2HostMap.remove(graphVertexID);
     }
@@ -202,11 +202,11 @@ public class ExecutionStateRegistry implements PersistentDS
      * @return True if the execution of the graph is done, false otherwise.
      */
     @Persist
-    public boolean markDone(GraphVertexID graphVertexID)
+    public boolean markDone(VertexID graphVertexID)
     {
         myVertex2HostMap.remove(graphVertexID);
         Schedule schedule = myGraph2ScheduleMap.get(graphVertexID.getGraphID());
-        schedule.notifyDone(graphVertexID.getVertexID());
+        schedule.notifyDone(graphVertexID);
         if (schedule.isCompleted()) {
             myGraph2ScheduleMap.remove(graphVertexID.getGraphID());
             return true;

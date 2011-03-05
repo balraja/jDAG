@@ -11,7 +11,7 @@ import org.jdag.graph.ExecutionContext;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-public interface Splitter<T>
+public interface Splitter<T> extends Executable
 {
     public int numPartitions();
 

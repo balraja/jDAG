@@ -5,8 +5,6 @@ import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
@@ -21,22 +19,16 @@ import org.jdag.common.Application;
 import org.jdag.common.ApplicationExecutor;
 import org.jdag.common.log.LogFactory;
 import org.jdag.common.persistentds.PersistentDSManagerAccessor;
-import org.jdag.communicator.messages.ExecuteVertexProtos;
-import org.jdag.communicator.messages.JDAGMessageType;
-import org.jdag.communicator.messages.SimpleMessage;
-import org.jdag.communicator.messages.UpAndLiveProtos;
-import org.jdag.communicator.messages.ExecuteVertexProtos.ExecuteVertexMessage;
-import org.jdag.communicator.messages.ExecuteVertexStatusProtos.ExecuteVertexStatusMessage;
-import org.jdag.communicator.messages.UpAndLiveProtos.UpAndAliveMessage;
+import org.jdag.communicator.messages.ExecuteVertexCommand;
+import org.jdag.communicator.messages.ExecuteVertexCommandStatus;
+import org.jdag.communicator.messages.Heartbeat;
+
 import org.jdag.graph.Graph;
 import org.jdag.graph.GraphID;
 import org.jdag.graph.ExecutionResult;
-import org.jdag.graph.GraphVertexID;
 import org.jdag.graph.Vertex;
-import org.jdag.graph.VertexID;
 import org.jdag.graph.scheduler.Schedule;
 import org.jdag.graph.scheduler.TopologicalSortSchedule;
-import org.jdag.io.IOKey;
 import org.jdag.node.NodeExecutor;
 
 /**
@@ -71,10 +63,8 @@ public class MasterExecutor implements Application
         @Override
         public void process(Message m)
         {
-            SimpleMessage message = (SimpleMessage) m;
-            UpAndAliveMessage aliveMessage =
-                ((UpAndLiveProtos.UpAndAliveMessage) message.getPayload());
-            HostID fromHost = new HostID(aliveMessage.getIdentifier());
+            Heartbeat hearbeat = (Heartbeat) m;
+            HostID fromHost = new HostID(hearbeat.getNodeID());
             if (!myStateRegistry.hasWorker(fromHost)) {
                 myStateRegistry.addWorker(fromHost);
             }
@@ -92,23 +82,18 @@ public class MasterExecutor implements Application
         @Override
         public void process(Message m)
         {
-            SimpleMessage message = (SimpleMessage) m;
-            ExecuteVertexStatusMessage status =
-                (ExecuteVertexStatusMessage) message.getPayload();
-            ExecutionResult result =
-                ExecutionResult.getExecutionResult(
-                    status.getExecutionStatus());
+            ExecuteVertexCommandStatus status =
+                (ExecuteVertexCommandStatus) m;
+            ExecutionResult result = status.getResult();
+
             if (result == ExecutionResult.SUCCESS) {
-                GraphID graphID =
-                    new GraphID(status.getGraphId());
-                VertexID vertexID = new VertexID(status.getVertexId());
-                GraphVertexID graphVertexID =
-                    new GraphVertexID(graphID, vertexID);
+
                 boolean isCompleted =
-                    myStateRegistry.markDone(graphVertexID);
+                    myStateRegistry.markDone(status.getExecutedVertex());
                 if (!isCompleted) {
                     myScheduler.schedule(
-                        new VertexSchedulingTask(graphID),
+                        new VertexSchedulingTask(
+                                status.getExecutedVertex().getGraphID()),
                         10,
                         TimeUnit.MICROSECONDS);
                 }
@@ -142,27 +127,13 @@ public class MasterExecutor implements Application
                 myStateRegistry.getVertexForExecution(myGraphID);
             HostID hostID =
                 myWorkerSchedulingPolicy.getWorkerNode(
-                    new GraphVertexID(myGraphID, vertex.getID()),
-                    myStateRegistry);
+                    vertex.getID(), myStateRegistry);
+
             if (hostID != null) {
-                GraphVertexID gvID =
-                    new GraphVertexID(myGraphID, vertex.getID());
-                myStateRegistry.updateVertex2HostMapping(gvID, hostID);
-                ExecuteVertexMessage executeVertexMessage =
-                    ExecuteVertexProtos.ExecuteVertexMessage
-                                       .newBuilder()
-                                       .setUdfIdentifier(vertex.getUDFIdentifier())
-                                       .addAllInputs(
-                                           (Iterable<? extends org.jdag.communicator.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey>)
-                                           makeIOKeys(vertex.getInputs()).iterator())
-                                       .addAllOutputs(
-                                           (Iterable<? extends org.jdag.communicator.messages.ExecuteVertexProtos.ExecuteVertexMessage.IOKey>)
-                                           makeIOKeys(vertex.getOutputs()).iterator())
-                                       .build();
-                SimpleMessage simpleMessage =
-                    new SimpleMessage(JDAGMessageType.EXECUTE_VERTEX_MESSAGE,
-                                      executeVertexMessage);
-                myCommunicator.sendMessage(hostID, simpleMessage);
+                myStateRegistry.updateVertex2HostMapping(vertex.getID(), hostID);
+                ExecuteVertexCommand command =
+                    new ExecuteVertexCommand(vertex);
+                myCommunicator.sendMessage(hostID, command);
             }
             else {
                 myScheduler.schedule(
@@ -197,10 +168,10 @@ public class MasterExecutor implements Application
         myStateRegistry.initFromSnapshot(
            PersistentDSManagerAccessor.getPersistentDSManager()
                                       .getSnapshot(myStateRegistry.ID()));
-        myCommunicator.attachReactor(JDAGMessageType.UP_AND_ALIVE_MESSAGE,
-                                     new UpAndALiveReactor());
-        myCommunicator.attachReactor(JDAGMessageType.EXECUTE_VERTEX_STATUS_MESSAGE,
-                                     new ExecuteVertexStatusReactor());
+        myCommunicator.attachReactor(Heartbeat.class,
+                                                   new UpAndALiveReactor());
+        myCommunicator.attachReactor(ExecuteVertexCommandStatus.class,
+                                                   new ExecuteVertexStatusReactor());
         myCommunicator.start();
     }
 
@@ -212,25 +183,6 @@ public class MasterExecutor implements Application
     {
         LOG.info("Stopping the master");
         myCommunicator.stop();
-    }
-
-    private List<ExecuteVertexProtos.ExecuteVertexMessage.IOKey> makeIOKeys(
-        List<IOKey> ioKeys)
-    {
-        ArrayList<ExecuteVertexProtos.ExecuteVertexMessage.IOKey> protoIOKeys =
-            new ArrayList<ExecuteVertexProtos.ExecuteVertexMessage.IOKey>();
-        for (IOKey ioKey : ioKeys) {
-            protoIOKeys.add(ExecuteVertexProtos.ExecuteVertexMessage
-                                               .IOKey
-                                               .newBuilder()
-                                               .setTypeId(ioKey.getSourceType()
-                                                               .getTypeID())
-                                               .setIoIdentifier(
-                                                   ioKey.getIdentifier())
-                                               .build());
-        }
-        return protoIOKeys;
-
     }
 
     /**

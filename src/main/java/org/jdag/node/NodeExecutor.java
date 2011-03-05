@@ -26,7 +26,6 @@ import org.jdag.communicator.messages.ExecuteVertexCommandStatus;
 import org.jdag.communicator.messages.Heartbeat;
 
 import org.jdag.graph.ExecutionContext;
-import org.jdag.graph.GraphID;
 import org.jdag.graph.ExecutionResult;
 import org.jdag.graph.VertexID;
 
@@ -139,13 +138,10 @@ public class NodeExecutor implements Application
 		{
 			ExecuteVertexCommand message = (ExecuteVertexCommand) m;
 			ExecutableVertex v =
-				new ExecutableVertex(message, myExecutionContext);
+				new ExecutableVertex(message.getVertex(), myExecutionContext);
 			Future<ExecutionResult> result =
 			    myExecutorService.submit(v);
-			myFunToExecutionStatusMap.put(
-		        new GraphVertexID(new GraphID(message.getGraphId()),
-		                          new VertexID(message.getVertexId())),
-		        result);
+			myFunToExecutionStatusMap.put(v.getID(), result);
 		}
     }
 
@@ -169,7 +165,7 @@ public class NodeExecutor implements Application
         myScheduler = Executors.newScheduledThreadPool(2, namedSchedulerFactory);
         myExecutionContext = new SimpleExecutionContext();
         myFunToExecutionStatusMap =
-        	new HashMap<GraphVertexID, Future<ExecutionResult>>();
+        	new HashMap<VertexID, Future<ExecutionResult>>();
     }
 
     /**
@@ -181,8 +177,8 @@ public class NodeExecutor implements Application
     	myPaceMaker.start();
     	myScheduler.scheduleWithFixedDelay(
            new ResultChecker(), 1, 1, TimeUnit.SECONDS);
-    	myCommunicator.attachReactor(JDAGMessageType.EXECUTE_VERTEX_MESSAGE,
-    			                     new ExecuteVertexReactor());
+    	myCommunicator.attachReactor(
+    	    ExecuteVertexCommand.class, new ExecuteVertexReactor());
 
     }
 
