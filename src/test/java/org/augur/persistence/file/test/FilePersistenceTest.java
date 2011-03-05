@@ -1,5 +1,6 @@
 package org.augur.persistence.file.test;
 
+import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
@@ -7,12 +8,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.jdag.dag.IOSource;
 import org.jdag.data.FunctionInput;
 import org.jdag.data.FunctionOutput;
-import org.jdag.graph.Record;
 import org.jdag.io.IOFactory;
 import org.jdag.io.IOKey;
+import org.jdag.io.IOSource;
 import org.jdag.io.serialiazition.FileIOFactory;
 import org.testng.AssertJUnit;
 import org.testng.annotations.Test;
@@ -27,10 +27,10 @@ public class FilePersistenceTest
 {
     private static final int TOTAL_RECORDS = 10;
 
-    private List<TestFileRecord> myRecords;
+    private final List<TestFileRecord> myRecords;
 
     /** A simple record for testing the way we write to files */
-    private static class TestFileRecord implements Record
+    private static class TestFileRecord implements Externalizable
     {
         private int myRecordID;
 
@@ -118,7 +118,7 @@ public class FilePersistenceTest
     /** Factory method for making a key to the file */
     private IOKey makeKey()
     {
-        return new IOKey(PersistenceSource.IOSource, "C:\\temp\\test1.txt");
+        return new IOKey(IOSource.FILE_SYSTEM, "C:\\temp\\test1.txt");
     }
 
     /** Factory method for making a IOFactory for reading data */
@@ -130,8 +130,8 @@ public class FilePersistenceTest
     @Test(testName="writeTest", groups={"persistence"})
     public void testWrite()
     {
-        FunctionOutput output = makeIOFactory().makeOutput(makeKey());
-        for (Record r : myRecords) {
+        FunctionOutput<TestFileRecord> output = makeIOFactory().makeOutput(makeKey());
+        for (TestFileRecord r : myRecords) {
             output.write(r);
         }
         output.done();
@@ -142,9 +142,10 @@ public class FilePersistenceTest
           groups={"persistence"})
     public void testRead()
     {
-        FunctionInput in = makeIOFactory().makeInput(makeKey());
-        Iterator<Record> itr = in.getIterator();
-        ArrayList<Record> readData = new ArrayList<Record>(TOTAL_RECORDS);
+        FunctionInput<TestFileRecord> in = makeIOFactory().makeInput(makeKey());
+        Iterator<TestFileRecord> itr = in.getIterator();
+        ArrayList<TestFileRecord> readData =
+            new ArrayList<TestFileRecord>(TOTAL_RECORDS);
         while (itr.hasNext()) {
             readData.add(itr.next());
         }
