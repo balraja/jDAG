@@ -3,8 +3,8 @@ package org.jdag.communicator.impl;
 import com.google.inject.AbstractModule;
 
 import org.hornetq.api.core.TransportConfiguration;
-import org.jdag.commmunicator.MessageMarshaller;
-import org.jdag.communicator.messages.ProtoBufMessageMarshaller;
+import org.jdag.communicator.MessageMarshaller;
+import org.jdag.communicator.messages.SerializableMessageMarshaller;
 
 /**
  * Implements guice <code>AbstractModule</code> to define bindings corresponding
@@ -21,7 +21,7 @@ public abstract class AbstractCommModule extends AbstractModule
     @Override
     protected void configure()
     {
-        bind(MessageMarshaller.class).to(ProtoBufMessageMarshaller.class);
+        bind(MessageMarshaller.class).to(SerializableMessageMarshaller.class);
         bind(CommunicatorConfig.class).toProvider(CommunicatorConfigProvider.class);
         bind(TransportConfiguration.class).toProvider(TransportConfigurationProvider.class);
     }

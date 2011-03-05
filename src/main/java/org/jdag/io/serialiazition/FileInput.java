@@ -9,28 +9,27 @@ import java.io.ObjectInputStream;
 import java.util.Iterator;
 
 import org.jdag.data.FunctionInput;
-import org.jdag.graph.Record;
 import org.jdag.io.IOKey;
 import org.jdag.io.PersistenceException;
 
 /**
  * A simple class that encapsulates the input to a task that can be read from a
  * file.
- * 
+ *
  * @author Balraja Subbiah
  * @version $Id:$
  */
-public class FileInput implements FunctionInput
+public class FileInput<T> implements FunctionInput<T>
 {
     private final IOKey myInputKey;
-    
+
     /** A simple iterator that iterates over a file */
-    private static class FileIterator implements Iterator<Record>
+    private static class FileIterator<T> implements Iterator<T>
     {
         private ObjectInputStream myObjectStream;
-        
-        private Record myReadRecord;
-        
+
+        private T myReadRecord;
+
         /**
          * CTOR
          */
@@ -38,7 +37,7 @@ public class FileInput implements FunctionInput
         {
             try {
                 assert file.exists() && file.canRead();
-                myObjectStream = 
+                myObjectStream =
                     new ObjectInputStream(new FileInputStream(file));
             }
             catch (FileNotFoundException e) {
@@ -49,13 +48,14 @@ public class FileInput implements FunctionInput
             }
             myReadRecord = readRecord();
         }
-        
+
         /** A helper method for reading record from the file */
-        private Record readRecord()
+        @SuppressWarnings("unchecked")
+        private T readRecord()
         {
-            Record result = null;
+            T result = null;
             try {
-                result = (Record) myObjectStream.readObject();
+                result = (T) myObjectStream.readObject();
                 int delim = myObjectStream.readInt();
                 assert delim == FileConstants.RECORD_DELIM;
             }
@@ -89,9 +89,9 @@ public class FileInput implements FunctionInput
          * {@inheritDoc}
          */
         @Override
-        public Record next()
+        public T next()
         {
-            Record result = myReadRecord;
+            T result = myReadRecord;
             myReadRecord = readRecord();
             return result;
         }
@@ -102,10 +102,10 @@ public class FileInput implements FunctionInput
         @Override
         public void remove()
         {
-             throw new IllegalArgumentException("Remove is not supported");            
+             throw new IllegalArgumentException("Remove is not supported");
         }
     }
-    
+
     /**
      * CTOR
      */
@@ -118,9 +118,8 @@ public class FileInput implements FunctionInput
      * {@inheritDoc}
      */
     @Override
-    public Iterator<Record> getIterator()
+    public Iterator<T> getIterator()
     {
-        return new FileIterator(new File(myInputKey.getIdentifier()));
+        return new FileIterator<T>(new File(myInputKey.getIdentifier()));
     }
-
 }

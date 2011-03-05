@@ -2,14 +2,11 @@ package org.jdag.io.flatfile;
 
 import com.google.common.base.Preconditions;
 
-import java.util.List;
-
-import org.jdag.common.Pair;
-import org.jdag.dag.IOSource;
 import org.jdag.data.FunctionInput;
 import org.jdag.data.FunctionOutput;
 import org.jdag.io.IOFactory;
 import org.jdag.io.IOKey;
+import org.jdag.io.IOSource;
 
 /**
  * Implements <code>IOFactory</code> that reads data from flat files.
@@ -22,20 +19,19 @@ public class FlatFileIOFactory implements IOFactory
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings("unchecked")
     @Override
-    public FunctionInput makeInput(IOKey key)
+    public <T> FunctionInput<T> makeInput(IOKey key)
     {
         Preconditions.checkArgument(
-            key.getSourceType() == IOSource.FLAT_FILE);
-        Pair<String, List<Object>> decodedKey =
-            key.getSourceType().getIOKeyCodec().getDecodedKey(
-                key.getIdentifier());
+            key.getSourceType() == IOSource.FILE_SYSTEM);
+
         try {
-            Interpreter lineInterpreter =
-                (Interpreter)
-                    Class.forName(decodedKey.getSecond().get(0).toString())
+            Interpreter<T> lineInterpreter =
+                (Interpreter<T>)
+                    Class.forName(key.getAttribute(Interpreter.ATTRIBUTE_NAME))
                          .newInstance();
-            return new FlatFileInput(lineInterpreter, decodedKey.getFirst());
+            return new FlatFileInput<T>(lineInterpreter, key.getIdentifier());
         }
         catch (InstantiationException e) {
              throw new RuntimeException(e);
@@ -51,20 +47,19 @@ public class FlatFileIOFactory implements IOFactory
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings("unchecked")
     @Override
-    public FunctionOutput makeOutput(IOKey key)
+    public <T> FunctionOutput<T> makeOutput(IOKey key)
     {
         Preconditions.checkArgument(
-                key.getSourceType() == IOSource.FLAT_FILE);
-        Pair<String, List<Object>> decodedKey =
-            key.getSourceType().getIOKeyCodec().getDecodedKey(
-                key.getIdentifier());
-        try {
-            Interpreter lineInterpreter =
-                (Interpreter)
-                    Class.forName(decodedKey.getSecond().get(0).toString())
+                key.getSourceType() == IOSource.FILE_SYSTEM);
+
+                try {
+            Interpreter<T> lineInterpreter =
+                (Interpreter<T>)
+                    Class.forName(key.getAttribute(Interpreter.ATTRIBUTE_NAME))
                          .newInstance();
-            return new FlatFileOutput(lineInterpreter, decodedKey.getFirst());
+            return new FlatFileOutput(lineInterpreter, key.getIdentifier());
         }
         catch (InstantiationException e) {
              throw new RuntimeException(e);

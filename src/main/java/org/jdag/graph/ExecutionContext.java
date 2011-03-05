@@ -16,10 +16,4 @@ public interface ExecutionContext
      * task outputs.
      */
     public IOFactory makeIOFactory();
-
-    /**
-     * Returns the <code>UDFFactory<code> to be used for creating the
-     * function that needs to be executed.
-     */
-    public UDFFactory makeUDFFactory();
 }

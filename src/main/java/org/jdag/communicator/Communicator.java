@@ -1,4 +1,4 @@
-package org.jdag.commmunicator;
+package org.jdag.communicator;
 
 import java.util.concurrent.Executor;
 

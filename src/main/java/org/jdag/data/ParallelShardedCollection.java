@@ -12,6 +12,7 @@ import org.jdag.graph.Graph;
 import org.jdag.graph.SimpleVertex;
 import org.jdag.graph.VertexID;
 import org.jdag.io.IOKey;
+import org.jdag.io.KeyGenerator;
 import org.jdag.io.IOSource;
 
 /**
@@ -28,13 +29,21 @@ public class ParallelShardedCollection<T> implements ShardedDataCollection<T>
     private final Map<VertexID, IOKey> myVertexToFileMap;
 
     /**
+     * The key generator to be used for assigning ids to the temporary files
+     * used in the computation
+     */
+    private final KeyGenerator myKeyGenerator;
+
+    /**
      * CTOR
      */
     public ParallelShardedCollection(Graph graph,
-                                                Map<VertexID, IOKey> vertexToFileMap)
+                                                Map<VertexID, IOKey> vertexToFileMap,
+                                                KeyGenerator keyGenerator)
     {
         myGraph = graph;
         myVertexToFileMap = vertexToFileMap;
+        myKeyGenerator = keyGenerator;
     }
 
     /**
@@ -49,7 +58,7 @@ public class ParallelShardedCollection<T> implements ShardedDataCollection<T>
             VertexID inVertex = entry.getKey();
             VertexID id = new VertexID(myGraph.getID(), UUID.randomUUID());
             IOKey outputFileKey =
-                new IOKey(IOSource.FILE_SYSTEM, id + FILE_SUFFIX);
+               myKeyGenerator.generateIdentifier(myGraph.getID(),  id + FILE_SUFFIX);
             SimpleVertex vertex =
                 new SimpleVertex(id,
                                          function.getClass().getName(),
@@ -60,7 +69,8 @@ public class ParallelShardedCollection<T> implements ShardedDataCollection<T>
             myGraph.addEdge(edge);
             vertexToFileMap.put(id, outputFileKey);
         }
-        return new ParallelShardedCollection<V>(myGraph, vertexToFileMap);
+        return new ParallelShardedCollection<V>(
+                myGraph, vertexToFileMap, myKeyGenerator);
     }
 
     /**
@@ -84,6 +94,7 @@ public class ParallelShardedCollection<T> implements ShardedDataCollection<T>
             Edge edge = new Edge(src, id);
             myGraph.addEdge(edge);
         }
-        return new PseudoDataCollection<T>(myGraph, id, outputFileKey);
+        return new PseudoDataCollection<T>(
+                myGraph, id, outputFileKey, myKeyGenerator);
     }
 }

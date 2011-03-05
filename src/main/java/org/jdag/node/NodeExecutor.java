@@ -15,12 +15,12 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
-import org.jdag.commmunicator.Communicator;
-import org.jdag.commmunicator.HostID;
-import org.jdag.commmunicator.Message;
-import org.jdag.commmunicator.Reactor;
 import org.jdag.common.Application;
 import org.jdag.common.ApplicationExecutor;
+import org.jdag.communicator.Communicator;
+import org.jdag.communicator.HostID;
+import org.jdag.communicator.Message;
+import org.jdag.communicator.Reactor;
 import org.jdag.communicator.messages.ExecuteVertexCommand;
 import org.jdag.communicator.messages.ExecuteVertexCommandStatus;
 import org.jdag.communicator.messages.Heartbeat;

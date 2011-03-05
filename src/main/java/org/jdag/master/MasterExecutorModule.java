@@ -2,10 +2,10 @@ package org.jdag.master;
 
 import com.google.inject.matcher.Matchers;
 
-import org.jdag.commmunicator.Communicator;
 import org.jdag.common.persistentds.Persist;
 import org.jdag.common.persistentds.PersistentDS;
 import org.jdag.common.persistentds.PersistentDSManagerAccessor;
+import org.jdag.communicator.Communicator;
 import org.jdag.communicator.impl.AbstractCommModule;
 import org.jdag.communicator.impl.CommunicatorImpl;
 

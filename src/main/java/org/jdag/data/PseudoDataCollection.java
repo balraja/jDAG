@@ -3,11 +3,14 @@ package org.jdag.data;
 import java.util.Collections;
 import java.util.UUID;
 
+import javax.security.auth.kerberos.KerberosKey;
+
 import org.jdag.graph.Edge;
 import org.jdag.graph.Graph;
 import org.jdag.graph.SimpleVertex;
 import org.jdag.graph.VertexID;
 import org.jdag.io.IOKey;
+import org.jdag.io.KeyGenerator;
 import org.jdag.io.IOSource;
 
 /**
@@ -36,17 +39,23 @@ public class PseudoDataCollection<T>
      * stored.
      */
     private final IOKey myFileKey;
+    
+    /** 
+     * The key generator to be used for assigning ids to the temporary files 
+     * used in the computation
+     */
+    private final KeyGenerator myKeyGenerator;
 
     /**
      * CTOR
      */
-    public PseudoDataCollection(Graph graph,
-                              VertexID compVertex,
-                              IOKey fileKey)
+    public PseudoDataCollection(
+            Graph graph, VertexID compVertex, IOKey fileKey, KeyGenerator gen)
     {
         myGraph = graph;
         myVertex = compVertex;
         myFileKey = fileKey;
+        myKeyGenerator = gen;
     }
 
     /**
@@ -73,7 +82,8 @@ public class PseudoDataCollection<T>
     {
          VertexID id = new VertexID(myGraph.getID(), UUID.randomUUID());
          IOKey outputFileKey =
-             new IOKey(IOSource.FILE_SYSTEM, id.toString() + FILE_SUFFIX);
+            myKeyGenerator.generateIdentifier(myGraph.getID(), 
+                                                           id.toString() + FILE_SUFFIX);
 
          SimpleVertex vertex =
              new SimpleVertex(id,
@@ -84,6 +94,7 @@ public class PseudoDataCollection<T>
          Edge edge = new Edge(myVertex, id);
          myGraph.addVertex(vertex);
          myGraph.addEdge(edge);
-         return new PseudoDataCollection<V>(myGraph, id, outputFileKey);
+         return new PseudoDataCollection<V>(
+                 myGraph, id, outputFileKey, myKeyGenerator);
     }
 }

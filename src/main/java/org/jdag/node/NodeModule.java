@@ -2,7 +2,7 @@ package org.jdag.node;
 
 import com.google.inject.Provides;
 
-import org.jdag.commmunicator.Communicator;
+import org.jdag.communicator.Communicator;
 import org.jdag.communicator.impl.AbstractCommModule;
 import org.jdag.communicator.impl.CommunicatorImpl;
 import org.jdag.config.ConfigurationProvider;

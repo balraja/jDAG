@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import org.jdag.data.FunctionOutput;
-import org.jdag.graph.Record;
 
 /**
  * Implements <code>FunctionOutput</code> that writes data to a flat file.
@@ -17,16 +16,16 @@ import org.jdag.graph.Record;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-public class FlatFileOutput implements FunctionOutput
+public class FlatFileOutput<T> implements FunctionOutput<T>
 {
     private final PrintWriter myWriter;
 
-    private final Interpreter myLineInterpreter;
+    private final Interpreter<T> myLineInterpreter;
 
     /**
      * CTOR
      */
-    public FlatFileOutput(Interpreter lineInterpreter, String fileName)
+    public FlatFileOutput(Interpreter<T> lineInterpreter, String fileName)
     {
         myLineInterpreter = lineInterpreter;
         File f = new File(fileName);
@@ -53,7 +52,7 @@ public class FlatFileOutput implements FunctionOutput
      * {@inheritDoc}
      */
     @Override
-    public void write(Record r)
+    public void write(T r)
     {
         myWriter.println(myLineInterpreter.flattenRecord(r));
     }

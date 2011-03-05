@@ -1,4 +1,4 @@
-package org.jdag.commmunicator;
+package org.jdag.communicator;
 
 /**
  * A tagged type to denote a message being sent on wire.

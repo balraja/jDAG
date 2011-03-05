@@ -5,7 +5,7 @@ import com.google.common.collect.Sets.SetView;
 
 import java.util.Set;
 
-import org.jdag.commmunicator.HostID;
+import org.jdag.communicator.HostID;
 import org.jdag.graph.VertexID;
 
 /**

@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.util.Iterator;
 
 import org.jdag.data.FunctionInput;
-import org.jdag.graph.Record;
 
 /**
  * Implements <code>FunctionInput</code> that reads data from a flat file.
@@ -16,9 +15,9 @@ import org.jdag.graph.Record;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-public class FlatFileInput implements FunctionInput
+public class FlatFileInput<T> implements FunctionInput<T>
 {
-    private final Interpreter myLineInterpreter;
+    private final Interpreter<T> myLineInterpreter;
 
     private final File myFile;
 
@@ -26,18 +25,18 @@ public class FlatFileInput implements FunctionInput
      * A simple iterator that reads the file as input and transforms each line
      * to a <code>Record</code> using a <code>RecordFactory</code>
      */
-    private static class FlattenFileIterator implements Iterator<Record>
+    private static class FlattenFileIterator<T> implements Iterator<T>
     {
         private final BufferedReader myFileReader;
 
-        private final Interpreter myLineInterpreter;
+        private final Interpreter<T> myLineInterpreter;
 
-        private Record record = null;
+        private T record = null;
 
         /**
          * CTOR
          */
-        public FlattenFileIterator(File file, Interpreter factory)
+        public FlattenFileIterator(File file, Interpreter<T> interpreter)
         {
             try {
                 myFileReader = new BufferedReader(new FileReader(file));
@@ -45,7 +44,7 @@ public class FlatFileInput implements FunctionInput
             catch (FileNotFoundException e) {
                  throw new RuntimeException(e);
             }
-            myLineInterpreter = factory;
+            myLineInterpreter = interpreter;
         }
 
         /**
@@ -68,7 +67,7 @@ public class FlatFileInput implements FunctionInput
          * {@inheritDoc}
          */
         @Override
-        public Record next()
+        public T next()
         {
             return record;
         }
@@ -86,7 +85,7 @@ public class FlatFileInput implements FunctionInput
     /**
      * CTOR
      */
-    public FlatFileInput(Interpreter recordFactory, String fileName)
+    public FlatFileInput(Interpreter<T> recordFactory, String fileName)
     {
         myFile = new File(fileName);
         myLineInterpreter = recordFactory;
@@ -96,8 +95,8 @@ public class FlatFileInput implements FunctionInput
      * {@inheritDoc}
      */
     @Override
-    public Iterator<Record> getIterator()
+    public Iterator<T> getIterator()
     {
-        return new FlattenFileIterator(myFile, myLineInterpreter);
+        return new FlattenFileIterator<T>(myFile, myLineInterpreter);
     }
 }

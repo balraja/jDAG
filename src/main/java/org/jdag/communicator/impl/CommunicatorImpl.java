@@ -4,6 +4,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 
+import java.io.IOException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -21,14 +22,14 @@ import org.hornetq.api.core.client.ClientSessionFactory;
 import org.hornetq.api.core.client.HornetQClient;
 import org.hornetq.api.core.client.MessageHandler;
 
-import org.jdag.commmunicator.Communicator;
-import org.jdag.commmunicator.HostID;
-import org.jdag.commmunicator.Message;
-import org.jdag.commmunicator.MessageMarshaller;
-import org.jdag.commmunicator.Reactor;
 import org.jdag.common.NamedThreadFactory;
 import org.jdag.common.Pair;
 import org.jdag.common.log.LogFactory;
+import org.jdag.communicator.Communicator;
+import org.jdag.communicator.HostID;
+import org.jdag.communicator.Message;
+import org.jdag.communicator.MessageMarshaller;
+import org.jdag.communicator.Reactor;
 
 /**
  * A simple implementation of communicator using jboss HornetQ messaging
@@ -134,7 +135,12 @@ public class CommunicatorImpl implements Communicator
         public SendMessageTask(HostID hostID, Message message)
         {
             myHostID = hostID;
-            myMessageBody = myMarshaller.marshal(message);
+            try {
+                myMessageBody = myMarshaller.marshal(message);
+            }
+            catch (IOException e) {
+                 throw new RuntimeException(e);
+            }
         }
 
         /**
@@ -180,7 +186,13 @@ public class CommunicatorImpl implements Communicator
             }
             byte[] body = new byte[message.getBodyBuffer().readableBytes()];
             message.getBodyBuffer().readBytes(body);
-            Message m = myMarshaller.unmarshal(body);
+            Message m;
+            try {
+                m = myMarshaller.unmarshal(body);
+            }
+            catch (IOException e) {
+                 throw new RuntimeException(e);
+            }
             synchronized(myMessageToReactorMap) {
                 for (Pair<Reactor, Executor> reactorExecPair :
                     myMessageToReactorMap.get(m.getClass()))

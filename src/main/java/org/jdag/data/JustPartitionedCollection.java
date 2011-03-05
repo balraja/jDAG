@@ -11,6 +11,7 @@ import org.jdag.graph.Graph;
 import org.jdag.graph.SimpleVertex;
 import org.jdag.graph.VertexID;
 import org.jdag.io.IOKey;
+import org.jdag.io.KeyGenerator;
 import org.jdag.io.IOSource;
 
 /**
@@ -28,16 +29,22 @@ public class JustPartitionedCollection<T> implements ShardedDataCollection<T>
 
     private final List<IOKey> myIOKeys;
 
+    private final KeyGenerator myKeyGenerator;
+
     /**
      * CTOR
      */
     public JustPartitionedCollection(
-            Graph graph, VertexID vertexID, List<IOKey> iOKeys)
+            Graph graph,
+            VertexID vertexID,
+            List<IOKey> iOKeys,
+            KeyGenerator keyGenerator)
     {
         super();
         myGraph = graph;
         myVertexID = vertexID;
         myIOKeys = iOKeys;
+        myKeyGenerator = keyGenerator;
     }
 
     /**
@@ -72,6 +79,7 @@ public class JustPartitionedCollection<T> implements ShardedDataCollection<T>
             vertexToFileMap.put(id, outputFileKey);
         }
 
-        return new ParallelShardedCollection<V>(myGraph, vertexToFileMap);
+        return new ParallelShardedCollection<V>(
+                myGraph, vertexToFileMap, myKeyGenerator);
     }
 }

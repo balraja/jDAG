@@ -6,10 +6,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
-import org.jdag.dag.IOSource;
 import org.jdag.data.FunctionOutput;
-import org.jdag.graph.Record;
 import org.jdag.io.IOKey;
+import org.jdag.io.IOSource;
 import org.jdag.io.PersistenceException;
 
 /**
@@ -19,7 +18,7 @@ import org.jdag.io.PersistenceException;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-public class FileOutput implements FunctionOutput
+public class FileOutput<T> implements FunctionOutput<T>
 {
     /** The random access file where data is stored */
     private final File myFile;
@@ -30,7 +29,7 @@ public class FileOutput implements FunctionOutput
     /** CTOR */
     public FileOutput(IOKey key)
     {
-        assert key.getSourceType() == IOSource.SERIALIZED_FILE;
+        assert key.getSourceType() == IOSource.FILE_SYSTEM;
         // For file sources the identifier corresponds to the file path.
         myFile = new File(key.getIdentifier());
         try {
@@ -48,7 +47,7 @@ public class FileOutput implements FunctionOutput
      * {@inheritDoc}
      */
     @Override
-    public void write(Record r)
+    public void write(T r)
     {
         try {
             myObjectOut.writeObject(r);

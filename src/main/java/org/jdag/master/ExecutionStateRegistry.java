@@ -11,10 +11,10 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.jdag.commmunicator.HostID;
 import org.jdag.common.persistentds.Persist;
 import org.jdag.common.persistentds.PersistentDS;
 import org.jdag.common.persistentds.Snapshot;
+import org.jdag.communicator.HostID;
 import org.jdag.graph.GraphID;
 import org.jdag.graph.Vertex;
 import org.jdag.graph.VertexID;

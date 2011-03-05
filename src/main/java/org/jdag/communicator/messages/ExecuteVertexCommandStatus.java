@@ -2,7 +2,7 @@ package org.jdag.communicator.messages;
 
 import java.io.Serializable;
 
-import org.jdag.commmunicator.Message;
+import org.jdag.communicator.Message;
 import org.jdag.graph.ExecutionResult;
 import org.jdag.graph.VertexID;
 

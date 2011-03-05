@@ -1,4 +1,4 @@
-package org.jdag.commmunicator;
+package org.jdag.communicator;
 
 /**
  * Type that defines the basic definition for a piece of code that

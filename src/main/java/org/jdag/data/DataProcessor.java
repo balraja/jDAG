@@ -15,6 +15,7 @@ import org.jdag.graph.SimpleVertex;
 import org.jdag.graph.Vertex;
 import org.jdag.graph.VertexID;
 import org.jdag.io.IOKey;
+import org.jdag.io.KeyGenerator;
 import org.jdag.io.IOSource;
 import org.jdag.io.flatfile.Interpreter;
 
@@ -35,11 +36,17 @@ public final class DataProcessor
     private final Graph myGraph;
 
     /**
+     * The key generator to be used for uniquely identifying the key.
+     */
+    private final KeyGenerator myKeyGenerator;
+
+    /**
      * CTOR
      */
-    private DataProcessor(GraphID graphID)
+    private DataProcessor(GraphID graphID, KeyGenerator keyGenerator)
     {
         myGraph = new Graph(graphID);
+        myKeyGenerator = keyGenerator;
     }
 
     /**
@@ -54,7 +61,7 @@ public final class DataProcessor
          VertexID id = new VertexID(myGraph.getID(), UUID.randomUUID());
          Vertex vertex = new InputVertex(id, fileKey);
          myGraph.addVertex(vertex);
-         return new PseudoDataCollection<T>(myGraph, id, fileKey);
+         return new PseudoDataCollection<T>(myGraph, id, fileKey, myKeyGenerator);
     }
 
     /**
@@ -75,8 +82,9 @@ public final class DataProcessor
          IOKey input = pseudoDataCollection.getFileKey();
          List<IOKey> outputFiles = new ArrayList<IOKey>();
          for (int i = 0; i < splitter.numPartitions(); i++) {
-             outputFiles.add(new IOKey(IOSource.FILE_SYSTEM,
-                                                  input.getIdentifier() + " _" + i + "_" + SHARD));
+             outputFiles.add(myKeyGenerator.generateIdentifier(
+                 myGraph.getID(),
+                 input.getIdentifier() + " _" + i + "_" + SHARD));
          }
 
          VertexID id = new VertexID(myGraph.getID(), UUID.randomUUID());
@@ -90,6 +98,7 @@ public final class DataProcessor
          Edge edge = new Edge(pseudoDataCollection.getVertex(), id);
          myGraph.addVertex(vertex);
          myGraph.addEdge(edge);
-         return new JustPartitionedCollection<T>(myGraph, id, outputFiles);
+         return new JustPartitionedCollection<T>(
+                myGraph, id, outputFiles, myKeyGenerator);
     }
 }

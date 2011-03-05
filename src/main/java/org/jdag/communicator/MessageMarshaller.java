@@ -1,4 +1,6 @@
-package org.jdag.commmunicator;
+package org.jdag.communicator;
+
+import java.io.IOException;
 
 /**
  * Type that defines the protocol used for serializing/deserializing
@@ -10,8 +12,8 @@ package org.jdag.commmunicator;
 public interface MessageMarshaller
 {
     /** Marshals the <code>Message</code> to a byte stream */
-    public byte[] marshal(Message message);
+    public byte[] marshal(Message message) throws IOException;
 
     /** Deserializes the byte stream to <code>Message</code> */
-    public Message unmarshal(byte[] binaryMsg);
+    public Message unmarshal(byte[] binaryMsg) throws IOException;
 }

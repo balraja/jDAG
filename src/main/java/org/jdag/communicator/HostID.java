@@ -1,4 +1,4 @@
-package org.jdag.commmunicator;
+package org.jdag.communicator;
 
 /**
  * Type for representing an unique identifier corresponding to a host.
