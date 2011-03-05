@@ -2,21 +2,21 @@ package org.augur.dag.test;
 
 import java.util.List;
 
-import org.augur.dag.ExecutionContext;
-import org.augur.dag.ExecutionGraph;
-import org.augur.dag.ExecutionGraphID;
-import org.augur.dag.IOKey;
-import org.augur.dag.IOSource;
-import org.augur.dag.Record;
-import org.augur.dag.UserDefinedFunction;
-import org.augur.dag.SimpleInputSplitterFactory.SplitterType;
-import org.augur.dag.builder.Collect;
-import org.augur.dag.builder.GraphBuilder;
-import org.augur.dag.builder.GraphSpecification;
-import org.augur.dag.builder.InputSpecification;
-import org.augur.dag.builder.Join;
-import org.augur.dag.builder.UDFSpecification;
-import org.augur.persistence.flatfile.LineInterpreter;
+import org.jdag.dag.IOSource;
+import org.jdag.dag.SimpleInputSplitterFactory.SplitterType;
+import org.jdag.dag.builder.Collect;
+import org.jdag.dag.builder.GraphBuilder;
+import org.jdag.dag.builder.GraphSpecification;
+import org.jdag.dag.builder.InputSpecification;
+import org.jdag.dag.builder.Join;
+import org.jdag.dag.builder.UDFSpecification;
+import org.jdag.data.Function;
+import org.jdag.graph.ExecutionContext;
+import org.jdag.graph.Graph;
+import org.jdag.graph.GraphID;
+import org.jdag.graph.Record;
+import org.jdag.io.IOKey;
+import org.jdag.io.flatfile.Interpreter;
 
 /**
  * A simple testcase for <code>GraphBuilder</code>
@@ -26,7 +26,7 @@ import org.augur.persistence.flatfile.LineInterpreter;
  */
 public class GraphBuilderTest
 {
-     private static class Add implements UserDefinedFunction
+     private static class Add implements Function
      {
 
         /**
@@ -42,7 +42,7 @@ public class GraphBuilderTest
 
      }
 
-     private static class Max implements UserDefinedFunction
+     private static class Max implements Function
      {
 
         /**
@@ -58,7 +58,7 @@ public class GraphBuilderTest
 
      }
 
-     private static class FlattenLineInterpreter implements LineInterpreter
+     private static class FlattenLineInterpreter implements Interpreter
      {
 
         /**
@@ -115,8 +115,8 @@ public class GraphBuilderTest
          GraphSpecification spec = makeGraphSpecification();
          GraphBuilder builder =
              new GraphBuilder(new FileIOKeyFactory());
-         ExecutionGraph graph =
-             builder.build(spec, new ExecutionGraphID("TestGraph"));
+         Graph graph =
+             builder.build(spec, new GraphID("TestGraph"));
          Assert.assertEquals(graph.getInputs().size(), 2);
          Assert.assertEquals(graph.getVertices().size(), 6);
          Assert.assertEquals(

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <project>
 	
-  <name>augur</name>
+  <name>jDAG</name>
   <url></url>
 
   <licenses>
@@ -29,8 +29,8 @@
   </developers>
   
   <modelVersion>4.0.0</modelVersion>
-  <groupId>augur</groupId>
-  <artifactId>augur</artifactId>
+  <groupId>jDAG</groupId>
+  <artifactId>jDAG</artifactId>
   <version>0.1</version>
   <packaging>jar</packaging>
   
@@ -65,15 +65,6 @@
 	   <artifactId>maven-clean-plugin</artifactId>
 	   <version>2.4.1</version>
 	   <configuration>
-		<filesets>
-			<fileset>
-				<directory>${basedir}/src/main/java/org/augur/communicator/messages/</directory>
-				<includes>
-					<include>*Protos.java</include>
-				</includes>
-				<followSymlinks>false</followSymlinks>
-			</fileset>
-		  </filesets>
 	    </configuration>
       </plugin>
       <plugin>
@@ -83,30 +74,6 @@
           <target>1.6</target>
         </configuration>
       </plugin>
-      <plugin>
-      <artifactId>maven-antrun-plugin</artifactId>
-      <executions>
-        <execution>
-          <id>generate-messages</id>
-          <phase>generate-sources</phase>
-          <configuration>
-             <tasks>
-              <exec executable="protoc">
-                    <arg value="--java_out=src/main/java/"/>
-                    <arg value="src/main/java/org/augur/communicator/messages/execute-vertex.proto"/>
-                    <arg value="src/main/java/org/augur/communicator/messages/execute-vertex-status.proto"/>
-                    <arg value="src/main/java/org/augur/communicator/messages/up-and-alive.proto"/>
-                    <arg value="src/main/java/org/augur/communicator/messages/wired-message.proto"/>
-              </exec>
-            </tasks>
-            <sourceRoot>target/generated-sources</sourceRoot>
-          </configuration>
-          <goals>
-            <goal>run</goal>
-          </goals>
-        </execution>
-      </executions>
-    </plugin>
     </plugins>
   </build>
 

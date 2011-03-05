@@ -7,13 +7,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.augur.dag.FunctionInput;
-import org.augur.dag.FunctionOutput;
-import org.augur.dag.IOFactory;
-import org.augur.dag.IOKey;
-import org.augur.dag.Record;
-import org.augur.dag.IOSource;
-import org.augur.persistence.file.FileIOFactory;
+import org.jdag.dag.IOSource;
+import org.jdag.data.FunctionInput;
+import org.jdag.data.FunctionOutput;
+import org.jdag.graph.Record;
+import org.jdag.io.IOFactory;
+import org.jdag.io.IOKey;
+import org.jdag.io.serialiazition.FileIOFactory;
 import org.testng.AssertJUnit;
 import org.testng.annotations.Test;
 
