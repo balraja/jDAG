@@ -1,7 +1,6 @@
 package org.jdag.io;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.Serializable;
 
 /**
  * Type to be used for representing the keys used for identifying the
@@ -10,13 +9,13 @@ import java.util.Map;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-public class IOKey
+public class IOKey implements Serializable
 {
+    private static final long serialVersionUID = 1L;
+
     private final IOSource mySourceType;
 
     private final String myIdentifier;
-
-    private final Map<String, String> myAttributes;
 
     /**
      * CTOR
@@ -25,7 +24,6 @@ public class IOKey
     {
         mySourceType = sourceType;
         myIdentifier = identifier;
-        myAttributes = new HashMap<String, String>();
     }
 
     /**
@@ -42,26 +40,6 @@ public class IOKey
     public String getIdentifier()
     {
         return myIdentifier;
-    }
-
-    /**
-     * Returns true if the key has the attribute with the given id.
-     */
-    public boolean hasAttribute(String id)
-    {
-        return myAttributes.containsKey(id);
-    }
-
-    /** Returns value associated with the given key */
-    public String getAttribute(String id)
-    {
-        return myAttributes.get(id);
-    }
-
-    /** Adds an attribute with the given value */
-    public void addAttribute(String id, String value)
-    {
-        myAttributes.put(id, value);
     }
 
     /**

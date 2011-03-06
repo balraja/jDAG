@@ -9,17 +9,13 @@ package org.jdag.io;
 public enum IOSource
 {
     /**
-     * Defines the case where data is stored in a file system.
+     * Defines the case where data is stored in a file system as serialized
+     * java objects.
      */
-    FILE_SYSTEM,
+    SERIALIZED_FILE,
 
     /**
-     * Defines the case where data is stored in a relational database.
+     * Defines the case where data is stored in a file system as raw files.
      */
-    RELATIONAL_DB,
-
-    /**
-     * Defines the case where data is stored in a mongo db.
-     */
-    MONGO_DB
+    FLAT_FILE
 }

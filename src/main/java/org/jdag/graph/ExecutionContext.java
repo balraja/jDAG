@@ -1,6 +1,7 @@
 package org.jdag.graph;
 
 import org.jdag.io.IOFactory;
+import org.jdag.io.IOSource;
 
 /**
  * A simple class that encapsulates the <code>TaskGraphContext</code> for a
@@ -15,5 +16,5 @@ public interface ExecutionContext
      * Provides access to IOFactory that in turn be used for taskInputs and
      * task outputs.
      */
-    public IOFactory makeIOFactory();
+    public IOFactory makeIOFactory(IOSource source);
 }

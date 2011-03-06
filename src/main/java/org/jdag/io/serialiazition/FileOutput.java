@@ -29,7 +29,7 @@ public class FileOutput<T> implements FunctionOutput<T>
     /** CTOR */
     public FileOutput(IOKey key)
     {
-        assert key.getSourceType() == IOSource.FILE_SYSTEM;
+        assert key.getSourceType() == IOSource.SERIALIZED_FILE;
         // For file sources the identifier corresponds to the file path.
         myFile = new File(key.getIdentifier());
         try {

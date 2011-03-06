@@ -17,6 +17,7 @@ import org.jdag.graph.VertexID;
 import org.jdag.io.IOKey;
 import org.jdag.io.KeyGenerator;
 import org.jdag.io.IOSource;
+import org.jdag.io.flatfile.FlatFileIOKey;
 import org.jdag.io.flatfile.Interpreter;
 
 /**
@@ -43,10 +44,19 @@ public final class DataProcessor
     /**
      * CTOR
      */
-    private DataProcessor(GraphID graphID, KeyGenerator keyGenerator)
+    public DataProcessor(GraphID graphID, KeyGenerator keyGenerator)
     {
         myGraph = new Graph(graphID);
         myKeyGenerator = keyGenerator;
+    }
+
+
+    /**
+     * Returns the value of graph
+     */
+    public Graph getGraph()
+    {
+        return myGraph;
     }
 
     /**
@@ -55,9 +65,11 @@ public final class DataProcessor
     public <T> DataCollection<T> fromInputSource(
         String fileName, Interpreter<T> interpreter)
     {
-         IOKey fileKey = new IOKey(IOSource.FILE_SYSTEM, fileName);
-         fileKey.addAttribute(Interpreter.ATTRIBUTE_NAME,
-                                     interpreter.getClass().getName());
+         IOKey fileKey =
+             new FlatFileIOKey(IOSource.SERIALIZED_FILE,
+                                      fileName,
+                                      interpreter.getClass().getName());
+
          VertexID id = new VertexID(myGraph.getID(), UUID.randomUUID());
          Vertex vertex = new InputVertex(id, fileKey);
          myGraph.addVertex(vertex);
@@ -80,11 +92,19 @@ public final class DataProcessor
              (PseudoDataCollection<T>) dataCollection;
 
          IOKey input = pseudoDataCollection.getFileKey();
+
          List<IOKey> outputFiles = new ArrayList<IOKey>();
          for (int i = 0; i < splitter.numPartitions(); i++) {
-             outputFiles.add(myKeyGenerator.generateIdentifier(
-                 myGraph.getID(),
-                 input.getIdentifier() + " _" + i + "_" + SHARD));
+             IOKey outputKey =
+                 input instanceof FlatFileIOKey ?
+                         myKeyGenerator.generateFlatFileIdentifier(
+                                 myGraph.getID(),
+                                 input.getIdentifier() + " _" + i + "_" + SHARD,
+                                 ((FlatFileIOKey) input).getInterpreterClassName())
+                         : myKeyGenerator.generateIdentifier(
+                               myGraph.getID(),
+                                input.getIdentifier() + " _" + i + "_" + SHARD);
+            outputFiles.add(outputKey);
          }
 
          VertexID id = new VertexID(myGraph.getID(), UUID.randomUUID());

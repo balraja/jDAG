@@ -67,7 +67,7 @@ public class JustPartitionedCollection<T> implements ShardedDataCollection<T>
         for (IOKey input : myIOKeys) {
             VertexID id = new VertexID(myGraph.getID(), UUID.randomUUID());
             IOKey outputFileKey =
-                new IOKey(IOSource.FILE_SYSTEM, id + FILE_SUFFIX);
+                new IOKey(IOSource.SERIALIZED_FILE, id + FILE_SUFFIX);
             SimpleVertex vertex =
                 new SimpleVertex(id,
                                          function.getClass().getName(),

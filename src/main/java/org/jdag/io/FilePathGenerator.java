@@ -3,6 +3,7 @@ package org.jdag.io;
 import java.io.File;
 
 import org.jdag.graph.GraphID;
+import org.jdag.io.flatfile.FlatFileIOKey;
 
 /**
  * This type should be used when the data is stored in the file system.
@@ -37,6 +38,22 @@ public class FilePathGenerator implements KeyGenerator
             graphDir.mkdir();
         }
         String intermediateFile = myRootDirectory + File.separator + localIdentifier;
-        return new IOKey(IOSource.FILE_SYSTEM, intermediateFile);
+        return new IOKey(IOSource.SERIALIZED_FILE, intermediateFile);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public IOKey generateFlatFileIdentifier(
+            GraphID graphID, String localIdentifier, String interpreterClassName)
+    {
+        File graphDir = new File(myRootDirectory, graphID.getID());
+        if (!graphDir.exists()) {
+            graphDir.mkdir();
+        }
+        String intermediateFile = myRootDirectory + File.separator + localIdentifier;
+        return new FlatFileIOKey(
+                IOSource.FLAT_FILE, intermediateFile, interpreterClassName);
     }
 }

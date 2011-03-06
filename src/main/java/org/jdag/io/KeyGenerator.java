@@ -16,4 +16,11 @@ public interface KeyGenerator
      * corresponding to the local identifier in the file system.
      */
     public IOKey generateIdentifier(GraphID graphID, String localIdentifier);
+
+    /**
+     * Returns an unique identifier that can be used for directly accessing the data
+     * corresponding to the local identifier in the file system.
+     */
+    public IOKey generateFlatFileIdentifier(
+            GraphID graphID, String localIdentifier, String interpreterClassName);
 }

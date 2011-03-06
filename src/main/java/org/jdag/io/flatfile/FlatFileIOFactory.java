@@ -6,7 +6,6 @@ import org.jdag.data.FunctionInput;
 import org.jdag.data.FunctionOutput;
 import org.jdag.io.IOFactory;
 import org.jdag.io.IOKey;
-import org.jdag.io.IOSource;
 
 /**
  * Implements <code>IOFactory</code> that reads data from flat files.
@@ -24,13 +23,13 @@ public class FlatFileIOFactory implements IOFactory
     public <T> FunctionInput<T> makeInput(IOKey key)
     {
         Preconditions.checkArgument(
-            key.getSourceType() == IOSource.FILE_SYSTEM);
+            key instanceof FlatFileIOKey);
 
         try {
+            FlatFileIOKey flatFileKey = (FlatFileIOKey) key;
             Interpreter<T> lineInterpreter =
-                (Interpreter<T>)
-                    Class.forName(key.getAttribute(Interpreter.ATTRIBUTE_NAME))
-                         .newInstance();
+                (Interpreter<T>) (Class.forName(flatFileKey.getInterpreterClassName())
+                                               .newInstance());
             return new FlatFileInput<T>(lineInterpreter, key.getIdentifier());
         }
         catch (InstantiationException e) {
@@ -52,13 +51,13 @@ public class FlatFileIOFactory implements IOFactory
     public <T> FunctionOutput<T> makeOutput(IOKey key)
     {
         Preconditions.checkArgument(
-                key.getSourceType() == IOSource.FILE_SYSTEM);
+                key instanceof FlatFileIOKey);
 
-                try {
+        try {
+            FlatFileIOKey flatFileKey = (FlatFileIOKey) key;
             Interpreter<T> lineInterpreter =
-                (Interpreter<T>)
-                    Class.forName(key.getAttribute(Interpreter.ATTRIBUTE_NAME))
-                         .newInstance();
+                (Interpreter<T>) (Class.forName(flatFileKey.getInterpreterClassName())
+                                               .newInstance());
             return new FlatFileOutput(lineInterpreter, key.getIdentifier());
         }
         catch (InstantiationException e) {

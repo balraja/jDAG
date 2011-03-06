@@ -81,7 +81,7 @@ public class ParallelShardedCollection<T> implements ShardedDataCollection<T>
     {
         VertexID id = new VertexID(myGraph.getID(), UUID.randomUUID());
         IOKey outputFileKey =
-            new IOKey(IOSource.FILE_SYSTEM, id + FILE_SUFFIX);
+            new IOKey(IOSource.SERIALIZED_FILE, id + FILE_SUFFIX);
         List<IOKey> inputKeys = new ArrayList<IOKey>(myVertexToFileMap.values());
         SimpleVertex vertex =
             new SimpleVertex(id,
