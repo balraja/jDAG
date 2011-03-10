@@ -10,7 +10,7 @@ package org.jdag.common.persistentds;
 public interface PersistentDS
 {
     /** Returns the identifier of the persistent data structure */
-    public String ID();
+    public String id();
 
     /** Returns the snapshot that has to be persisted */
     public Snapshot makeSnapshot();

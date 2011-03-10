@@ -2,10 +2,9 @@ package org.jdag.function;
 
 import java.util.List;
 
-import org.jdag.data.FunctionInput;
-import org.jdag.data.FunctionOutput;
+import org.jdag.data.Input;
+import org.jdag.data.Output;
 import org.jdag.data.Splitter;
-import org.jdag.graph.ExecutionContext;
 
 /**
  * The splitter function to be used for hashing the records
@@ -38,13 +37,13 @@ public abstract class HashSplitter<T> implements Splitter<T>
      * {@inheritDoc}
      */
     @Override
-    public void split(FunctionInput<T> input,
-                           List<FunctionOutput<T>> outputs);
+    public void split(Input<T> input,
+                           List<Output<T>> outputs)
     {
         for (T record : new IteratorWrapper<T>(input.getIterator())) {
             int hashCode = Math.abs(record.hashCode());
             int outIndex = hashCode % myNumPartitions;
-            FunctionOutput<T> output = outputs.get(outIndex);
+            Output<T> output = outputs.get(outIndex);
             output.write(record);
         }
     }

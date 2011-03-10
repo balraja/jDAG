@@ -167,7 +167,7 @@ public class MasterExecutor implements Application
         LOG.info("Starting the master");
         myStateRegistry.initFromSnapshot(
            PersistentDSManagerAccessor.getPersistentDSManager()
-                                      .getSnapshot(myStateRegistry.ID()));
+                                      .getSnapshot(myStateRegistry.id()));
         myCommunicator.attachReactor(Heartbeat.class,
                                                    new UpAndALiveReactor());
         myCommunicator.attachReactor(ExecuteVertexCommandStatus.class,
@@ -207,5 +207,6 @@ public class MasterExecutor implements Application
         ApplicationExecutor applicationExecutor =
             new ApplicationExecutor(executor);
         applicationExecutor.run();
+
     }
 }

@@ -8,7 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import org.jdag.data.FunctionOutput;
+import org.jdag.data.Output;
 
 /**
  * Implements <code>FunctionOutput</code> that writes data to a flat file.
@@ -16,7 +16,7 @@ import org.jdag.data.FunctionOutput;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-public class FlatFileOutput<T> implements FunctionOutput<T>
+public class FlatFileOutput<T> implements Output<T>
 {
     private final PrintWriter myWriter;
 

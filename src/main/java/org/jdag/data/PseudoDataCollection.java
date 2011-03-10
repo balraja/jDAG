@@ -1,9 +1,9 @@
 package org.jdag.data;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
-
-import javax.security.auth.kerberos.KerberosKey;
 
 import org.jdag.graph.Edge;
 import org.jdag.graph.Graph;
@@ -11,7 +11,7 @@ import org.jdag.graph.SimpleVertex;
 import org.jdag.graph.VertexID;
 import org.jdag.io.IOKey;
 import org.jdag.io.KeyGenerator;
-import org.jdag.io.IOSource;
+import org.jdag.io.flatfile.FlatFileIOKey;
 
 /**
  * Wraps a <code>DataCollection</code> so that function calls on a
@@ -39,9 +39,9 @@ public class PseudoDataCollection<T>
      * stored.
      */
     private final IOKey myFileKey;
-    
-    /** 
-     * The key generator to be used for assigning ids to the temporary files 
+
+    /**
+     * The key generator to be used for assigning ids to the temporary files
      * used in the computation
      */
     private final KeyGenerator myKeyGenerator;
@@ -82,7 +82,7 @@ public class PseudoDataCollection<T>
     {
          VertexID id = new VertexID(myGraph.getID(), UUID.randomUUID());
          IOKey outputFileKey =
-            myKeyGenerator.generateIdentifier(myGraph.getID(), 
+            myKeyGenerator.generateIdentifier(myGraph.getID(),
                                                            id.toString() + FILE_SUFFIX);
 
          SimpleVertex vertex =
@@ -96,5 +96,69 @@ public class PseudoDataCollection<T>
          myGraph.addEdge(edge);
          return new PseudoDataCollection<V>(
                  myGraph, id, outputFileKey, myKeyGenerator);
+    }
+
+    /**
+     * Creates a node in the execution graph that can be used for splitting
+     * the data into multiple partitions.
+     */
+    public ShardedDataCollection<T> partition(Splitter<T> splitter)
+    {
+
+         IOKey input = getFileKey();
+
+         List<IOKey> outputFiles = new ArrayList<IOKey>();
+         for (int i = 0; i < splitter.numPartitions(); i++) {
+             IOKey outputKey =
+                 input instanceof FlatFileIOKey ?
+                         myKeyGenerator.generateFlatFileIdentifier(
+                                 myGraph.getID(),
+                                 input.getIdentifier() + " _"
+                                 + i
+                                 +ShardedDataCollection.FILE_SUFFIX,
+                                 ((FlatFileIOKey) input).getInterpreterClassName())
+                         : myKeyGenerator.generateIdentifier(
+                               myGraph.getID(),
+                                input.getIdentifier() + " _"
+                                + i
+                                + ShardedDataCollection.FILE_SUFFIX);
+            outputFiles.add(outputKey);
+         }
+
+         VertexID id = new VertexID(myGraph.getID(), UUID.randomUUID());
+
+         SimpleVertex vertex =
+             new SimpleVertex(id,
+                                      splitter.getClass().getName(),
+                                      Collections.singletonList(input),
+                                      outputFiles);
+
+         Edge edge = new Edge(getVertex(), id);
+         myGraph.addVertex(vertex);
+         myGraph.addEdge(edge);
+         return new JustPartitionedCollection<T>(
+                myGraph, id, outputFiles, myKeyGenerator);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void writeOutput(String fileName, Dumper<T> dumper)
+    {
+        VertexID id = new VertexID(myGraph.getID(), UUID.randomUUID());
+        IOKey outputFileKey =
+           myKeyGenerator.generateFlatFileIdentifier(
+                   myGraph.getID(), fileName, null);
+
+        SimpleVertex vertex =
+            new SimpleVertex(id,
+                                     dumper.getClass().getName(),
+                                     Collections.singletonList(myFileKey),
+                                     Collections.singletonList(outputFileKey));
+
+        Edge edge = new Edge(myVertex, id);
+        myGraph.addVertex(vertex);
+        myGraph.addEdge(edge);
     }
 }

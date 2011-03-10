@@ -14,6 +14,6 @@ public interface Merger<T> extends Executable
     /**
      * Merges the data from different shards into a single collection back.
      */
-    public void merge(List<FunctionInput<T>> shards,
-                              FunctionOutput<T> output);
+    public void merge(List<Input<T>> shards,
+                              Output<T> output);
 }

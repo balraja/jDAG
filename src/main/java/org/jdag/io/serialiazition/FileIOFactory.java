@@ -1,7 +1,7 @@
 package org.jdag.io.serialiazition;
 
-import org.jdag.data.FunctionInput;
-import org.jdag.data.FunctionOutput;
+import org.jdag.data.Input;
+import org.jdag.data.Output;
 import org.jdag.io.IOFactory;
 import org.jdag.io.IOKey;
 
@@ -18,7 +18,7 @@ public class FileIOFactory implements IOFactory
      * {@inheritDoc}
      */
     @Override
-    public <T> FunctionInput<T> makeInput(IOKey key)
+    public <T> Input<T> makeInput(IOKey key)
     {
         return new FileInput<T>(key);
     }
@@ -27,7 +27,7 @@ public class FileIOFactory implements IOFactory
      * {@inheritDoc}
      */
     @Override
-    public <T> FunctionOutput<T> makeOutput(IOKey key)
+    public <T> Output<T> makeOutput(IOKey key)
     {
         return new FileOutput<T>(key);
     }

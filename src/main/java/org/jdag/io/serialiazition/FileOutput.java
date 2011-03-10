@@ -6,7 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
-import org.jdag.data.FunctionOutput;
+import org.jdag.data.Output;
 import org.jdag.io.IOKey;
 import org.jdag.io.IOSource;
 import org.jdag.io.PersistenceException;
@@ -18,7 +18,7 @@ import org.jdag.io.PersistenceException;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-public class FileOutput<T> implements FunctionOutput<T>
+public class FileOutput<T> implements Output<T>
 {
     /** The random access file where data is stored */
     private final File myFile;

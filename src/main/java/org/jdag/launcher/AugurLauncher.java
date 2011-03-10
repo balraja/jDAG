@@ -33,7 +33,7 @@ import org.jdag.common.log.LogFactory;
 public class AugurLauncher
 {
     /** The logger */
-    private final Logger LOG =  LogFactory.getLogger(AugurLauncher.class);
+    private static final Logger LOG =  LogFactory.getLogger(AugurLauncher.class);
 
     private static final String JAVA_COMMAND =
         "C:\\Program Files\\Java\\jdk1.6.0_21\\bin\\javaw";
@@ -51,8 +51,6 @@ public class AugurLauncher
     private final XMLConfiguration myTopologyConfiguration;
 
     private final String myClassPath;
-
-    private String myMasterName;
 
     /**
      * Reads lines of class path file and builds them to a single string.
@@ -111,11 +109,9 @@ public class AugurLauncher
                            + " Hence aborting");
             }
 
+
             File classPathFile =
-                new File(ClassLoader.getSystemClassLoader()
-                        .getResource(commandLine.getOptionValue(
-                             OPTION_CLASSPATH_FILE_NAME))
-                        .getFile());
+                new File(commandLine.getOptionValue(OPTION_CLASSPATH_FILE_NAME));
 
             myClassPath =
                 Files.readLines(classPathFile,
@@ -126,6 +122,7 @@ public class AugurLauncher
                 new File(ClassLoader.getSystemClassLoader()
                                     .getResource(TOPOLOGY_FILE)
                                     .getFile());
+            LOG.info("Parsing topology from " + f.toString());
             myTopologyConfiguration = new XMLConfiguration(f);
         }
         catch (ConfigurationException e) {
@@ -160,10 +157,12 @@ public class AugurLauncher
             myTopologyConfiguration.getString("master.name");
         cmdBuilder.append(addProperty("augur.communicator.clientName", name));
         String logFile =
-            myTopologyConfiguration.getString("master.logFile");
+            myTopologyConfiguration.getString("master.logfile");
         cmdBuilder.append(addProperty(LogFactory.PROP_LOG_FILE, logFile));
 
-        try {
+       try {
+            LOG.info("starting master");
+            LOG.info(cmdBuilder.toString());
             new ProcessBuilder(cmdBuilder.toString()).start();
         }
         catch (IOException e) {
@@ -181,7 +180,8 @@ public class AugurLauncher
         cmdBuilder.append(" ");
         cmdBuilder.append(WORKER_CLASS_NAME);
         cmdBuilder.append(" -cp " + myClassPath);
-        cmdBuilder.append(addProperty("augur.node.masterHostID", myMasterName));
+        cmdBuilder.append(addProperty("augur.node.masterHostID",
+                myTopologyConfiguration.getString("master.name")));
         // XXX For now everything is local host.
 
         List<Object> workers =
@@ -193,9 +193,10 @@ public class AugurLauncher
             String name = worker.getString("name");
             cmdBuilder.append(addProperty("augur.communicator.clientName", name));
             String logFile =
-                myTopologyConfiguration.getString("logFile");
+                myTopologyConfiguration.getString("logfile");
             cmdBuilder.append(addProperty(LogFactory.PROP_LOG_FILE, logFile));
-
+            LOG.info("Starting worker " + name );
+            LOG.info(cmdBuilder.toString());
             try {
                 new ProcessBuilder(cmdBuilder.toString()).start();
             }

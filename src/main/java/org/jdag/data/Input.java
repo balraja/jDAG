@@ -8,7 +8,7 @@ import java.util.Iterator;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-public interface FunctionInput<T>
+public interface Input<T>
 {
     /**
      * Returns an <code>Iterator</code> over the <code>Record</code>s to be

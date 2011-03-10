@@ -8,8 +8,8 @@ import java.util.Map;
 
 import org.jdag.data.ComputeFailedException;
 import org.jdag.data.Function;
-import org.jdag.data.FunctionInput;
-import org.jdag.data.FunctionOutput;
+import org.jdag.data.Input;
+import org.jdag.data.Output;
 import org.jdag.function.IteratorWrapper;
 import org.jdag.graph.ExecutionContext;
 import org.jdag.io.IOKey;
@@ -27,8 +27,8 @@ public class CountWords implements Function<String, Map<String,Integer>>
      * {@inheritDoc}
      */
     @Override
-    public void process(FunctionInput<String> input,
-                                 FunctionOutput<Map<String, Integer>> output)
+    public void process(Input<String> input,
+                                 Output<Map<String, Integer>> output)
     {
          Map<String, Integer> wordcountMap = new HashMap<String, Integer>();
          com.google.common.base.Function<String,Integer> lookupFunction =
@@ -52,11 +52,11 @@ public class CountWords implements Function<String, Map<String,Integer>>
                                 List<IOKey> outputKeys) throws ComputeFailedException
     {
         IOKey inputKey = inputKeys.get(0);
-         FunctionInput<String> input =
+         Input<String> input =
              context.makeIOFactory(inputKey.getSourceType()).makeInput(inputKey);
 
          IOKey outputKey = outputKeys.get(0);
-         FunctionOutput<Map<String,Integer>> output =
+         Output<Map<String,Integer>> output =
              context.makeIOFactory(outputKey.getSourceType()).makeOutput(outputKey);
 
          process(input, output);

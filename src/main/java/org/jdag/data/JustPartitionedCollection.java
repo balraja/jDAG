@@ -61,7 +61,7 @@ public class JustPartitionedCollection<T> implements ShardedDataCollection<T>
      * {@inheritDoc}
      */
     @Override
-    public <V> DataCollection<V> apply(Function<T, V> function)
+    public <V> ShardedDataCollection<V> apply(Function<T, V> function)
     {
         Map<VertexID,IOKey> vertexToFileMap = new HashMap<VertexID, IOKey>();
         for (IOKey input : myIOKeys) {

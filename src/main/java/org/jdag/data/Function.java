@@ -14,5 +14,5 @@ public interface Function<I,O>
     /**
      * The definition of the function that needs to be executed on a vertex.
      */
-    public void process( FunctionInput<I> input,  FunctionOutput<O> output);
+    public void process( Input<I> input,  Output<O> output);
 }

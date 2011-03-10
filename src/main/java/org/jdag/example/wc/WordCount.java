@@ -41,12 +41,13 @@ public class WordCount
          DataCollection<String> words =
              processor.fromInputSource(myInputFile, new SimpleInterpreter());
          ShardedDataCollection<String> partitionedInput =
-             processor.partition(words, new SimpleLineSplitter(4));
+             words.partition(new SimpleLineSplitter(4));
          ShardedDataCollection<Map<String,Integer>> partialResults =
              partitionedInput.apply(new CountWords());
          DataCollection<Map<String, Integer>> wordCount =
              partialResults.merge(new WordCountMerger());
-
+         wordCount.writeOutput("C:\\temp\\wcout.txt",
+                                          new ExecutableDumper());
          return processor.getGraph();
     }
 

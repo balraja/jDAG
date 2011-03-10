@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jdag.data.ComputeFailedException;
-import org.jdag.data.FunctionInput;
-import org.jdag.data.FunctionOutput;
+import org.jdag.data.Input;
+import org.jdag.data.Output;
 import org.jdag.function.HashSplitter;
 import org.jdag.graph.ExecutionContext;
 import org.jdag.io.IOKey;
@@ -34,15 +34,15 @@ public class SimpleLineSplitter extends HashSplitter<String>
     public void execute(ExecutionContext context, List<IOKey> inputKeys,
             List<IOKey> outputKeys) throws ComputeFailedException
     {
-         List<FunctionOutput<String>> outputs =
-             new ArrayList<FunctionOutput<String>>();
+         List<Output<String>> outputs =
+             new ArrayList<Output<String>>();
         for (IOKey outputKey : outputKeys) {
             outputs.add(context.makeIOFactory(outputKey.getSourceType())
                                         .<String>makeOutput(outputKey));
         }
 
         IOKey inputKey = inputKeys.get(0);
-        FunctionInput<String> input =
+        Input<String> input =
             context.makeIOFactory(inputKey.getSourceType()).makeInput(inputKey);
 
         split(input, outputs);

@@ -47,6 +47,16 @@ public class ExecutionStateRegistry implements PersistentDS
 
         private Map<GraphID, Schedule> myGraph2ScheduleMap;
 
+        /**
+         * CTOR
+         */
+        public ExecutionRegistryState()
+        {
+            myWorkerNodes = null;
+            myVertex2HostMap = null;
+            myGraph2ScheduleMap = null;
+        }
+
         /** CTOR */
         public ExecutionRegistryState(
             Set<HostID> workerNodes,
@@ -228,7 +238,7 @@ public class ExecutionStateRegistry implements PersistentDS
      * {@inheritDoc}
      */
     @Override
-    public String ID()
+    public String id()
     {
         return MY_ID;
     }

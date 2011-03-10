@@ -2,8 +2,8 @@ package org.jdag.io.flatfile;
 
 import com.google.common.base.Preconditions;
 
-import org.jdag.data.FunctionInput;
-import org.jdag.data.FunctionOutput;
+import org.jdag.data.Input;
+import org.jdag.data.Output;
 import org.jdag.io.IOFactory;
 import org.jdag.io.IOKey;
 
@@ -20,7 +20,7 @@ public class FlatFileIOFactory implements IOFactory
      */
     @SuppressWarnings("unchecked")
     @Override
-    public <T> FunctionInput<T> makeInput(IOKey key)
+    public <T> Input<T> makeInput(IOKey key)
     {
         Preconditions.checkArgument(
             key instanceof FlatFileIOKey);
@@ -28,8 +28,8 @@ public class FlatFileIOFactory implements IOFactory
         try {
             FlatFileIOKey flatFileKey = (FlatFileIOKey) key;
             Interpreter<T> lineInterpreter =
-                (Interpreter<T>) (Class.forName(flatFileKey.getInterpreterClassName())
-                                               .newInstance());
+                (Interpreter<T>) Class.forName(flatFileKey.getInterpreterClassName())
+                                               .newInstance();
             return new FlatFileInput<T>(lineInterpreter, key.getIdentifier());
         }
         catch (InstantiationException e) {
@@ -48,17 +48,22 @@ public class FlatFileIOFactory implements IOFactory
      */
     @SuppressWarnings("unchecked")
     @Override
-    public <T> FunctionOutput<T> makeOutput(IOKey key)
+    public <T> Output<T> makeOutput(IOKey key)
     {
         Preconditions.checkArgument(
                 key instanceof FlatFileIOKey);
 
         try {
             FlatFileIOKey flatFileKey = (FlatFileIOKey) key;
-            Interpreter<T> lineInterpreter =
-                (Interpreter<T>) (Class.forName(flatFileKey.getInterpreterClassName())
-                                               .newInstance());
-            return new FlatFileOutput(lineInterpreter, key.getIdentifier());
+            if (flatFileKey.getInterpreterClassName() != null) {
+                Interpreter<T> lineInterpreter =
+                    (Interpreter<T>) Class.forName(flatFileKey.getInterpreterClassName())
+                                                   .newInstance();
+                return new FlatFileOutput(lineInterpreter, key.getIdentifier());
+            }
+            else {
+                return new FlatFileOutput(null, flatFileKey.getIdentifier());
+            }
         }
         catch (InstantiationException e) {
              throw new RuntimeException(e);

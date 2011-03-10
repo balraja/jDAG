@@ -7,7 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Iterator;
 
-import org.jdag.data.FunctionInput;
+import org.jdag.data.Input;
 
 /**
  * Implements <code>FunctionInput</code> that reads data from a flat file.
@@ -15,7 +15,7 @@ import org.jdag.data.FunctionInput;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-public class FlatFileInput<T> implements FunctionInput<T>
+public class FlatFileInput<T> implements Input<T>
 {
     private final Interpreter<T> myLineInterpreter;
 

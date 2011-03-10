@@ -1,6 +1,4 @@
-/**
- *
- */
+
 package org.jdag.node;
 
 import java.io.IOException;
@@ -27,6 +25,15 @@ public class ExecutableVertex  implements Vertex, Callable<ExecutionResult>
     private final Vertex myVertex;
 
 	private final ExecutionContext myExecutionContext;
+
+	/**
+	 * CTOR
+	 */
+	public ExecutableVertex()
+	{
+	    myVertex = null;
+	    myExecutionContext = null;
+	}
 
 	/**
 	 * CTOR

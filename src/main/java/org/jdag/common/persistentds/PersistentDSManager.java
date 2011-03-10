@@ -45,9 +45,9 @@ public class PersistentDSManager implements MethodInterceptor
                 invocation.getThis().getClass()));
         PersistentDS ds = (PersistentDS) invocation.getThis();
         PersistenceDSSession session =
-            myType2PersistenceSession.get(ds.ID());
+            myType2PersistenceSession.get(ds.id());
         if (session == null) {
-            session = new PersistenceDSSession(ds.ID(), myConfig);
+            session = new PersistenceDSSession(ds.id(), myConfig);
         }
         session.saveSnapshot(ds.makeSnapshot());
         return result;

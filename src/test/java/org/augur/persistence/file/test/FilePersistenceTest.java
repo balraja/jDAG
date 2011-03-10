@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.jdag.data.FunctionInput;
-import org.jdag.data.FunctionOutput;
+import org.jdag.data.Input;
+import org.jdag.data.Output;
 import org.jdag.io.IOFactory;
 import org.jdag.io.IOKey;
 import org.jdag.io.IOSource;
@@ -118,7 +118,7 @@ public class FilePersistenceTest
     /** Factory method for making a key to the file */
     private IOKey makeKey()
     {
-        return new IOKey(IOSource.FILE_SYSTEM, "C:\\temp\\test1.txt");
+        return new IOKey(IOSource.SERIALIZED_FILE, "C:\\temp\\test1.txt");
     }
 
     /** Factory method for making a IOFactory for reading data */
@@ -130,7 +130,7 @@ public class FilePersistenceTest
     @Test(testName="writeTest", groups={"persistence"})
     public void testWrite()
     {
-        FunctionOutput<TestFileRecord> output = makeIOFactory().makeOutput(makeKey());
+        Output<TestFileRecord> output = makeIOFactory().makeOutput(makeKey());
         for (TestFileRecord r : myRecords) {
             output.write(r);
         }
@@ -142,7 +142,7 @@ public class FilePersistenceTest
           groups={"persistence"})
     public void testRead()
     {
-        FunctionInput<TestFileRecord> in = makeIOFactory().makeInput(makeKey());
+        Input<TestFileRecord> in = makeIOFactory().makeInput(makeKey());
         Iterator<TestFileRecord> itr = in.getIterator();
         ArrayList<TestFileRecord> readData =
             new ArrayList<TestFileRecord>(TOTAL_RECORDS);

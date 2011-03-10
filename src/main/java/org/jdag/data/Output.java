@@ -6,7 +6,7 @@ package org.jdag.data;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-public interface FunctionOutput<T>
+public interface Output<T>
 {
     /** Writes the result to the o/p source */
     public void write(T record);

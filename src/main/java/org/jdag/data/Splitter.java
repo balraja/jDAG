@@ -16,6 +16,6 @@ public interface Splitter<T> extends Executable
     /**
      * Splits the data into multiple partitions.
      */
-    public void split(FunctionInput<T> input,
-                           List<FunctionOutput<T>> outputs);
+    public void split(Input<T> input,
+                           List<Output<T>> outputs);
 }

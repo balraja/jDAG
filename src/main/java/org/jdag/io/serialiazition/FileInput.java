@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.Iterator;
 
-import org.jdag.data.FunctionInput;
+import org.jdag.data.Input;
 import org.jdag.io.IOKey;
 import org.jdag.io.PersistenceException;
 
@@ -19,7 +19,7 @@ import org.jdag.io.PersistenceException;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-public class FileInput<T> implements FunctionInput<T>
+public class FileInput<T> implements Input<T>
 {
     private final IOKey myInputKey;
 

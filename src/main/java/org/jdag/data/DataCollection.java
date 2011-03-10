@@ -17,4 +17,15 @@ public interface DataCollection<T>
      * Applies the function directly on the data collection.
      */
     public <V> DataCollection<V> apply(Function<T, V> function);
+
+    /**
+     * Creates a node in the execution graph that can be used for splitting
+     * the data into multiple partitions.
+     */
+    public ShardedDataCollection<T> partition(Splitter<T> splitter);
+
+    /**
+     * Dump the contents of collection to the file.
+     */
+    public void writeOutput(String fileName, Dumper<T> dumper);
 }

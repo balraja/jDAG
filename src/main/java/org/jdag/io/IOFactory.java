@@ -1,7 +1,7 @@
 package org.jdag.io;
 
-import org.jdag.data.FunctionInput;
-import org.jdag.data.FunctionOutput;
+import org.jdag.data.Input;
+import org.jdag.data.Output;
 
 /**
  * Type for denoting a factory that can be used for making inputs and outputs
@@ -13,8 +13,8 @@ import org.jdag.data.FunctionOutput;
 public interface IOFactory
 {
     /** A factory method for making input corresponding to a task */
-    public <T> FunctionInput<T> makeInput(IOKey key);
+    public <T> Input<T> makeInput(IOKey key);
 
     /** A factory method for making output corresponding to a task */
-    public <T> FunctionOutput<T> makeOutput(IOKey key);
+    public <T> Output<T> makeOutput(IOKey key);
 }

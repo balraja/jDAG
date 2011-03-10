@@ -51,7 +51,8 @@ public class CommunicatorImpl implements Communicator
     private static final String CONSUMER_TF_NAME = "HQMessageConsumer";
 
     /** The logger */
-    private final Logger LOG =  LogFactory.getLogger(CommunicatorImpl.class);
+    private static final Logger LOG =
+        LogFactory.getLogger(CommunicatorImpl.class);
 
     /** The connection factory to be used for the creating a jms connection */
     private final ClientSessionFactory myClientSessionFactory;
