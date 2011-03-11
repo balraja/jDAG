@@ -207,6 +207,5 @@ public class MasterExecutor implements Application
         ApplicationExecutor applicationExecutor =
             new ApplicationExecutor(executor);
         applicationExecutor.run();
-
     }
 }

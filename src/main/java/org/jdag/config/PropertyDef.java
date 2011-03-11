@@ -1,16 +1,20 @@
 package org.jdag.config;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 /**
- * All methods in a configuration interface will be annotated by this.
- *
  * @author Balraja Subbiah
  * @version $Id:$
+ *
  */
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
 public @interface PropertyDef
 {
-    /** The type to which the data has to be parsed to */
-    public ExpectedResult resultType();
-
-    /** The name of the property */
     public String name();
+
+    public ExpectedResult resultType();
 }

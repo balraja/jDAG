@@ -3,7 +3,6 @@ package org.jdag.config;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 
@@ -14,29 +13,36 @@ import org.apache.commons.configuration.PropertiesConfiguration;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-public class ConfigurationProvider implements InvocationHandler
+public final class ConfigurationProvider implements InvocationHandler
 {
     private final String myBasePrefix;
 
     private final PropertiesConfiguration myPropertiesConfiguration;
 
+    private final Class<?> myConfigDefnClass;
+
     /**
      * CTOR
      */
-    private ConfigurationProvider(String src, String basePrefix)
+    private ConfigurationProvider(String src,
+                                  String basePrefix,
+                                  Class<?> configDefinitionClass)
         throws ConfigurationException
     {
         myPropertiesConfiguration = new PropertiesConfiguration(src);
         myBasePrefix = basePrefix;
+        myConfigDefnClass = configDefinitionClass;
     }
 
     /**
      * CTOR
      */
-    private ConfigurationProvider(String basePrefix)
+    private ConfigurationProvider(String basePrefix,
+                                  Class<?> configDefinitionClass)
     {
         myBasePrefix = basePrefix;
         myPropertiesConfiguration = null;
+        myConfigDefnClass = configDefinitionClass;
     }
 
     /**
@@ -45,27 +51,37 @@ public class ConfigurationProvider implements InvocationHandler
     @Override
     public Object invoke(Object proxy, Method method, Object[] args)
     {
-        PropertyDef def = method.getAnnotation(PropertyDef.class);
-        String property = myBasePrefix + "." + def.name();
-        String value = System.getProperty(property);
-        switch (def.resultType()) {
-        case INT:
-            return value != null ? Integer.parseInt(value)
-                                 : myPropertiesConfiguration != null ?
-                                       myPropertiesConfiguration.getInt(property)
-                                       : null;
-        case STRING:
-            return value != null ? value
-                                 : myPropertiesConfiguration != null ?
-                                       myPropertiesConfiguration.getProperty(property)
-                                       : null;
-        case BOOLEAN:
-            return value != null ? Boolean.parseBoolean(value)
-                                 : myPropertiesConfiguration != null ?
-                                       myPropertiesConfiguration.getBoolean(property)
-                                       : null;
+        try {
+            Method actualDefnMethod =
+                myConfigDefnClass.getDeclaredMethod(method.getName());
+            PropertyDef def = actualDefnMethod.getAnnotation(PropertyDef.class);
+            String property = myBasePrefix + "." + def.name();
+            String value = System.getProperty(property);
+            switch (def.resultType()) {
+            case INT:
+                return value != null ? Integer.parseInt(value)
+                                     : myPropertiesConfiguration != null ?
+                                           myPropertiesConfiguration.getInt(property)
+                                           : null;
+            case STRING:
+                return value != null ? value
+                                     : myPropertiesConfiguration != null ?
+                                           myPropertiesConfiguration.getProperty(property)
+                                           : null;
+            case BOOLEAN:
+                return value != null ? Boolean.parseBoolean(value)
+                                     : myPropertiesConfiguration != null ?
+                                           myPropertiesConfiguration.getBoolean(property)
+                                           : null;
+            }
+            return null;
         }
-        return null;
+        catch (SecurityException e) {
+             throw new RuntimeException(e);
+        }
+        catch (NoSuchMethodException e) {
+             throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -80,8 +96,10 @@ public class ConfigurationProvider implements InvocationHandler
         try {
             ConfigurationProvider provider =
                 propertyFile != null ?
-                    new ConfigurationProvider(propertyFile, s.prefix())
-                    : new ConfigurationProvider(s.prefix());
+                    new ConfigurationProvider(
+                            propertyFile, s.prefix(), configDefinitionClass)
+                    : new ConfigurationProvider(
+                            s.prefix(), configDefinitionClass);
 
             return (T) Proxy.newProxyInstance(
                 configDefinitionClass.getClassLoader(),

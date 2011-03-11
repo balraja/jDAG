@@ -44,7 +44,7 @@ import org.jdag.communicator.Reactor;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-public class CommunicatorImpl implements Communicator
+public final class CommunicatorImpl implements Communicator
 {
     private static final String PRODUCER_TF_NAME = "HQMessageProducer";
 
@@ -222,7 +222,8 @@ public class CommunicatorImpl implements Communicator
         myConfig = config;
         myMarshaller = messageMarshaller;
         myMessageToReactorMap =
-            HashMultimap.<Class<? extends Message>, Pair<Reactor, Executor>>create();
+            HashMultimap.<Class<? extends Message>,
+                          Pair<Reactor, Executor>>create();
         myClientSessionFactory =
             HornetQClient.createClientSessionFactory(transportConfiguration);
 
@@ -259,7 +260,6 @@ public class CommunicatorImpl implements Communicator
             myMessageToReactorMap.put(type,
                                        new Pair<Reactor, Executor>(r, null));
         }
-
     }
 
     /**

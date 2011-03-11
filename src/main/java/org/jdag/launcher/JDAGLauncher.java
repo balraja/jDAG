@@ -30,19 +30,19 @@ import org.jdag.common.log.LogFactory;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-public class AugurLauncher
+public class JDAGLauncher
 {
     /** The logger */
-    private static final Logger LOG =  LogFactory.getLogger(AugurLauncher.class);
+    private static final Logger LOG =  LogFactory.getLogger(JDAGLauncher.class);
 
     private static final String JAVA_COMMAND =
-        "C:\\Program Files\\Java\\jdk1.6.0_21\\bin\\javaw";
+        "java";
 
     private static final String MASTER_CLASS_NAME =
-        "org.augur.master.MasterExecutor";
+        "org.jdag.master.MasterExecutor";
 
     private static final String WORKER_CLASS_NAME =
-        "org.augur.node.NodeExecutor";
+        "org.jdag.node.NodeExecutor";
 
     private static final String TOPOLOGY_FILE = "topology.xml";
 
@@ -91,7 +91,7 @@ public class AugurLauncher
      * CTOR
      */
     @SuppressWarnings("static-access")
-    public AugurLauncher(String[] args)
+    public JDAGLauncher(String[] args)
     {
         try {
             Option classPathFileOption =
@@ -149,16 +149,14 @@ public class AugurLauncher
         StringBuilder cmdBuilder = new StringBuilder();
         cmdBuilder.append(JAVA_COMMAND);
         cmdBuilder.append(" ");
-        cmdBuilder.append(MASTER_CLASS_NAME);
         cmdBuilder.append(" -cp " + myClassPath);
-        // XXX For now everything is local host.
-
         String name =
             myTopologyConfiguration.getString("master.name");
         cmdBuilder.append(addProperty("augur.communicator.clientName", name));
         String logFile =
             myTopologyConfiguration.getString("master.logfile");
         cmdBuilder.append(addProperty(LogFactory.PROP_LOG_FILE, logFile));
+        cmdBuilder.append(MASTER_CLASS_NAME);
 
        try {
             LOG.info("starting master");
@@ -175,19 +173,18 @@ public class AugurLauncher
     @SuppressWarnings("unchecked")
     public void startWorkers()
     {
-        StringBuilder cmdBuilder = new StringBuilder();
-        cmdBuilder.append(JAVA_COMMAND);
-        cmdBuilder.append(" ");
-        cmdBuilder.append(WORKER_CLASS_NAME);
-        cmdBuilder.append(" -cp " + myClassPath);
-        cmdBuilder.append(addProperty("augur.node.masterHostID",
-                myTopologyConfiguration.getString("master.name")));
-        // XXX For now everything is local host.
-
         List<Object> workers =
             myTopologyConfiguration.configurationsAt("workers.worker");
-        for(Iterator<Object> it = workers.iterator(); it.hasNext();)
+        Iterator<Object> it = workers.iterator();
+        while (it.hasNext())
         {
+            StringBuilder cmdBuilder = new StringBuilder();
+            cmdBuilder.append(JAVA_COMMAND);
+            cmdBuilder.append(" ");
+
+            cmdBuilder.append(" -cp " + myClassPath);
+            cmdBuilder.append(addProperty("augur.node.masterHostID",
+                    myTopologyConfiguration.getString("master.name")));
             HierarchicalConfiguration worker =
                 (HierarchicalConfiguration) it.next();
             String name = worker.getString("name");
@@ -195,6 +192,7 @@ public class AugurLauncher
             String logFile =
                 myTopologyConfiguration.getString("logfile");
             cmdBuilder.append(addProperty(LogFactory.PROP_LOG_FILE, logFile));
+
             LOG.info("Starting worker " + name );
             LOG.info(cmdBuilder.toString());
             try {
@@ -210,13 +208,13 @@ public class AugurLauncher
     /** Returns a property that can be added to a command line */
     private String addProperty(String PropertyName, String value)
     {
-        return " -D " + PropertyName + "=" + value;
+        return " -D" + PropertyName + "=" + value + " ";
     }
 
     /** Starting point for the launcher */
     public static void main(String[] args)
     {
-        AugurLauncher launcher = new AugurLauncher(args);
+        JDAGLauncher launcher = new JDAGLauncher(args);
         launcher.startMaster();
         launcher.startWorkers();
     }

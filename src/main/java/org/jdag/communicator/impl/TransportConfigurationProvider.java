@@ -10,7 +10,6 @@ import java.util.Map;
 
 import org.hornetq.api.core.TransportConfiguration;
 
-
 /**
  * Implements google provider to support transport configuration injection.
  *
