@@ -11,7 +11,6 @@ import org.jdag.graph.SimpleVertex;
 import org.jdag.graph.VertexID;
 import org.jdag.io.IOKey;
 import org.jdag.io.KeyGenerator;
-import org.jdag.io.flatfile.FlatFileIOKey;
 
 /**
  * Wraps a <code>DataCollection</code> so that function calls on a
@@ -105,35 +104,26 @@ public class PseudoDataCollection<T>
     public ShardedDataCollection<T> partition(Splitter<T> splitter)
     {
 
+         VertexID id = new VertexID(myGraph.getID(), UUID.randomUUID());
          IOKey input = getFileKey();
-
          List<IOKey> outputFiles = new ArrayList<IOKey>();
          for (int i = 0; i < splitter.numPartitions(); i++) {
              IOKey outputKey =
-                 input instanceof FlatFileIOKey ?
-                         myKeyGenerator.generateFlatFileIdentifier(
-                                 myGraph.getID(),
-                                 input.getIdentifier() + " _"
-                                 + i
-                                 +ShardedDataCollection.FILE_SUFFIX,
-                                 ((FlatFileIOKey) input).getInterpreterClassName())
-                         : myKeyGenerator.generateIdentifier(
+                myKeyGenerator.generateIdentifier(
                                myGraph.getID(),
-                                input.getIdentifier() + " _"
+                                id + "_"
                                 + i
                                 + ShardedDataCollection.FILE_SUFFIX);
             outputFiles.add(outputKey);
          }
 
-         VertexID id = new VertexID(myGraph.getID(), UUID.randomUUID());
-
          SimpleVertex vertex =
              new SimpleVertex(id,
-                                      splitter.getClass().getName(),
-                                      Collections.singletonList(input),
-                                      outputFiles);
+                              splitter.getClass().getName(),
+                              Collections.singletonList(input),
+                              outputFiles);
 
-         Edge edge = new Edge(getVertex(), id);
+         Edge edge = new Edge(myVertex, id);
          myGraph.addVertex(vertex);
          myGraph.addEdge(edge);
          return new JustPartitionedCollection<T>(
@@ -153,9 +143,9 @@ public class PseudoDataCollection<T>
 
         SimpleVertex vertex =
             new SimpleVertex(id,
-                                     dumper.getClass().getName(),
-                                     Collections.singletonList(myFileKey),
-                                     Collections.singletonList(outputFileKey));
+                             dumper.getClass().getName(),
+                             Collections.singletonList(myFileKey),
+                             Collections.singletonList(outputFileKey));
 
         Edge edge = new Edge(myVertex, id);
         myGraph.addVertex(vertex);

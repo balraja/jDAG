@@ -14,9 +14,11 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 import org.jdag.common.Application;
 import org.jdag.common.ApplicationExecutor;
+import org.jdag.common.log.LogFactory;
 import org.jdag.communicator.Communicator;
 import org.jdag.communicator.HostID;
 import org.jdag.communicator.Message;
@@ -38,6 +40,9 @@ import org.jdag.graph.VertexID;
  */
 public class NodeExecutor implements Application
 {
+    /** The logger */
+    private final Logger LOG =  LogFactory.getLogger(NodeExecutor.class);
+
     private final Communicator myCommunicator;
 
     private final NodeConfig myConfig;
@@ -51,7 +56,7 @@ public class NodeExecutor implements Application
     private final ScheduledExecutorService myScheduler;
 
     private final Map<VertexID, Future<ExecutionResult>>
-        myFunToExecutionStatusMap;
+        myFuncToExecutionStatusMap;
 
     /**
      * Responsible for sending heartbeats to the master.
@@ -73,11 +78,14 @@ public class NodeExecutor implements Application
         @Override
         public void run()
         {
+
             Heartbeat heartbeat =
                 new Heartbeat(myCommunicator.getMyHostID().getIdentifier(),
-                                     System.currentTimeMillis() - myStartTime);
+                              System.currentTimeMillis() - myStartTime);
+            LOG.info("Sending heartbeat to the master ALIVE "
+                     + heartbeat.getAliveMillis() + " ms");
             myCommunicator.sendMessage(new HostID(myConfig.getMasterHostID()),
-                                                      heartbeat);
+                                       heartbeat);
         }
 
         /**
@@ -103,7 +111,7 @@ public class NodeExecutor implements Application
         public void run()
         {
             for (Map.Entry<VertexID, Future<ExecutionResult>> entry :
-                    myFunToExecutionStatusMap.entrySet())
+                    myFuncToExecutionStatusMap.entrySet())
             {
                 Future<ExecutionResult> future = entry.getValue();
                 ExecutionResult result = null;
@@ -137,11 +145,13 @@ public class NodeExecutor implements Application
 		public void process(Message m)
 		{
 			ExecuteVertexCommand message = (ExecuteVertexCommand) m;
+			LOG.info("Received " + message.getVertex().getID()
+			         + " for execution");
 			ExecutableVertex v =
 				new ExecutableVertex(message.getVertex(), myExecutionContext);
 			Future<ExecutionResult> result =
 			    myExecutorService.submit(v);
-			myFunToExecutionStatusMap.put(v.getID(), result);
+			myFuncToExecutionStatusMap.put(v.getID(), result);
 		}
     }
 
@@ -164,7 +174,7 @@ public class NodeExecutor implements Application
                      .build();
         myScheduler = Executors.newScheduledThreadPool(2, namedSchedulerFactory);
         myExecutionContext = new SimpleExecutionContext();
-        myFunToExecutionStatusMap =
+        myFuncToExecutionStatusMap =
         	new HashMap<VertexID, Future<ExecutionResult>>();
     }
 
@@ -174,12 +184,12 @@ public class NodeExecutor implements Application
      */
     public void start()
     {
+        LOG.info("Starting Worker " + myCommunicator.getMyHostID());
     	myPaceMaker.start();
     	myScheduler.scheduleWithFixedDelay(
-           new ResultChecker(), 1, 1, TimeUnit.SECONDS);
+           new ResultChecker(), 1, 30, TimeUnit.SECONDS);
     	myCommunicator.attachReactor(
     	    ExecuteVertexCommand.class, new ExecuteVertexReactor());
-
     }
 
     /**
@@ -188,7 +198,9 @@ public class NodeExecutor implements Application
     @Override
     public void stop()
     {
-
+        LOG.info("Stopping Worker " + myCommunicator.getMyHostID());
+        myScheduler.shutdownNow();
+        myCommunicator.stop();
     }
 
     /**

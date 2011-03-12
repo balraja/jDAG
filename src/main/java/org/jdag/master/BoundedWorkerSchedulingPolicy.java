@@ -23,7 +23,7 @@ public class BoundedWorkerSchedulingPolicy implements WorkerSchedulingPolicy
      */
     @Override
     public HostID getWorkerNode(VertexID graphVertexID,
-                                             ExecutionStateRegistry stateRegistry)
+                                ExecutionStateRegistry stateRegistry)
     {
         Set<HostID> workers = stateRegistry.getWorkers();
         if (workers.isEmpty()) {

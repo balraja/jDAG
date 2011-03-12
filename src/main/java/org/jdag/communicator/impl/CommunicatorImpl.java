@@ -140,6 +140,7 @@ public final class CommunicatorImpl implements Communicator
                 myMessageBody = myMarshaller.marshal(message);
             }
             catch (IOException e) {
+                 LOG.log(Level.SEVERE, " Exception while serializing a msg", e);
                  throw new RuntimeException(e);
             }
         }
@@ -160,6 +161,7 @@ public final class CommunicatorImpl implements Communicator
                                                0,
                                                myMessageBody.length);
             try {
+                LOG.info("Sending message to " + myHostID);
                 myMessageProducer.send(message.getAddress(), message);
             }
             catch (HornetQException e) {
@@ -192,6 +194,7 @@ public final class CommunicatorImpl implements Communicator
                 m = myMarshaller.unmarshal(body);
             }
             catch (IOException e) {
+                LOG.log(Level.SEVERE, " Exception while deserializing a msg", e);
                  throw new RuntimeException(e);
             }
             synchronized(myMessageToReactorMap) {
@@ -226,7 +229,7 @@ public final class CommunicatorImpl implements Communicator
                           Pair<Reactor, Executor>>create();
         myClientSessionFactory =
             HornetQClient.createClientSessionFactory(transportConfiguration);
-
+        myClientSessionFactory.setConsumerWindowSize(0);
         try {
             mySession = myClientSessionFactory.createSession();
             myMessageProducer = mySession.createProducer();
@@ -234,18 +237,31 @@ public final class CommunicatorImpl implements Communicator
                 Executors.newSingleThreadExecutor(
                     NamedThreadFactory.newNamedFactory(PRODUCER_TF_NAME));
 
-            mySession.createQueue(myConfig.getClientName(),
-                                  myConfig.getQuqueName(),
-                                  true);
+            // Creates a quque for receiving messages sent to the address
+            // corresponding to the given client name. The quque is also
+            // named as equivalent to client id.
+            ClientSession.QueueQuery ququeQuery =
+                mySession.queueQuery(new SimpleString(myConfig.getClientName()));
+            if (!ququeQuery.isExists()) {
+                mySession.createQueue(myConfig.getClientName(),
+                                      myConfig.getClientName(),
+                                      true);
+            }
+            else {
+                LOG.info("Quque with id " + myConfig.getClientName()
+                         + " already exists");
+            }
             myMessageConsumer =
-                mySession.createConsumer(myConfig.getQuqueName());
+                mySession.createConsumer(myConfig.getClientName());
             myMessageConsumer.setMessageHandler(new CommMessageListener());
             myConsumerExecutor =
                 Executors.newSingleThreadExecutor(
                     NamedThreadFactory.newNamedFactory(CONSUMER_TF_NAME));
         }
         catch (HornetQException e) {
-            LOG.log(Level.INFO, "Exception while initializing the communicator", e);
+            LOG.log(Level.INFO,
+                    "Exception while initializing the communicator",
+                    e);
             throw new RuntimeException(e);
         }
     }
@@ -289,7 +305,8 @@ public final class CommunicatorImpl implements Communicator
     @Override
     public void sendMessage(HostID host, Message m)
     {
-        myProducerExecutor.submit(new SendMessageTask(host, m));
+        LOG.info("Sending " + m + " -> " + host);
+        myProducerExecutor.execute(new SendMessageTask(host, m));
     }
 
     /**
@@ -315,12 +332,15 @@ public final class CommunicatorImpl implements Communicator
     {
         LOG.info("Stopping the communicator");
         try {
+            myMessageConsumer.close();
+            myMessageProducer.close();
+            mySession.deleteQueue(myConfig.getClientName());
             mySession.stop();
             myProducerExecutor.shutdownNow();
             myConsumerExecutor.shutdownNow();
         }
         catch (HornetQException e) {
-            LOG.log(Level.SEVERE, "Unable to start a session", e);
+            LOG.log(Level.SEVERE, "Unable to shutdown hornetq session", e);
             throw new RuntimeException(e);
         }
     }

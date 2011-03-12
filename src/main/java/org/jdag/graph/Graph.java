@@ -118,7 +118,7 @@ public class Graph
             myOutgoingEdges.put(edge.getSource(), outgoingEdges);
         }
         outgoingEdges.add(edge);
-        List<Edge> incomingEdges = myIncomingEdges.get(edge.getSource());
+        List<Edge> incomingEdges = myIncomingEdges.get(edge.getDestination());
         if (incomingEdges == null) {
             incomingEdges = new ArrayList<Edge>();
             myIncomingEdges.put(edge.getDestination(), incomingEdges);

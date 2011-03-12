@@ -1,13 +1,20 @@
 package org.jdag.graph;
 
+import java.io.Serializable;
+
 /**
  * Type that defines an unique id assigned for a task graph.
  *
  * @author Balraja Subbiah
  * @version $Id:$
  */
-public class GraphID
+public class GraphID implements Serializable
 {
+    /**
+     * The serial version id.
+     */
+    private static final long serialVersionUID = -2390864513699127717L;
+
     /** The string id assigned for a task graph */
     private final String myID;
 
@@ -33,7 +40,7 @@ public class GraphID
     {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((myID == null) ? 0 : myID.hashCode());
+        result = prime * result + (myID == null ? 0 : myID.hashCode());
         return result;
     }
 
@@ -43,19 +50,24 @@ public class GraphID
     @Override
     public boolean equals(Object obj)
     {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         GraphID other = (GraphID) obj;
         if (myID == null) {
-            if (other.myID != null)
+            if (other.myID != null) {
                 return false;
+            }
         }
-        else if (!myID.equals(other.myID))
+        else if (!myID.equals(other.myID)) {
             return false;
+        }
         return true;
     }
 

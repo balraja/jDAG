@@ -22,6 +22,7 @@ import org.jdag.communicator.Reactor;
 import org.jdag.communicator.messages.ExecuteVertexCommand;
 import org.jdag.communicator.messages.ExecuteVertexCommandStatus;
 import org.jdag.communicator.messages.Heartbeat;
+import org.jdag.example.wc.WordCount;
 
 import org.jdag.graph.Graph;
 import org.jdag.graph.GraphID;
@@ -88,9 +89,9 @@ public class MasterExecutor implements Application
 
             if (result == ExecutionResult.SUCCESS) {
 
-                boolean isCompleted =
+                boolean isGraphCompleted =
                     myStateRegistry.markDone(status.getExecutedVertex());
-                if (!isCompleted) {
+                if (!isGraphCompleted) {
                     myScheduler.schedule(
                         new VertexSchedulingTask(
                                 status.getExecutedVertex().getGraphID()),
@@ -107,14 +108,31 @@ public class MasterExecutor implements Application
      */
     private class VertexSchedulingTask implements Runnable
     {
+        /**
+         * THe graph whose scheduling is managed by this task.
+         */
         private final GraphID myGraphID;
+
+        /**
+         * THe vertex to be scheduled by this task.
+         */
+        private Vertex myToBeScheduledVertex;
 
         /**
          * CTOR
          */
         public VertexSchedulingTask(GraphID graphID)
         {
+            this(graphID, null);
+        }
+
+        /**
+         * CTOR
+         */
+        public VertexSchedulingTask(GraphID graphID, Vertex vertex)
+        {
             myGraphID = graphID;
+            myToBeScheduledVertex = vertex;
         }
 
         /**
@@ -123,23 +141,30 @@ public class MasterExecutor implements Application
         @Override
         public void run()
         {
-            Vertex vertex =
-                myStateRegistry.getVertexForExecution(myGraphID);
-            HostID hostID =
-                myWorkerSchedulingPolicy.getWorkerNode(
-                    vertex.getID(), myStateRegistry);
-
-            if (hostID != null) {
-                myStateRegistry.updateVertex2HostMapping(vertex.getID(), hostID);
-                ExecuteVertexCommand command =
-                    new ExecuteVertexCommand(vertex);
-                myCommunicator.sendMessage(hostID, command);
+            LOG.info("Executing vertex scheduling task");
+            if (myToBeScheduledVertex == null) {
+                myToBeScheduledVertex =
+                    myStateRegistry.getVertexForExecution(myGraphID);
             }
-            else {
-                myScheduler.schedule(
-                    new VertexSchedulingTask(myGraphID),
-                    10,
-                    TimeUnit.SECONDS);
+            LOG.info("Trying to schedule " + myToBeScheduledVertex);
+            if (myToBeScheduledVertex != null) {
+                HostID hostID = myWorkerSchedulingPolicy.getWorkerNode(
+                        myToBeScheduledVertex.getID(), myStateRegistry);
+                if (hostID != null) {
+                    myStateRegistry.updateVertex2HostMapping(
+                            myToBeScheduledVertex.getID(), hostID);
+                    ExecuteVertexCommand command = new ExecuteVertexCommand(
+                            myToBeScheduledVertex);
+                    myCommunicator.sendMessage(hostID, command);
+                }
+                else {
+                    LOG.info("No hosts are available rescheduling");
+                    myScheduler.schedule(
+                        new VertexSchedulingTask(myGraphID,
+                                                 myToBeScheduledVertex),
+                        10,
+                        TimeUnit.SECONDS);
+                }
             }
         }
     }
@@ -169,10 +194,14 @@ public class MasterExecutor implements Application
            PersistentDSManagerAccessor.getPersistentDSManager()
                                       .getSnapshot(myStateRegistry.id()));
         myCommunicator.attachReactor(Heartbeat.class,
-                                                   new UpAndALiveReactor());
+                                     new UpAndALiveReactor());
         myCommunicator.attachReactor(ExecuteVertexCommandStatus.class,
-                                                   new ExecuteVertexStatusReactor());
+                                     new ExecuteVertexStatusReactor());
         myCommunicator.start();
+
+        WordCount count = new WordCount("C:\\temp\\wcjournal.txt");
+        Graph graph = count.getGraph();
+        execute(graph);
     }
 
     /**
@@ -190,6 +219,8 @@ public class MasterExecutor implements Application
      */
     public void execute(Graph graph)
     {
+        LOG.info("Received graph with id " + graph.getID()
+                 + " for execution");
         Schedule schedule = new TopologicalSortSchedule(graph);
         myStateRegistry.addSchedule(graph.getID(), schedule);
         myScheduler.schedule(

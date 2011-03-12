@@ -4,9 +4,11 @@ import com.google.common.base.Preconditions;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
+import org.jdag.common.log.LogFactory;
 
 /**
  * Implements <code>MethodInterceptor</code> that intercepts calls to methods
@@ -18,6 +20,10 @@ import org.aopalliance.intercept.MethodInvocation;
  */
 public class PersistentDSManager implements MethodInterceptor
 {
+    /** The logger */
+    private final Logger LOG =
+        LogFactory.getLogger(PersistentDSManager.class);
+
     private final PersistentDSManagerConfig myConfig;
 
     private final Map<String, PersistenceDSSession>
@@ -39,6 +45,7 @@ public class PersistentDSManager implements MethodInterceptor
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable
     {
+        LOG.info("Intercepting " + invocation.getMethod().getName());
         Object result = invocation.proceed();
         Preconditions.checkState(
             PersistentDS.class.isAssignableFrom(

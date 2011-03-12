@@ -1,13 +1,20 @@
 package org.jdag.communicator;
 
+import java.io.Serializable;
+
 /**
  * Type for representing an unique identifier corresponding to a host.
  *
  * @author Balraja Subbiah
  * @version $Id:$
  */
-public class HostID
+public class HostID implements Serializable
 {
+    /**
+     * The serial version id.
+     */
+    private static final long serialVersionUID = -6057921445338124953L;
+
     private final String myIdentifier;
 
     /**
@@ -35,7 +42,7 @@ public class HostID
         final int prime = 31;
         int result = 1;
         result = prime * result
-                + ((myIdentifier == null) ? 0 : myIdentifier.hashCode());
+                + (myIdentifier == null ? 0 : myIdentifier.hashCode());
         return result;
     }
 
@@ -45,19 +52,24 @@ public class HostID
     @Override
     public boolean equals(Object obj)
     {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         HostID other = (HostID) obj;
         if (myIdentifier == null) {
-            if (other.myIdentifier != null)
+            if (other.myIdentifier != null) {
                 return false;
+            }
         }
-        else if (!myIdentifier.equals(other.myIdentifier))
+        else if (!myIdentifier.equals(other.myIdentifier)) {
             return false;
+        }
         return true;
     }
 

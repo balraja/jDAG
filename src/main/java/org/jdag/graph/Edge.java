@@ -44,9 +44,9 @@ public class Edge
         final int prime = 31;
         int result = 1;
         result = prime * result
-                + ((myDestination == null) ? 0 : myDestination.hashCode());
+                + (myDestination == null ? 0 : myDestination.hashCode());
         result = prime * result
-                + ((mySource == null) ? 0 : mySource.hashCode());
+                + (mySource == null ? 0 : mySource.hashCode());
         return result;
     }
 
@@ -56,25 +56,42 @@ public class Edge
     @Override
     public boolean equals(Object obj)
     {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         Edge other = (Edge) obj;
         if (myDestination == null) {
-            if (other.myDestination != null)
+            if (other.myDestination != null) {
                 return false;
+            }
         }
-        else if (!myDestination.equals(other.myDestination))
+        else if (!myDestination.equals(other.myDestination)) {
             return false;
+        }
         if (mySource == null) {
-            if (other.mySource != null)
+            if (other.mySource != null) {
                 return false;
+            }
         }
-        else if (!mySource.equals(other.mySource))
+        else if (!mySource.equals(other.mySource)) {
             return false;
+        }
         return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString()
+    {
+        return "Edge [myDestination=" + myDestination + ", mySource="
+                + mySource + "]";
     }
 }

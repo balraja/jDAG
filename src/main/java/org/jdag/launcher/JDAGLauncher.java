@@ -156,17 +156,20 @@ public class JDAGLauncher
         String logFile =
             myTopologyConfiguration.getString("master.logfile");
         cmdBuilder.append(addProperty(LogFactory.PROP_LOG_FILE, logFile));
+        String stateDir =
+            myTopologyConfiguration.getString("master.statedir");
+        cmdBuilder.append(addProperty("jdag.persistentds.rootDir", stateDir));
         cmdBuilder.append(MASTER_CLASS_NAME);
+        LOG.info("starting master");
+        LOG.info(cmdBuilder.toString());
 
-       try {
-            LOG.info("starting master");
-            LOG.info(cmdBuilder.toString());
+      /* try {
             new ProcessBuilder(cmdBuilder.toString()).start();
         }
         catch (IOException e) {
              LOG.log(Level.SEVERE, "Unable to start master", e);
              throw new RuntimeException(e);
-        }
+        }*/
     }
 
     /** Starts the workers */
@@ -189,19 +192,18 @@ public class JDAGLauncher
                 (HierarchicalConfiguration) it.next();
             String name = worker.getString("name");
             cmdBuilder.append(addProperty("augur.communicator.clientName", name));
-            String logFile =
-                myTopologyConfiguration.getString("logfile");
+            String logFile = worker.getString("logfile");
             cmdBuilder.append(addProperty(LogFactory.PROP_LOG_FILE, logFile));
-
+            cmdBuilder.append(WORKER_CLASS_NAME);
             LOG.info("Starting worker " + name );
             LOG.info(cmdBuilder.toString());
-            try {
+          /*  try {
                 new ProcessBuilder(cmdBuilder.toString()).start();
             }
             catch (IOException e) {
-                 LOG.log(Level.SEVERE, "Unable to start master", e);
+                 LOG.log(Level.SEVERE, "Unable to start worker", e);
                  throw new RuntimeException(e);
-            }
+            }*/
         }
     }
 

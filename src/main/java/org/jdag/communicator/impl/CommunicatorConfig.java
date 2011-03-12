@@ -10,7 +10,7 @@ import org.jdag.config.Source;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-@Source(prefix="augur.communicator")
+@Source(prefix="jdag.communicator")
 public interface CommunicatorConfig
 {
     @PropertyDef(name="portNumber", resultType=ExpectedResult.INT)
@@ -18,8 +18,5 @@ public interface CommunicatorConfig
 
     @PropertyDef(name="clientName", resultType=ExpectedResult.STRING)
     public String getClientName();
-
-    @PropertyDef(name="ququeName", resultType=ExpectedResult.STRING)
-    public String getQuqueName();
 
 }

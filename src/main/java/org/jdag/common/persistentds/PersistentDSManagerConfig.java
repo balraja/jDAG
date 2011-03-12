@@ -10,7 +10,7 @@ import org.jdag.config.Source;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-@Source(prefix="augur.persistentds")
+@Source(prefix="jdag.persistentds")
 public interface PersistentDSManagerConfig
 {
     @PropertyDef(name="rootDir", resultType=ExpectedResult.STRING)

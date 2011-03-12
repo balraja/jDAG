@@ -1,5 +1,7 @@
 package org.jdag.graph.scheduler;
 
+import java.io.Serializable;
+
 import org.jdag.graph.Vertex;
 import org.jdag.graph.VertexID;
 
@@ -9,7 +11,7 @@ import org.jdag.graph.VertexID;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-public interface Schedule
+public interface Schedule extends Serializable
 {
     /**
      * When called returns the next vertex to be executed. If all the

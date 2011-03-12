@@ -3,6 +3,7 @@
 	    <name>Master</name>
 	    <host>LOCAL</host>
 	    <logfile>C:\temp\master.log</logfile>
+	    <statedir>C:\temp\state</statedir>
 	</master>
 	<workers>
 	    <worker>

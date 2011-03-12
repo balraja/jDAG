@@ -59,9 +59,9 @@ public final class DataProcessor
         String fileName, Interpreter<T> interpreter)
     {
          IOKey fileKey =
-             new FlatFileIOKey(IOSource.SERIALIZED_FILE,
-                                      fileName,
-                                      interpreter.getClass().getName());
+             new FlatFileIOKey(IOSource.FLAT_FILE,
+                               fileName,
+                               interpreter.getClass().getName());
 
          VertexID id = new VertexID(myGraph.getID(), UUID.randomUUID());
          Vertex vertex = new InputVertex(id, fileKey);

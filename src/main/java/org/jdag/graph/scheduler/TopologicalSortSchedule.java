@@ -1,11 +1,15 @@
 package org.jdag.graph.scheduler;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 
+import org.jdag.common.log.LogFactory;
 import org.jdag.common.persistentds.Persist;
 import org.jdag.graph.Edge;
 import org.jdag.graph.Graph;
+import org.jdag.graph.InputVertex;
 import org.jdag.graph.Vertex;
 import org.jdag.graph.VertexID;
 
@@ -19,6 +23,15 @@ import org.jdag.graph.VertexID;
 public class TopologicalSortSchedule implements Schedule
 {
     /**
+     * The serial version id.
+     */
+    private static final long serialVersionUID = 4186288918149046297L;
+
+    /** The logger */
+    private final Logger LOG =
+        LogFactory.getLogger(TopologicalSortSchedule.class);
+
+    /**
      * The <code>ExecutionGraph</code> from which we process the vertices.
      */
     private final Graph myGraph;
@@ -29,6 +42,13 @@ public class TopologicalSortSchedule implements Schedule
     /** The vertices whose processing is completed */
     private final Set<VertexID> myDoneVertices;
 
+    public TopologicalSortSchedule()
+    {
+        myGraph = null;
+        myReturnedVertices = null;
+        myDoneVertices = null;
+    }
+
     /**
      * CTOR
      */
@@ -37,6 +57,27 @@ public class TopologicalSortSchedule implements Schedule
         myGraph = graph;
         myReturnedVertices = new HashSet<VertexID>();
         myDoneVertices = new HashSet<VertexID>();
+        // Just mark all the input vertices as done.
+        StringBuilder graphInfo = new StringBuilder();
+        graphInfo.append("The graph " + myGraph.getID() + " has \n");
+        graphInfo.append("Vertices [ ");
+        for (Vertex vertex : myGraph.getVertices()) {
+            graphInfo.append("\n "  + vertex);
+            if (vertex instanceof InputVertex) {
+                graphInfo.append("(Input)");
+                myDoneVertices.add(vertex.getID());
+            }
+
+            List<Edge> incomingEdges =
+                myGraph.getIncomingEdge(vertex.getID());
+            if (incomingEdges != null && !incomingEdges.isEmpty()) {
+                for (Edge e : incomingEdges) {
+                   graphInfo.append("\n\t" + e);
+                }
+            }
+        }
+        graphInfo.append(" ]");
+        LOG.info(graphInfo.toString());
     }
 
     /**
@@ -45,15 +86,7 @@ public class TopologicalSortSchedule implements Schedule
     @Override
     public Vertex getVertexForExecution()
     {
-        for (Vertex inputVertex : myGraph.getVertices()) {
-            if (!myDoneVertices.contains(inputVertex.getID())
-                && !myReturnedVertices.contains(inputVertex.getID())
-                && myGraph.getIncomingEdge(inputVertex.getID()).isEmpty())
-            {
-                    myReturnedVertices.add(inputVertex.getID());
-                    return inputVertex;
-            }
-        }
+        LOG.info("Executing vertex search for " + myGraph.getID());
         // If it comes here then it means all the input vertices are done.
         // We have started processing the compute vertices.
         for (Vertex vertex : myGraph.getVertices()) {
@@ -62,18 +95,29 @@ public class TopologicalSortSchedule implements Schedule
             {
                 continue;
             }
-            boolean isAllInputsDone = true;
-            for (Edge e : myGraph.getIncomingEdge(vertex.getID())) {
-                if (!myDoneVertices.contains(e.getSource())) {
-                    isAllInputsDone = false;
-                    break;
+            LOG.info("Checking edges start");
+
+            List<Edge> incomingEdges =
+                myGraph.getIncomingEdge(vertex.getID());
+            if (incomingEdges != null && !incomingEdges.isEmpty()) {
+                boolean isAllInputsDone = true;
+                for (Edge e : incomingEdges) {
+                    if (!myDoneVertices.contains(e.getSource())) {
+                        isAllInputsDone = false;
+                        break;
+                    }
+                }
+                if (isAllInputsDone) {
+                    LOG.info("Returning " + vertex.toString());
+                    myReturnedVertices.add(vertex.getID());
+                    return vertex;
                 }
             }
-            if (isAllInputsDone) {
-                myReturnedVertices.add(vertex.getID());
-                return vertex;
+            else {
+                LOG.info("Ignoring " + vertex + " as it doesn't depend on any data");
             }
         }
+        LOG.info("Returning null ");
         return null;
     }
 

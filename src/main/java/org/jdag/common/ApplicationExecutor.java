@@ -1,5 +1,10 @@
 package org.jdag.common;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.jdag.common.log.LogFactory;
+
 /**
  * A simple class that takes care of running an <code>Application</code>
  *
@@ -8,6 +13,9 @@ package org.jdag.common;
  */
 public class ApplicationExecutor
 {
+    /** The logger */
+    private final Logger LOG =  LogFactory.getLogger(ApplicationExecutor.class);
+
     private final Application myApplication;
 
     private static class TerminatingThreadGroup extends ThreadGroup
@@ -55,7 +63,16 @@ public class ApplicationExecutor
             @Override
             public void run()
             {
-                myApplication.start();
+                try {
+                    myApplication.start();
+                    while (true) {
+                        // loop infinitely for application.
+                    }
+                }
+                catch (Throwable e) {
+                    LOG.log(Level.SEVERE, " exception", e);
+                    throw new RuntimeException(e);
+                }
             }
         });
         Runtime.getRuntime().addShutdownHook(new Thread() {

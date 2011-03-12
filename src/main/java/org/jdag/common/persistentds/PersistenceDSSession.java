@@ -10,6 +10,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Date;
+import java.util.logging.Logger;
+
+import org.jdag.common.log.LogFactory;
 
 /**
  * The session class that's responsible for persisting the changes made to
@@ -20,7 +23,11 @@ import java.util.Date;
  */
 public class PersistenceDSSession
 {
-    private PersistentDSManagerConfig myConfig;
+    /** The logger */
+    private final Logger LOG =
+        LogFactory.getLogger(PersistenceDSSession.class);
+
+    private final PersistentDSManagerConfig myConfig;
 
     private final String myDirectoryName;
 
@@ -32,14 +39,17 @@ public class PersistenceDSSession
     public PersistenceDSSession(String id,
                                 PersistentDSManagerConfig config)
     {
-        myDirectoryName = myConfig.getRootDirectory() + id;
+        Preconditions.checkNotNull(config, "Config is empty");
+        myConfig = config;
+        myDirectoryName = myConfig.getRootDirectory() + File.separator + id;
+        LOG.info("Onitializing state directory as " + myDirectoryName);
         File directory = new File(myDirectoryName);
         if (!directory.exists()) {
             directory.mkdirs();
         }
         mySnapshotFile = null;
         File[] files = directory.listFiles();
-        Preconditions.checkState(files.length == 1);
+        Preconditions.checkState(files.length <= 1);
         if (files.length == 1) {
             mySnapshotFile = files[0];
         }
@@ -55,6 +65,8 @@ public class PersistenceDSSession
              mySnapshotFile = new File(myDirectoryName
                                        + File.separator
                                        + new Date().toString());
+             LOG.info("Writing state to file " + mySnapshotFile);
+
              ObjectOutputStream oOut =
                  new ObjectOutputStream(new FileOutputStream(mySnapshotFile));
              oOut.writeObject(snapshot);
@@ -71,6 +83,9 @@ public class PersistenceDSSession
     /** Loads snapshot from the file */
     public Snapshot loadSnapshot()
     {
+        if (mySnapshotFile == null) {
+            return null;
+        }
         try {
             ObjectInputStream oIn =
                 new ObjectInputStream(new FileInputStream(mySnapshotFile));

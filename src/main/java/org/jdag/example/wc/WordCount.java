@@ -36,7 +36,7 @@ public class WordCount
     {
          DataProcessor processor =
              new DataProcessor(new GraphID("WordCountTest"),
-                                        new FilePathGenerator("C:\\temp"));
+                               new FilePathGenerator("C:\\temp"));
 
          DataCollection<String> words =
              processor.fromInputSource(myInputFile, new SimpleInterpreter());

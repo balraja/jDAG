@@ -11,7 +11,7 @@ import org.jdag.config.Source;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-@Source(prefix="augur.node")
+@Source(prefix="jdag.node")
 public interface NodeConfig
 {
     /**

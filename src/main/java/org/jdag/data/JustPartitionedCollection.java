@@ -70,9 +70,9 @@ public class JustPartitionedCollection<T> implements ShardedDataCollection<T>
                 new IOKey(IOSource.SERIALIZED_FILE, id + FILE_SUFFIX);
             SimpleVertex vertex =
                 new SimpleVertex(id,
-                                         function.getClass().getName(),
-                                         Collections.singletonList(input),
-                                         Collections.singletonList(outputFileKey));
+                                 function.getClass().getName(),
+                                 Collections.singletonList(input),
+                                 Collections.singletonList(outputFileKey));
             Edge edge = new Edge(myVertexID, id);
             myGraph.addVertex(vertex);
             myGraph.addEdge(edge);

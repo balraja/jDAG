@@ -104,4 +104,15 @@ public class SimpleVertex implements Vertex
         out.writeObject(myInputs);
         out.writeObject(myOutputs);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString()
+    {
+        return "SimpleVertex [myID=" + myID + ", myInputs=" + myInputs
+                + ", myOutputs=" + myOutputs + ", myUDFIdentifier="
+                + myUDFIdentifier + "]";
+    }
 }
