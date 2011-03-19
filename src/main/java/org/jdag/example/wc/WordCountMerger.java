@@ -44,6 +44,7 @@ public class WordCountMerger implements Merger<Map<String,Integer>>
             }
         }
         output.write(resultMap);
+        output.done();
     }
 
     /**

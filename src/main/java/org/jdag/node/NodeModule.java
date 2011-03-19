@@ -4,7 +4,7 @@ import com.google.inject.Provides;
 
 import org.jdag.communicator.Communicator;
 import org.jdag.communicator.impl.AbstractCommModule;
-import org.jdag.communicator.impl.CommunicatorImpl;
+import org.jdag.communicator.impl.HornetqCommunicator;
 import org.jdag.config.ConfigurationProvider;
 
 /**
@@ -24,7 +24,7 @@ public class NodeModule extends AbstractCommModule
     protected void configure()
     {
         super.configure();
-        bind(Communicator.class).to(CommunicatorImpl.class);
+        bind(Communicator.class).to(HornetqCommunicator.class);
     }
 
     @Provides

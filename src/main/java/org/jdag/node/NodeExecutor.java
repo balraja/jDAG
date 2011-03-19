@@ -41,7 +41,7 @@ import org.jdag.graph.VertexID;
 public class NodeExecutor implements Application
 {
     /** The logger */
-    private final Logger LOG =  LogFactory.getLogger(NodeExecutor.class);
+    private static final Logger LOG =  LogFactory.getLogger(NodeExecutor.class);
 
     private final Communicator myCommunicator;
 
@@ -80,10 +80,8 @@ public class NodeExecutor implements Application
         {
 
             Heartbeat heartbeat =
-                new Heartbeat(myCommunicator.getMyHostID().getIdentifier(),
+                new Heartbeat(myCommunicator.getMyHostID(),
                               System.currentTimeMillis() - myStartTime);
-            LOG.info("Sending heartbeat to the master ALIVE "
-                     + heartbeat.getAliveMillis() + " ms");
             myCommunicator.sendMessage(new HostID(myConfig.getMasterHostID()),
                                        heartbeat);
         }
@@ -95,7 +93,7 @@ public class NodeExecutor implements Application
         {
         	myStartTime = System.currentTimeMillis();
         	myScheduler.scheduleAtFixedRate(
-        	    PaceMaker.this, 10, 10, TimeUnit.SECONDS);
+        	    PaceMaker.this, 1, 1, TimeUnit.SECONDS);
         }
     }
 
@@ -110,6 +108,8 @@ public class NodeExecutor implements Application
         @Override
         public void run()
         {
+            Map<VertexID, ExecutionResult> doneVertices =
+                new HashMap<VertexID, ExecutionResult>();
             for (Map.Entry<VertexID, Future<ExecutionResult>> entry :
                     myFuncToExecutionStatusMap.entrySet())
             {
@@ -125,12 +125,19 @@ public class NodeExecutor implements Application
                     catch (ExecutionException e) {
                         result = ExecutionResult.ERROR;
                     }
-                    ExecuteVertexCommandStatus status =
-                        new ExecuteVertexCommandStatus(
-                                entry.getKey(), result);
-                    myCommunicator.sendMessage(
-                        new HostID(myConfig.getMasterHostID()), status);
+                    doneVertices.put(entry.getKey(), result);
                 }
+            }
+
+            for (Map.Entry<VertexID, ExecutionResult> entry
+                    : doneVertices.entrySet())
+            {
+                myFuncToExecutionStatusMap.remove(entry.getKey());
+                ExecuteVertexCommandStatus status =
+                    new ExecuteVertexCommandStatus(
+                            entry.getKey(), entry.getValue());
+                myCommunicator.sendMessage(
+                    new HostID(myConfig.getMasterHostID()), status);
             }
         }
     }
@@ -185,9 +192,10 @@ public class NodeExecutor implements Application
     public void start()
     {
         LOG.info("Starting Worker " + myCommunicator.getMyHostID());
+        myCommunicator.start();
     	myPaceMaker.start();
     	myScheduler.scheduleWithFixedDelay(
-           new ResultChecker(), 1, 30, TimeUnit.SECONDS);
+           new ResultChecker(), 1, 1, TimeUnit.SECONDS);
     	myCommunicator.attachReactor(
     	    ExecuteVertexCommand.class, new ExecuteVertexReactor());
     }

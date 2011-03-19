@@ -3,16 +3,10 @@ package org.jdag.master;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
-
-import org.jdag.common.log.LogFactory;
 import org.jdag.common.persistentds.Persist;
 import org.jdag.common.persistentds.PersistentDS;
 import org.jdag.common.persistentds.Snapshot;
@@ -30,10 +24,6 @@ import org.jdag.graph.scheduler.Schedule;
  */
 public class ExecutionStateRegistry implements PersistentDS
 {
-    /** The logger */
-    private final Logger LOG =
-        LogFactory.getLogger(ExecutionStateRegistry.class);
-
     private static final String MY_ID = "ExecutionState";
 
     private final Set<HostID> myWorkerNodes;
@@ -41,90 +31,6 @@ public class ExecutionStateRegistry implements PersistentDS
     private final Map<VertexID, HostID> myVertex2HostMap;
 
     private final Map<GraphID, Schedule> myGraph2ScheduleMap;
-
-    /**
-     * The state that needs to be persisted.
-     */
-    public static class ExecutionRegistryState implements Snapshot
-    {
-        private Set<HostID> myWorkerNodes;
-
-        private Map<VertexID, HostID> myVertex2HostMap;
-
-        private Map<GraphID, Schedule> myGraph2ScheduleMap;
-
-        /**
-         * CTOR
-         */
-        public ExecutionRegistryState()
-        {
-            myWorkerNodes = new HashSet<HostID>();
-            myVertex2HostMap = new HashMap<VertexID, HostID>();
-            myGraph2ScheduleMap = new HashMap<GraphID, Schedule>();
-        }
-
-        /** CTOR */
-        public ExecutionRegistryState(
-            Set<HostID> workerNodes,
-            Map<VertexID, HostID> vertex2HostMap,
-            Map<GraphID, Schedule> graph2ScheduleMap)
-        {
-            super();
-            myWorkerNodes = workerNodes;
-            myVertex2HostMap = vertex2HostMap;
-            myGraph2ScheduleMap = graph2ScheduleMap;
-        }
-
-        /**
-         * Returns the value of workerNodes
-         */
-        public Set<HostID> getWorkerNodes()
-        {
-            return myWorkerNodes;
-        }
-
-        /**
-         * Returns the value of vertex2HostMap
-         */
-        public Map<VertexID, HostID> getVertex2HostMap()
-        {
-            return myVertex2HostMap;
-        }
-
-        /**
-         * Returns the value of graph2ScheduleMap
-         */
-        public Map<GraphID, Schedule> getGraph2ScheduleMap()
-        {
-            return myGraph2ScheduleMap;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @SuppressWarnings("unchecked")
-        @Override
-        public void readExternal(ObjectInput in) throws IOException,
-                ClassNotFoundException
-        {
-            myGraph2ScheduleMap =
-                (Map<GraphID, Schedule>) in.readObject();
-            myVertex2HostMap =
-                (Map<VertexID, HostID>) in.readObject();
-            myWorkerNodes = (Set<HostID>) in.readObject();
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void writeExternal(ObjectOutput out) throws IOException
-        {
-            out.writeObject(myGraph2ScheduleMap);
-            out.writeObject(myVertex2HostMap);
-            out.writeObject(myWorkerNodes);
-        }
-    }
 
     /**
      * CTOR
@@ -140,7 +46,6 @@ public class ExecutionStateRegistry implements PersistentDS
     @Persist
     public void addWorker(HostID workerID)
     {
-        LOG.info(workerID + " is added as a worker");
         myWorkerNodes.add(workerID);
     }
 
@@ -179,7 +84,6 @@ public class ExecutionStateRegistry implements PersistentDS
     public void updateVertex2HostMapping(
         VertexID graphVertexID, HostID hostID)
     {
-        LOG.info("Scheduling " + graphVertexID + " on " + hostID);
         myVertex2HostMap.put(graphVertexID, hostID);
     }
 
@@ -210,7 +114,6 @@ public class ExecutionStateRegistry implements PersistentDS
     @Persist
     public void addSchedule(GraphID graphID, Schedule schedule)
     {
-        LOG.info("Adding schedule for " + graphID);
         myGraph2ScheduleMap.put(graphID, schedule);
     }
 
@@ -223,7 +126,6 @@ public class ExecutionStateRegistry implements PersistentDS
     @Persist
     public boolean markDone(VertexID graphVertexID)
     {
-        LOG.info("The vertex " + graphVertexID + " is done");
         myVertex2HostMap.remove(graphVertexID);
         Schedule schedule = myGraph2ScheduleMap.get(graphVertexID.getGraphID());
         schedule.notifyDone(graphVertexID);
@@ -239,7 +141,6 @@ public class ExecutionStateRegistry implements PersistentDS
     /** Returns a vertex for execution */
     public Vertex getVertexForExecution(GraphID graphID)
     {
-        LOG.info("Getting vertex for " + graphID);
         Schedule schedule = myGraph2ScheduleMap.get(graphID);
         Preconditions.checkNotNull(schedule);
         return schedule.getVertexForExecution();

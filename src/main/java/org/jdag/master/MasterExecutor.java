@@ -65,7 +65,7 @@ public class MasterExecutor implements Application
         public void process(Message m)
         {
             Heartbeat hearbeat = (Heartbeat) m;
-            HostID fromHost = new HostID(hearbeat.getNodeID());
+            HostID fromHost = hearbeat.getNodeID();
             if (!myStateRegistry.hasWorker(fromHost)) {
                 myStateRegistry.addWorker(fromHost);
             }
@@ -97,6 +97,11 @@ public class MasterExecutor implements Application
                                 status.getExecutedVertex().getGraphID()),
                         10,
                         TimeUnit.MICROSECONDS);
+                }
+                else {
+                    LOG.info("The execution of " +
+                            status.getExecutedVertex().getGraphID()
+                            + " is completed ");
                 }
             }
         }
@@ -174,10 +179,11 @@ public class MasterExecutor implements Application
      */
     @Inject
     public MasterExecutor(WorkerSchedulingPolicy schedulingPolicy,
-                         Communicator communicator)
+                          Communicator communicator,
+                          ExecutionStateRegistry registry)
     {
         myWorkerSchedulingPolicy = schedulingPolicy;
-        myStateRegistry = new ExecutionStateRegistry();
+        myStateRegistry = registry;
         myCommunicator = communicator;
         ThreadFactoryBuilder tfBuilder = new ThreadFactoryBuilder();
         ThreadFactory namedFactory =

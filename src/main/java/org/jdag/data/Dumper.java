@@ -21,5 +21,6 @@ public abstract class Dumper<T> implements Function<T, String>
            for (T record : new IteratorWrapper<T>(input.getIterator())) {
                output.write(record.toString());
            }
+           output.done();
      }
 }

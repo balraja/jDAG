@@ -1,7 +1,5 @@
 package org.jdag.io.flatfile;
 
-import com.google.common.base.Preconditions;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -29,7 +27,7 @@ public class FlatFileOutput<T> implements Output<T>
     {
         myLineInterpreter = lineInterpreter;
         File f = new File(fileName);
-        Preconditions.checkArgument(f.exists() && f.canWrite());
+
         try {
             myWriter =
                 new PrintWriter(new BufferedWriter(new FileWriter(f)));
@@ -54,6 +52,9 @@ public class FlatFileOutput<T> implements Output<T>
     @Override
     public void write(T r)
     {
-        myWriter.println(myLineInterpreter.flattenRecord(r));
+        String line = myLineInterpreter != null ?
+                          myLineInterpreter.flattenRecord(r)
+                          : r.toString();
+        myWriter.println(line);
     }
 }

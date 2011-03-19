@@ -3,6 +3,8 @@ package org.jdag.config;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.net.InetSocketAddress;
+
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 
@@ -73,6 +75,13 @@ public final class ConfigurationProvider implements InvocationHandler
                                      : myPropertiesConfiguration != null ?
                                            myPropertiesConfiguration.getBoolean(property)
                                            : null;
+            case SOCKET_ADDRESS:
+                return value != null ?
+                        new InetSocketAddress(Integer.parseInt(value))
+                        : myPropertiesConfiguration != null ?
+                              new InetSocketAddress(
+                                  myPropertiesConfiguration.getInt(property))
+                              : null;
             }
             return null;
         }

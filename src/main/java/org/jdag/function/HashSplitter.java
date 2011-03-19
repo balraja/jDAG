@@ -14,14 +14,13 @@ import org.jdag.data.Splitter;
  */
 public abstract class HashSplitter<T> implements Splitter<T>
 {
-    private final int myNumPartitions;
+    private int myNumPartitions;
 
     /**
      * CTOR
      */
-    public HashSplitter(int numPartitions)
+    public HashSplitter()
     {
-        myNumPartitions = numPartitions;
     }
 
     /**
@@ -33,6 +32,11 @@ public abstract class HashSplitter<T> implements Splitter<T>
         return myNumPartitions;
     }
 
+    public void setPartitions(int numPartitions)
+    {
+        myNumPartitions = numPartitions;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -40,11 +44,16 @@ public abstract class HashSplitter<T> implements Splitter<T>
     public void split(Input<T> input,
                            List<Output<T>> outputs)
     {
+        int rc = 0;
         for (T record : new IteratorWrapper<T>(input.getIterator())) {
-            int hashCode = Math.abs(record.hashCode());
-            int outIndex = hashCode % myNumPartitions;
+            int outIndex = rc % myNumPartitions;
             Output<T> output = outputs.get(outIndex);
             output.write(record);
+            rc++;
+        }
+
+        for (Output<T> output : outputs) {
+            output.done();
         }
     }
 }

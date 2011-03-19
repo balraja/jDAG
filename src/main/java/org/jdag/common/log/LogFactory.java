@@ -49,4 +49,12 @@ public final class LogFactory
         logger.addHandler(ourLogFileHandler);
         return logger;
     }
+
+    /** Creates a logger class and sets the appropriate handler */
+    public static Logger getLogger(String logName)
+    {
+        Logger logger = Logger.getLogger(logName);
+        logger.addHandler(ourLogFileHandler);
+        return logger;
+    }
 }

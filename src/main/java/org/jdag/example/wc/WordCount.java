@@ -46,7 +46,7 @@ public class WordCount
              partitionedInput.apply(new CountWords());
          DataCollection<Map<String, Integer>> wordCount =
              partialResults.merge(new WordCountMerger());
-         wordCount.writeOutput("C:\\temp\\wcout.txt",
+         wordCount.writeOutput("wcout.txt",
                                           new ExecutableDumper());
          return processor.getGraph();
     }

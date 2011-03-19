@@ -9,7 +9,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.Date;
 import java.util.logging.Logger;
 
 import org.jdag.common.log.LogFactory;
@@ -42,7 +41,7 @@ public class PersistenceDSSession
         Preconditions.checkNotNull(config, "Config is empty");
         myConfig = config;
         myDirectoryName = myConfig.getRootDirectory() + File.separator + id;
-        LOG.info("Onitializing state directory as " + myDirectoryName);
+        LOG.info("Initializing state directory as " + myDirectoryName);
         File directory = new File(myDirectoryName);
         if (!directory.exists()) {
             directory.mkdirs();
@@ -64,11 +63,13 @@ public class PersistenceDSSession
              }
              mySnapshotFile = new File(myDirectoryName
                                        + File.separator
-                                       + new Date().toString());
+                                       + Long.toString(System.nanoTime()));
              LOG.info("Writing state to file " + mySnapshotFile);
 
              ObjectOutputStream oOut =
                  new ObjectOutputStream(new FileOutputStream(mySnapshotFile));
+             LOG.info(snapshot.getClass().getName());
+             LOG.info(snapshot.toString());
              oOut.writeObject(snapshot);
              oOut.close();
         }

@@ -1,6 +1,6 @@
 package org.jdag.graph;
 
-import java.io.Externalizable;
+import java.io.Serializable;
 import java.util.List;
 
 import org.jdag.io.IOKey;
@@ -11,7 +11,7 @@ import org.jdag.io.IOKey;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-public interface Vertex extends Externalizable
+public interface Vertex extends Serializable
 {
     /**
      * Returns <code>VertexID</code> of vertex.

@@ -7,7 +7,7 @@ import org.jdag.common.persistentds.PersistentDS;
 import org.jdag.common.persistentds.PersistentDSManagerAccessor;
 import org.jdag.communicator.Communicator;
 import org.jdag.communicator.impl.AbstractCommModule;
-import org.jdag.communicator.impl.CommunicatorImpl;
+import org.jdag.communicator.impl.HornetqCommunicator;
 
 /**
  * Implements GUICE module to support dependency injection.
@@ -24,8 +24,10 @@ public class MasterExecutorModule extends AbstractCommModule
     public void configure()
     {
         super.configure();
-        bind(Communicator.class).to(CommunicatorImpl.class);
-        bind(WorkerSchedulingPolicy.class).to(BoundedWorkerSchedulingPolicy.class);
+        bind(Communicator.class).to(HornetqCommunicator.class);
+        bind(WorkerSchedulingPolicy.class).to(
+                BoundedWorkerSchedulingPolicy.class);
+        bind(ExecutionStateRegistry.class);
         bindInterceptor(Matchers.subclassesOf(PersistentDS.class),
                         Matchers.annotatedWith(Persist.class),
                         PersistentDSManagerAccessor.getPersistentDSManager());

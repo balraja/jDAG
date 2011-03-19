@@ -11,5 +11,6 @@ public enum ExpectedResult
 {
     INT,
     BOOLEAN,
-    STRING
+    STRING,
+    SOCKET_ADDRESS
 }

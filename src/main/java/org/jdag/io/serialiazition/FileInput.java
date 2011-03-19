@@ -7,7 +7,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.Iterator;
+import java.util.logging.Logger;
 
+import org.jdag.common.log.LogFactory;
 import org.jdag.data.Input;
 import org.jdag.io.IOKey;
 import org.jdag.io.PersistenceException;
@@ -21,6 +23,9 @@ import org.jdag.io.PersistenceException;
  */
 public class FileInput<T> implements Input<T>
 {
+    /** The logger */
+    private static final Logger LOG =  LogFactory.getLogger(FileInput.class);
+
     private final IOKey myInputKey;
 
     /** A simple iterator that iterates over a file */
@@ -93,6 +98,7 @@ public class FileInput<T> implements Input<T>
         {
             T result = myReadRecord;
             myReadRecord = readRecord();
+            LOG.info("Read " + result);
             return result;
         }
 
@@ -120,6 +126,7 @@ public class FileInput<T> implements Input<T>
     @Override
     public Iterator<T> getIterator()
     {
+        LOG.info("Reading from " + myInputKey.getIdentifier());
         return new FileIterator<T>(new File(myInputKey.getIdentifier()));
     }
 }

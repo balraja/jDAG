@@ -1,12 +1,11 @@
-
 package org.jdag.node;
 
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import org.jdag.common.log.LogFactory;
 import org.jdag.data.Executable;
 import org.jdag.graph.ExecutionContext;
 import org.jdag.graph.ExecutionResult;
@@ -22,6 +21,9 @@ import org.jdag.io.IOKey;
  */
 public class ExecutableVertex  implements Vertex, Callable<ExecutionResult>
 {
+    /** The logger */
+    private final Logger LOG =  LogFactory.getLogger(ExecutableVertex.class);
+
     private final Vertex myVertex;
 
 	private final ExecutionContext myExecutionContext;
@@ -57,6 +59,7 @@ public class ExecutableVertex  implements Vertex, Callable<ExecutionResult>
              return ExecutionResult.SUCCESS;
         }
         catch (Throwable e) {
+            LOG.log(Level.SEVERE, "Execption while executing a vertex", e);
             return ExecutionResult.ERROR;
         }
     }
@@ -104,22 +107,5 @@ public class ExecutableVertex  implements Vertex, Callable<ExecutionResult>
     public String getUDFIdentifier()
     {
         return myVertex.getUDFIdentifier();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void readExternal(ObjectInput in) throws IOException,
-            ClassNotFoundException
-    {
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void writeExternal(ObjectOutput out) throws IOException
-    {
     }
 }

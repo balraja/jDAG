@@ -82,7 +82,7 @@ public class PseudoDataCollection<T>
          VertexID id = new VertexID(myGraph.getID(), UUID.randomUUID());
          IOKey outputFileKey =
             myKeyGenerator.generateIdentifier(myGraph.getID(),
-                                                           id.toString() + FILE_SUFFIX);
+                                              id.toString() + FILE_SUFFIX);
 
          SimpleVertex vertex =
              new SimpleVertex(id,

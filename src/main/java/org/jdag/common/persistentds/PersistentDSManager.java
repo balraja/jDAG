@@ -67,6 +67,7 @@ public class PersistentDSManager implements MethodInterceptor
             myType2PersistenceSession.get(ID);
         if (session == null) {
             session = new PersistenceDSSession(ID, myConfig);
+            myType2PersistenceSession.put(ID, session);
         }
         return session.loadSnapshot();
     }

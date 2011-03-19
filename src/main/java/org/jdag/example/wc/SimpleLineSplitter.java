@@ -18,13 +18,18 @@ import org.jdag.io.IOKey;
  */
 public class SimpleLineSplitter extends HashSplitter<String>
 {
-
     /**
      * CTOR
      */
+    public SimpleLineSplitter()
+    {
+        super();
+    }
+
     public SimpleLineSplitter(int numPartitions)
     {
-        super(numPartitions);
+        super();
+        setPartitions(numPartitions);
     }
 
     /**
@@ -34,6 +39,7 @@ public class SimpleLineSplitter extends HashSplitter<String>
     public void execute(ExecutionContext context, List<IOKey> inputKeys,
             List<IOKey> outputKeys) throws ComputeFailedException
     {
+         setPartitions(outputKeys.size());
          List<Output<String>> outputs =
              new ArrayList<Output<String>>();
         for (IOKey outputKey : outputKeys) {

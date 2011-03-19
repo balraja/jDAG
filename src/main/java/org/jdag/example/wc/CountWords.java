@@ -34,13 +34,14 @@ public class CountWords implements Function<String, Map<String,Integer>>
          com.google.common.base.Function<String,Integer> lookupFunction =
              Functions.forMap(wordcountMap, 0);
          for (String line : new IteratorWrapper<String>(input.getIterator())) {
-             String[] words = line.split("\t");
+             String[] words = line.split(" ");
              for (String word : words) {
                   int count = lookupFunction.apply(word);
                   wordcountMap.put(word, ++count);
              }
          }
          output.write(wordcountMap);
+         output.done();
     }
 
     /**

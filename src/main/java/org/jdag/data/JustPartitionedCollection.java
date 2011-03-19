@@ -12,7 +12,6 @@ import org.jdag.graph.SimpleVertex;
 import org.jdag.graph.VertexID;
 import org.jdag.io.IOKey;
 import org.jdag.io.KeyGenerator;
-import org.jdag.io.IOSource;
 
 /**
  * Represents a state where data in a node split into many partitions but still not
@@ -64,10 +63,16 @@ public class JustPartitionedCollection<T> implements ShardedDataCollection<T>
     public <V> ShardedDataCollection<V> apply(Function<T, V> function)
     {
         Map<VertexID,IOKey> vertexToFileMap = new HashMap<VertexID, IOKey>();
+        int index = 0;
         for (IOKey input : myIOKeys) {
             VertexID id = new VertexID(myGraph.getID(), UUID.randomUUID());
             IOKey outputFileKey =
-                new IOKey(IOSource.SERIALIZED_FILE, id + FILE_SUFFIX);
+                myKeyGenerator.generateIdentifier(
+                               myGraph.getID(),
+                                id + "_"
+                                + index
+                                + ShardedDataCollection.FILE_SUFFIX);
+            index++;
             SimpleVertex vertex =
                 new SimpleVertex(id,
                                  function.getClass().getName(),

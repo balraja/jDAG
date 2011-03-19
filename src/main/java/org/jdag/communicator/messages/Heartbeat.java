@@ -2,6 +2,7 @@ package org.jdag.communicator.messages;
 
 import java.io.Serializable;
 
+import org.jdag.communicator.HostID;
 import org.jdag.communicator.Message;
 
 /**
@@ -13,14 +14,14 @@ import org.jdag.communicator.Message;
  */
 public class Heartbeat implements Serializable,Message
 {
-    private final String myNodeID;
+    private final HostID myNodeID;
 
     private final long myAliveMillis;
 
     /**
      * CTOR
      */
-    public Heartbeat(String nodeID, long aliveMillis)
+    public Heartbeat(HostID nodeID, long aliveMillis)
     {
         super();
         myNodeID = nodeID;
@@ -30,7 +31,7 @@ public class Heartbeat implements Serializable,Message
     /**
      * Returns the value of nodeID
      */
-    public String getNodeID()
+    public HostID getNodeID()
     {
         return myNodeID;
     }
@@ -52,9 +53,9 @@ public class Heartbeat implements Serializable,Message
         final int prime = 31;
         int result = 1;
         result = prime * result
-                + (int) (myAliveMillis ^ (myAliveMillis >>> 32));
+                + (int) (myAliveMillis ^ myAliveMillis >>> 32);
         result = prime * result
-                + ((myNodeID == null) ? 0 : myNodeID.hashCode());
+                + (myNodeID == null ? 0 : myNodeID.hashCode());
         return result;
     }
 
@@ -64,21 +65,27 @@ public class Heartbeat implements Serializable,Message
     @Override
     public boolean equals(Object obj)
     {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Heartbeat other = (Heartbeat) obj;
-        if (myAliveMillis != other.myAliveMillis)
-            return false;
-        if (myNodeID == null) {
-            if (other.myNodeID != null)
-                return false;
         }
-        else if (!myNodeID.equals(other.myNodeID))
+        if (obj == null) {
             return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        Heartbeat other = (Heartbeat) obj;
+        if (myAliveMillis != other.myAliveMillis) {
+            return false;
+        }
+        if (myNodeID == null) {
+            if (other.myNodeID != null) {
+                return false;
+            }
+        }
+        else if (!myNodeID.equals(other.myNodeID)) {
+            return false;
+        }
         return true;
     }
 

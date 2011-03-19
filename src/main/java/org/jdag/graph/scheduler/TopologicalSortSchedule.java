@@ -95,7 +95,6 @@ public class TopologicalSortSchedule implements Schedule
             {
                 continue;
             }
-            LOG.info("Checking edges start");
 
             List<Edge> incomingEdges =
                 myGraph.getIncomingEdge(vertex.getID());
@@ -108,16 +107,11 @@ public class TopologicalSortSchedule implements Schedule
                     }
                 }
                 if (isAllInputsDone) {
-                    LOG.info("Returning " + vertex.toString());
                     myReturnedVertices.add(vertex.getID());
                     return vertex;
                 }
             }
-            else {
-                LOG.info("Ignoring " + vertex + " as it doesn't depend on any data");
-            }
         }
-        LOG.info("Returning null ");
         return null;
     }
 
