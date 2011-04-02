@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+import org.jdag.function.Dumper;
 import org.jdag.graph.Edge;
 import org.jdag.graph.Graph;
 import org.jdag.graph.SimpleVertex;

@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.jdag.data.ComputeFailedException;
-import org.jdag.data.Dumper;
 import org.jdag.data.Input;
 import org.jdag.data.Output;
+import org.jdag.function.Dumper;
 import org.jdag.graph.ExecutionContext;
 import org.jdag.io.IOKey;
 

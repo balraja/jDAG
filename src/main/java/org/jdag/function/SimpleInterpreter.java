@@ -1,4 +1,4 @@
-package org.jdag.example.wc;
+package org.jdag.function;
 
 import org.jdag.io.flatfile.Interpreter;
 

@@ -1,6 +1,7 @@
-package org.jdag.data;
+package org.jdag.function;
 
-import org.jdag.function.IteratorWrapper;
+import org.jdag.data.Input;
+import org.jdag.data.Output;
 
 /**
  * A helper class to support dumping the contents of a <code>DataCollection</code>
@@ -9,7 +10,7 @@ import org.jdag.function.IteratorWrapper;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-public abstract class Dumper<T> implements Function<T, String>
+public class Dumper<T> extends FunctionBase<T, String>
 {
     private static final long serialVersionUID = 1L;
 

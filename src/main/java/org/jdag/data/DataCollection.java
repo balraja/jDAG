@@ -1,5 +1,7 @@
 package org.jdag.data;
 
+import org.jdag.function.Dumper;
+
 /**
  * Type to define the collection of data records to be processed.
  *

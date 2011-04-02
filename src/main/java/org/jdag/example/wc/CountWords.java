@@ -3,16 +3,11 @@ package org.jdag.example.wc;
 import com.google.common.base.Functions;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import org.jdag.data.ComputeFailedException;
-import org.jdag.data.Function;
 import org.jdag.data.Input;
 import org.jdag.data.Output;
+import org.jdag.function.FunctionBase;
 import org.jdag.function.IteratorWrapper;
-import org.jdag.graph.ExecutionContext;
-import org.jdag.io.IOKey;
 
 /**
  * The function to be used for computing the number of records in a file.
@@ -20,7 +15,7 @@ import org.jdag.io.IOKey;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-public class CountWords implements Function<String, Map<String,Integer>>
+public class CountWords extends FunctionBase<String, Map<String,Integer>>
 {
 
     /**
@@ -42,24 +37,5 @@ public class CountWords implements Function<String, Map<String,Integer>>
          }
          output.write(wordcountMap);
          output.done();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void execute(ExecutionContext context,
-                                List<IOKey> inputKeys,
-                                List<IOKey> outputKeys) throws ComputeFailedException
-    {
-        IOKey inputKey = inputKeys.get(0);
-         Input<String> input =
-             context.makeIOFactory(inputKey.getSourceType()).makeInput(inputKey);
-
-         IOKey outputKey = outputKeys.get(0);
-         Output<Map<String,Integer>> output =
-             context.makeIOFactory(outputKey.getSourceType()).makeOutput(outputKey);
-
-         process(input, output);
     }
 }
