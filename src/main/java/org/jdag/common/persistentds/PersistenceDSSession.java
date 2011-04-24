@@ -36,7 +36,7 @@ public class PersistenceDSSession
      * CTOR
      */
     public PersistenceDSSession(String id,
-                                PersistentDSManagerConfig config)
+                                                    PersistentDSManagerConfig config)
     {
         Preconditions.checkNotNull(config, "Config is empty");
         myConfig = config;
@@ -61,9 +61,11 @@ public class PersistenceDSSession
             if (mySnapshotFile != null) {
                  mySnapshotFile.delete();
              }
+
              mySnapshotFile = new File(myDirectoryName
-                                       + File.separator
-                                       + Long.toString(System.nanoTime()));
+                                                          + File.separator
+                                                          + Long.toString(System.nanoTime()));
+
              LOG.info("Writing state to file " + mySnapshotFile);
 
              ObjectOutputStream oOut =

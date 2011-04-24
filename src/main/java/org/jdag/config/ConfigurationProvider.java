@@ -94,12 +94,12 @@ public final class ConfigurationProvider implements InvocationHandler
     }
 
     /**
-     * A factory method that creates a proxy to read from underlying
-     * property configuration.
+     *  A factory method that creates a proxy to read from underlying
+     *  property configuration.
      */
     @SuppressWarnings("unchecked")
     public static <T> T makeConfiguration(Class<T> configDefinitionClass,
-                                          String propertyFile)
+                                                                   String propertyFile)
     {
         Source s = configDefinitionClass.getAnnotation(Source.class);
         try {

@@ -23,7 +23,7 @@ public class ExecuteVertexCommandStatus implements Serializable,Message
       * CTOR
       */
     public ExecuteVertexCommandStatus(VertexID executedVertex,
-                                                        ExecutionResult result)
+                                                                  ExecutionResult result)
     {
         myExecutedVertex = executedVertex;
         myResult = result;
@@ -55,9 +55,9 @@ public class ExecuteVertexCommandStatus implements Serializable,Message
         int result = 1;
         result = prime
                 * result
-                + ((myExecutedVertex == null) ? 0 : myExecutedVertex.hashCode());
+                + (myExecutedVertex == null ? 0 : myExecutedVertex.hashCode());
         result = prime * result
-                + ((myResult == null) ? 0 : myResult.hashCode());
+                + (myResult == null ? 0 : myResult.hashCode());
         return result;
     }
 
@@ -67,25 +67,32 @@ public class ExecuteVertexCommandStatus implements Serializable,Message
     @Override
     public boolean equals(Object obj)
     {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         ExecuteVertexCommandStatus other = (ExecuteVertexCommandStatus) obj;
         if (myExecutedVertex == null) {
-            if (other.myExecutedVertex != null)
+            if (other.myExecutedVertex != null) {
                 return false;
+            }
         }
-        else if (!myExecutedVertex.equals(other.myExecutedVertex))
+        else if (!myExecutedVertex.equals(other.myExecutedVertex)) {
             return false;
+        }
         if (myResult == null) {
-            if (other.myResult != null)
+            if (other.myResult != null) {
                 return false;
+            }
         }
-        else if (!myResult.equals(other.myResult))
+        else if (!myResult.equals(other.myResult)) {
             return false;
+        }
         return true;
     }
 
@@ -96,6 +103,6 @@ public class ExecuteVertexCommandStatus implements Serializable,Message
     public String toString()
     {
         return "ExecuteVertexCommandStatus [myExecutedVertex="
-                  + myExecutedVertex + ", myResult=" + myResult + "]";
+                    + myExecutedVertex + ", myResult=" + myResult + "]";
     }
 }

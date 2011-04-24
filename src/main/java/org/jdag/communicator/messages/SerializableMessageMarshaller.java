@@ -11,8 +11,8 @@ import org.jdag.communicator.Message;
 import org.jdag.communicator.MessageMarshaller;
 
 /**
- * Implements <code>MessageMarshaller</code> for serializing/deserializing the
- * messages.
+ *  Implements <code>MessageMarshaller</code> for serializing/deserializing the
+ *  messages.
  *
  * @author Balraja Subbiah
  * @version $Id:$
@@ -59,7 +59,5 @@ public class SerializableMessageMarshaller implements MessageMarshaller
             byteStream.close();
             objectStream.close();
         }
-
     }
-
 }

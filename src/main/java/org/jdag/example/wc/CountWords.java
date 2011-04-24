@@ -10,7 +10,7 @@ import org.jdag.function.FunctionBase;
 import org.jdag.function.IteratorWrapper;
 
 /**
- * The function to be used for computing the number of records in a file.
+ * The function to be used for computing the number of words in a file.
  *
  * @author Balraja Subbiah
  * @version $Id:$
@@ -23,7 +23,7 @@ public class CountWords extends FunctionBase<String, Map<String,Integer>>
      */
     @Override
     public void process(Input<String> input,
-                                 Output<Map<String, Integer>> output)
+                                      Output<Map<String, Integer>> output)
     {
          Map<String, Integer> wordcountMap = new HashMap<String, Integer>();
          com.google.common.base.Function<String,Integer> lookupFunction =

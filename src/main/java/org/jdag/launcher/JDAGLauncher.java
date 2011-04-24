@@ -25,7 +25,7 @@ import org.jdag.common.log.LogFactory;
 
 /**
  * A simple type that reads a topology.xml file and creates master and worker
- * processes of augur.
+ * processes of jDAG.
  *
  * @author Balraja Subbiah
  * @version $Id:$
