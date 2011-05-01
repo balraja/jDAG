@@ -1,6 +1,9 @@
 package org.jdag.graph;
 
-import java.io.Serializable;
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.util.UUID;
 
 /**
@@ -9,13 +12,22 @@ import java.util.UUID;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-public class VertexID implements Serializable
+public class VertexID implements Externalizable
 {
 	private static final long serialVersionUID = -9172393936458409145L;
 
-	private final GraphID myGraphID;
+	private GraphID myGraphID;
 
-	private final UUID myVertexID;
+	private UUID myVertexID;
+	
+	/**
+	 * CTOR
+	 */
+	public VertexID()
+	{
+	    myGraphID = null;
+	    myVertexID = null;
+	}
 
 	/**
 	 * CTOR
@@ -93,5 +105,26 @@ public class VertexID implements Serializable
     public String toString()
     {
         return myGraphID.getID() + "_" + myVertexID.toString();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void readExternal(ObjectInput in) 
+        throws IOException,ClassNotFoundException
+    {
+        myGraphID = (GraphID) in.readObject();
+        myVertexID = (UUID) in.readObject();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException
+    {
+        out.writeObject(myGraphID);
+        out.writeObject(myVertexID);
     }
 }

@@ -1,6 +1,9 @@
 package org.jdag.communicator;
 
-import java.io.Serializable;
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 
 /**
  * Type for representing an unique identifier corresponding to a host.
@@ -8,14 +11,22 @@ import java.io.Serializable;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-public class HostID implements Serializable
+public class HostID implements Externalizable
 {
     /**
      * The serial version id.
      */
     private static final long serialVersionUID = -6057921445338124953L;
 
-    private final String myIdentifier;
+    private String myIdentifier;
+    
+    /**
+     * CTOR
+     */
+    public HostID()
+    {
+        myIdentifier = null;
+    }
 
     /**
      * CTOR
@@ -80,5 +91,19 @@ public class HostID implements Serializable
     public String toString()
     {
         return "HostID [myIdentifier=" + myIdentifier + "]";
+    }
+
+    @Override
+    public void readExternal(ObjectInput in) 
+        throws IOException, ClassNotFoundException
+    {
+        myIdentifier = in.readUTF();
+        
+    }
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException
+    {
+        out.writeUTF(myIdentifier);
     }
 }

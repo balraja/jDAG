@@ -3,8 +3,6 @@ package org.jdag.master;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -30,9 +28,9 @@ public class ExecutionRegistryState implements Snapshot
      */
     public ExecutionRegistryState()
     {
-        myWorkerNodes = new HashSet<HostID>();
-        myVertex2HostMap = new HashMap<VertexID, HostID>();
-        myGraph2ScheduleMap = new HashMap<GraphID, Schedule>();
+        myWorkerNodes = null;
+        myVertex2HostMap = null;
+        myGraph2ScheduleMap = null;
     }
 
     /** CTOR */

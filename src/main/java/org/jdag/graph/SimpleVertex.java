@@ -1,5 +1,8 @@
 package org.jdag.graph;
 
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.util.List;
 
 import org.jdag.io.IOKey;
@@ -13,13 +16,13 @@ import org.jdag.io.IOKey;
  */
 public class SimpleVertex implements Vertex
 {
-    private final VertexID myID;
+    private VertexID myID;
 
-    private final String myUDFIdentifier;
+    private String myUDFIdentifier;
 
-    private final List<IOKey> myInputs;
+    private List<IOKey> myInputs;
 
-    private final List<IOKey> myOutputs;
+    private List<IOKey> myOutputs;
 
     /**
      * CTOR
@@ -85,5 +88,26 @@ public class SimpleVertex implements Vertex
         return "SimpleVertex [myID=" + myID + ", myInputs=" + myInputs
                 + ", myOutputs=" + myOutputs + ", myUDFIdentifier="
                 + myUDFIdentifier + "]";
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void readExternal(ObjectInput in) throws IOException,
+            ClassNotFoundException
+    {
+        myID = (VertexID) in.readObject();
+        myUDFIdentifier = in.readUTF();
+        myInputs = (List<IOKey>) in.readObject();
+        myOutputs = (List<IOKey>) in.readObject();
+        
+    }
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException
+    {
+        out.writeObject(myID);
+        out.writeUTF(myUDFIdentifier);
+        out.writeObject(myInputs);
+        out.writeObject(myOutputs);
     }
 }

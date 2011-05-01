@@ -2,6 +2,10 @@ package org.jdag.graph;
 
 import com.google.common.base.Preconditions;
 
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -20,17 +24,29 @@ import java.util.Set;
  * @author subbiahb
  * @version $Id:$
  */
-public class Graph
+public class Graph implements Externalizable
 {
-    private final GraphID myID;
+    private GraphID myID;
 
-    private final Map<VertexID, Vertex> myVertices;
+    private Map<VertexID, Vertex> myVertices;
 
-    private final Set<Edge> myEdges;
+    private Set<Edge> myEdges;
 
-    private final Map<VertexID, List<Edge>> myOutgoingEdges;
+    private Map<VertexID, List<Edge>> myOutgoingEdges;
 
-    private final Map<VertexID, List<Edge>> myIncomingEdges;
+    private Map<VertexID, List<Edge>> myIncomingEdges;
+    
+    /**
+     * CTOR
+     */
+    public Graph()
+    {
+        myID = null;
+        myVertices = null;
+        myEdges = null;
+        myOutgoingEdges = null;
+        myIncomingEdges = null;
+    }
 
     /**
      * CTOR
@@ -124,5 +140,27 @@ public class Graph
             myIncomingEdges.put(edge.getDestination(), incomingEdges);
         }
         incomingEdges.add(edge);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void readExternal(ObjectInput in) throws IOException,
+            ClassNotFoundException
+    {
+        myID = (GraphID) in.readObject();
+        myVertices = (Map<VertexID, Vertex>) in.readObject();
+        myEdges = (Set<Edge>) in.readObject();
+        myIncomingEdges = (Map<VertexID, List<Edge>>) in.readObject();
+        myOutgoingEdges = (Map<VertexID, List<Edge>>) in.readObject();
+    }
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException
+    {
+        out.writeObject(myID);
+        out.writeObject(myVertices);
+        out.writeObject(myEdges);
+        out.writeObject(myIncomingEdges);
+        out.writeObject(myOutgoingEdges);
     }
 }

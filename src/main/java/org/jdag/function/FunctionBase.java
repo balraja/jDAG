@@ -22,8 +22,8 @@ public abstract class FunctionBase<I,O> implements Function<I, O>
      */
     @Override
     public void execute(ExecutionContext context,
-                                      List<IOKey> inputKeys,
-                                      List<IOKey> outputKeys)
+                        List<IOKey> inputKeys,
+                        List<IOKey> outputKeys)
         throws ComputeFailedException
     {
         IOKey inputKey = inputKeys.get(0);

@@ -1,5 +1,8 @@
 package org.jdag.graph.scheduler;
 
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -34,13 +37,13 @@ public class TopologicalSortSchedule implements Schedule
     /**
      * The <code>ExecutionGraph</code> from which we process the vertices.
      */
-    private final Graph myGraph;
+    private Graph myGraph;
 
     /** The vertices that have already been returned by this scheduler */
-    private final Set<VertexID> myReturnedVertices;
+    private Set<VertexID> myReturnedVertices;
 
     /** The vertices whose processing is completed */
-    private final Set<VertexID> myDoneVertices;
+    private Set<VertexID> myDoneVertices;
 
     public TopologicalSortSchedule()
     {
@@ -138,5 +141,23 @@ public class TopologicalSortSchedule implements Schedule
     public boolean isCompleted()
     {
         return myDoneVertices.size() == myGraph.getVertices().size();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void readExternal(ObjectInput in) 
+        throws IOException, ClassNotFoundException
+    {
+        myGraph = (Graph) in.readObject();
+        myReturnedVertices = (Set<VertexID>) in.readObject();
+        myDoneVertices = (Set<VertexID>) in.readObject();
+    }
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException
+    {
+        out.writeObject(myGraph);
+        out.writeObject(myReturnedVertices);
+        out.writeObject(myDoneVertices);
     }
 }

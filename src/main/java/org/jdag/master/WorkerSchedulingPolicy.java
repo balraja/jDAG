@@ -18,5 +18,5 @@ public interface WorkerSchedulingPolicy
      * can be scheduled or null if a worker is not free.
      */
     public HostID getWorkerNode(VertexID graphVertexID,
-                                ExecutionStateRegistry executionStateRegistry);
+                                ExecutionRegistry executionStateRegistry);
 }

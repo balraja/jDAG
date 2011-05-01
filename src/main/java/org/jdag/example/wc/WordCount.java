@@ -5,6 +5,7 @@ import java.util.Map;
 import org.jdag.data.DataCollection;
 import org.jdag.data.DataProcessor;
 import org.jdag.data.ShardedDataCollection;
+import org.jdag.function.HashSplitter;
 import org.jdag.function.SimpleInterpreter;
 import org.jdag.graph.Graph;
 import org.jdag.graph.GraphID;
@@ -38,18 +39,20 @@ public class WordCount
          DataProcessor processor =
              new DataProcessor(new GraphID("WordCountTest"),
                                new FilePathGenerator("C:\\temp"));
-
+         
          DataCollection<String> words =
              processor.fromInputSource(myInputFile, new SimpleInterpreter());
+         
          ShardedDataCollection<String> partitionedInput =
              words.partition(new HashSplitter(4));
+         
          ShardedDataCollection<Map<String,Integer>> partialResults =
              partitionedInput.apply(new CountWords());
+         
          DataCollection<Map<String, Integer>> wordCount =
              partialResults.merge(new WordCountMerger());
-         wordCount.writeOutput("wcout.txt",
-                                          new ExecutableDumper());
+         
+         wordCount.writeOutput("wcout.txt", new ExecutableDumper());
          return processor.getGraph();
     }
-
 }

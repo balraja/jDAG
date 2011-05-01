@@ -1,6 +1,9 @@
 package org.jdag.io;
 
-import java.io.Serializable;
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 
 /**
  * Type to be used for representing the keys used for identifying the
@@ -9,13 +12,22 @@ import java.io.Serializable;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-public class IOKey implements Serializable
+public class IOKey implements Externalizable
 {
     private static final long serialVersionUID = 1L;
 
-    private final IOSource mySourceType;
+    private IOSource mySourceType;
 
-    private final String myIdentifier;
+    private String myIdentifier;
+    
+    /**
+     * CTOR
+     */
+    public IOKey()
+    {
+        mySourceType = null;
+        myIdentifier = null;
+    }
 
     /**
      * CTOR
@@ -95,4 +107,18 @@ public class IOKey implements Serializable
                 + mySourceType + "]";
     }
 
+    @Override
+    public void readExternal(ObjectInput in) throws IOException,
+            ClassNotFoundException
+    {
+        mySourceType = IOSource.valueOf(in.readUTF());
+        myIdentifier = in.readUTF();
+    }
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException
+    {
+        out.writeUTF(mySourceType.name());
+        out.writeUTF(myIdentifier);
+    }
 }

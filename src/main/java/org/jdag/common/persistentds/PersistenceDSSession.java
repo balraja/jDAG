@@ -63,8 +63,8 @@ public class PersistenceDSSession
              }
 
              mySnapshotFile = new File(myDirectoryName
-                                                          + File.separator
-                                                          + Long.toString(System.nanoTime()));
+                                       + File.separator
+                                       + Long.toString(System.nanoTime()));
 
              LOG.info("Writing state to file " + mySnapshotFile);
 
@@ -89,11 +89,11 @@ public class PersistenceDSSession
         if (mySnapshotFile == null) {
             return null;
         }
+        
+        ObjectInputStream oIn = null;
         try {
-            ObjectInputStream oIn =
-                new ObjectInputStream(new FileInputStream(mySnapshotFile));
+            oIn = new ObjectInputStream(new FileInputStream(mySnapshotFile));
             Snapshot snapshot = (Snapshot) oIn.readObject();
-            oIn.close();
             return snapshot;
         }
         catch (FileNotFoundException e) {
@@ -104,6 +104,14 @@ public class PersistenceDSSession
         }
         catch (ClassNotFoundException e) {
              throw new RuntimeException(e);
+        }
+        finally {
+            try {
+                oIn.close();
+            } 
+            catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }

@@ -1,17 +1,34 @@
 package org.jdag.graph;
 
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+
 /**
  * A simple class that represents the unidirectional flow of data in a system.
  *
  * @author Balraja Subbiah
  * @version $Id:$
  */
-public class Edge
+public class Edge implements Externalizable
 {
-    private final VertexID mySource;
+    private VertexID mySource;
 
-    private final VertexID myDestination;
+    private VertexID myDestination;
+    
+    /**
+     * CTOR
+     */
+    public Edge()
+    {
+        mySource = null;
+        myDestination = null;
+    }
 
+    /**
+     * CTOR
+     */
     public Edge(VertexID source, VertexID destination)
     {
         super();
@@ -93,5 +110,20 @@ public class Edge
     {
         return "Edge [myDestination=" + myDestination + ", mySource="
                 + mySource + "]";
+    }
+
+    @Override
+    public void readExternal(ObjectInput in) throws IOException,
+            ClassNotFoundException
+    {
+        mySource = (VertexID) in.readObject();
+        myDestination = (VertexID) in.readObject();
+    }
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException
+    {
+        out.writeObject(mySource);
+        out.writeObject(myDestination);
     }
 }

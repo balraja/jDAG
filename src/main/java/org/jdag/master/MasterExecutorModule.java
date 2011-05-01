@@ -27,7 +27,7 @@ public class MasterExecutorModule extends AbstractCommModule
         bind(Communicator.class).to(HornetqCommunicator.class);
         bind(WorkerSchedulingPolicy.class).to(
                 BoundedWorkerSchedulingPolicy.class);
-        bind(ExecutionStateRegistry.class);
+        bind(ExecutionRegistry.class);
         bindInterceptor(Matchers.subclassesOf(PersistentDS.class),
                         Matchers.annotatedWith(Persist.class),
                         PersistentDSManagerAccessor.getPersistentDSManager());

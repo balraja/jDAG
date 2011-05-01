@@ -50,8 +50,8 @@ public class PersistentDSManager implements MethodInterceptor
         Preconditions.checkState(
             PersistentDS.class.isAssignableFrom(
                 invocation.getThis().getClass()));
-        PersistentDS ds = (PersistentDS) invocation.getThis();
-        PersistenceDSSession session =
+       PersistentDS ds = (PersistentDS) invocation.getThis();
+       PersistenceDSSession session =
             myType2PersistenceSession.get(ds.id());
         if (session == null) {
             session = new PersistenceDSSession(ds.id(), myConfig);

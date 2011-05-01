@@ -1,6 +1,9 @@
 package org.jdag.graph;
 
-import java.io.Serializable;
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 
 /**
  * Type that defines an unique id assigned for a task graph.
@@ -8,7 +11,7 @@ import java.io.Serializable;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-public class GraphID implements Serializable
+public class GraphID implements Externalizable
 {
     /**
      * The serial version id.
@@ -16,14 +19,21 @@ public class GraphID implements Serializable
     private static final long serialVersionUID = -2390864513699127717L;
 
     /** The string id assigned for a task graph */
-    private final String myID;
+    private String myID;
+    
+    /**
+     * CTOR
+     */
+    public GraphID()
+    {
+        myID= null;
+    }
 
     /**
      * CTOR
      */
     public GraphID(String iD)
     {
-        super();
         myID = iD;
     }
 
@@ -80,4 +90,17 @@ public class GraphID implements Serializable
         return "TaskGraphID [myID=" + myID + "]";
     }
 
+    @Override
+    public void readExternal(ObjectInput in) throws IOException,
+            ClassNotFoundException
+    {
+        myID = in.readUTF();
+        
+    }
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException
+    {
+        out.writeUTF(myID);
+    }
 }

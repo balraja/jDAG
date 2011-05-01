@@ -1,5 +1,9 @@
 package org.jdag.io.flatfile;
 
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+
 import org.jdag.io.IOKey;
 import org.jdag.io.IOSource;
 
@@ -13,11 +17,17 @@ import org.jdag.io.IOSource;
  */
 public class FlatFileIOKey extends IOKey
 {
-    private final String myInterpreterClassName;
+    private String myInterpreterClassName;
+    
+    public FlatFileIOKey()
+    {
+        super();
+        myInterpreterClassName = null;
+    }
 
     public FlatFileIOKey(IOSource sourceType,
-                               String identifier,
-                               String interpreterClass)
+                         String identifier,
+                         String interpreterClass)
     {
         super(sourceType, identifier);
         myInterpreterClassName = interpreterClass;
@@ -67,5 +77,31 @@ public class FlatFileIOKey extends IOKey
             return false;
         return true;
     }
-
+    
+    @Override
+    public void readExternal(ObjectInput in) throws IOException,
+            ClassNotFoundException
+    {
+        super.readExternal(in);
+        boolean hasValue = in.readBoolean();
+        if (hasValue) {
+            myInterpreterClassName = in.readUTF();
+        }
+        else {
+            myInterpreterClassName = null;
+        }
+    }
+    
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException
+    {
+        super.writeExternal(out);
+        if (myInterpreterClassName != null) {
+            out.writeBoolean(true);
+            out.writeUTF(myInterpreterClassName);
+        }
+        else {
+            out.writeBoolean(false);
+        }
+    }
 }

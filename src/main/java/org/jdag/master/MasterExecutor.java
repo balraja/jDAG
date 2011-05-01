@@ -50,7 +50,7 @@ public class MasterExecutor implements Application
 
     private final ScheduledExecutorService myScheduler;
 
-    private final ExecutionStateRegistry myStateRegistry;
+    private final ExecutionRegistry myStateRegistry;
 
     /**
      * Updates scheduling policy with the latest information from the scheduling
@@ -180,7 +180,7 @@ public class MasterExecutor implements Application
     @Inject
     public MasterExecutor(WorkerSchedulingPolicy schedulingPolicy,
                           Communicator communicator,
-                          ExecutionStateRegistry registry)
+                          ExecutionRegistry registry)
     {
         myWorkerSchedulingPolicy = schedulingPolicy;
         myStateRegistry = registry;

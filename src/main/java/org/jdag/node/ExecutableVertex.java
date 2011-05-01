@@ -1,5 +1,8 @@
 package org.jdag.node;
 
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
@@ -107,5 +110,19 @@ public class ExecutableVertex  implements Vertex, Callable<ExecutionResult>
     public String getUDFIdentifier()
     {
         return myVertex.getUDFIdentifier();
+    }
+
+    @Override
+    public void readExternal(ObjectInput in) throws IOException,
+            ClassNotFoundException
+    {
+        // Do Nothing
+        
+    }
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException
+    {
+        // Do Nothing
     }
 }

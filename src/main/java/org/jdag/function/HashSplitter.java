@@ -18,7 +18,15 @@ import org.jdag.io.IOKey;
  */
 public class HashSplitter<T> implements Splitter<T>
 {
-    private final int myNumPartitions;
+    private int myNumPartitions;
+    
+    /**
+     * CTOR
+     */
+    public HashSplitter()
+    {
+        myNumPartitions = 0;
+    }
 
     /**
      * CTOR
@@ -61,14 +69,15 @@ public class HashSplitter<T> implements Splitter<T>
      */
     @Override
     public void execute(ExecutionContext context,
-                                      List<IOKey> inputKeys,
-                                      List<IOKey> outputKeys)
+                        List<IOKey> inputKeys,
+                        List<IOKey> outputKeys)
         throws ComputeFailedException
     {
+        myNumPartitions = outputKeys.size();
         IOKey inputKey = inputKeys.get(0);
         Input<T> input =
             context.makeIOFactory(inputKey.getSourceType())
-                      .makeInput(inputKey);
+                   .makeInput(inputKey);
 
         List<Output<T>> outputs = new ArrayList<Output<T>>();
        for (IOKey outputKey : outputKeys) {
