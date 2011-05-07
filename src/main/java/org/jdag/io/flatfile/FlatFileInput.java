@@ -7,7 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Iterator;
 
-import org.jdag.data.Input;
+import org.jdag.dsl.Input;
 
 /**
  * Implements <code>FunctionInput</code> that reads data from a flat file.

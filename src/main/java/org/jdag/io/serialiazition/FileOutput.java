@@ -6,7 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
-import org.jdag.data.Output;
+import org.jdag.dsl.Output;
 import org.jdag.io.IOKey;
 import org.jdag.io.IOSource;
 import org.jdag.io.PersistenceException;

@@ -36,7 +36,7 @@ public class PersistenceDSSession
      * CTOR
      */
     public PersistenceDSSession(String id,
-                                                    PersistentDSManagerConfig config)
+                                PersistentDSManagerConfig config)
     {
         Preconditions.checkNotNull(config, "Config is empty");
         myConfig = config;

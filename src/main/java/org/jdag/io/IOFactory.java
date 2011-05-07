@@ -1,7 +1,7 @@
 package org.jdag.io;
 
-import org.jdag.data.Input;
-import org.jdag.data.Output;
+import org.jdag.dsl.Input;
+import org.jdag.dsl.Output;
 
 /**
  * Type for denoting a factory that can be used for making inputs and outputs

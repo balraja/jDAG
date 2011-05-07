@@ -1,7 +1,8 @@
-package org.jdag.data;
+package org.jdag.dsl;
 
 import java.util.List;
 
+import org.jdag.dsl.impl.ComputeFailedException;
 import org.jdag.graph.ExecutionContext;
 import org.jdag.io.IOKey;
 

@@ -3,10 +3,10 @@ package org.jdag.function;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jdag.data.ComputeFailedException;
-import org.jdag.data.Input;
-import org.jdag.data.Merger;
-import org.jdag.data.Output;
+import org.jdag.dsl.Input;
+import org.jdag.dsl.Merger;
+import org.jdag.dsl.Output;
+import org.jdag.dsl.impl.ComputeFailedException;
 import org.jdag.graph.ExecutionContext;
 import org.jdag.io.IOKey;
 

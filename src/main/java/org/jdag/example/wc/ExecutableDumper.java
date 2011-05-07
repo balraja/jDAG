@@ -3,9 +3,9 @@ package org.jdag.example.wc;
 import java.util.List;
 import java.util.Map;
 
-import org.jdag.data.ComputeFailedException;
-import org.jdag.data.Input;
-import org.jdag.data.Output;
+import org.jdag.dsl.Input;
+import org.jdag.dsl.Output;
+import org.jdag.dsl.impl.ComputeFailedException;
 import org.jdag.function.Dumper;
 import org.jdag.graph.ExecutionContext;
 import org.jdag.io.IOKey;

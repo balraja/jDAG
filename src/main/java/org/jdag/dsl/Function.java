@@ -1,6 +1,7 @@
-package org.jdag.data;
+package org.jdag.dsl;
 
 import java.io.Serializable;
+
 
 /**
  * Type that defines a function that gets shipped to a remote execution engine.

@@ -1,10 +1,10 @@
 package org.jdag.function;
 
 import java.util.List;
-import org.jdag.data.ComputeFailedException;
-import org.jdag.data.Function;
-import org.jdag.data.Input;
-import org.jdag.data.Output;
+import org.jdag.dsl.Function;
+import org.jdag.dsl.Input;
+import org.jdag.dsl.Output;
+import org.jdag.dsl.impl.ComputeFailedException;
 import org.jdag.graph.ExecutionContext;
 import org.jdag.io.IOKey;
 

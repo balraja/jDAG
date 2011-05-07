@@ -1,4 +1,4 @@
-package org.jdag.data;
+package org.jdag.dsl;
 
 import java.util.Iterator;
 

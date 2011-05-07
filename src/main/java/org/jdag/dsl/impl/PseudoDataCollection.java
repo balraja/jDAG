@@ -1,10 +1,14 @@
-package org.jdag.data;
+package org.jdag.dsl.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+import org.jdag.dsl.DataCollection;
+import org.jdag.dsl.Function;
+import org.jdag.dsl.ShardedDataCollection;
+import org.jdag.dsl.Splitter;
 import org.jdag.function.Dumper;
 import org.jdag.graph.Edge;
 import org.jdag.graph.Graph;
@@ -50,7 +54,7 @@ public class PseudoDataCollection<T>
      * CTOR
      */
     public PseudoDataCollection(
-            Graph graph, VertexID compVertex, IOKey fileKey, KeyGenerator gen)
+        Graph graph, VertexID compVertex, IOKey fileKey, KeyGenerator gen)
     {
         myGraph = graph;
         myVertex = compVertex;
@@ -87,9 +91,9 @@ public class PseudoDataCollection<T>
 
          SimpleVertex vertex =
              new SimpleVertex(id,
-                                      function.getClass().getName(),
-                                      Collections.singletonList(myFileKey),
-                                      Collections.singletonList(outputFileKey));
+                              function.getClass().getName(),
+                              Collections.singletonList(myFileKey),
+                              Collections.singletonList(outputFileKey));
 
          Edge edge = new Edge(myVertex, id);
          myGraph.addVertex(vertex);

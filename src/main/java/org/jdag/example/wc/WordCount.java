@@ -2,9 +2,9 @@ package org.jdag.example.wc;
 
 import java.util.Map;
 
-import org.jdag.data.DataCollection;
-import org.jdag.data.DataProcessor;
-import org.jdag.data.ShardedDataCollection;
+import org.jdag.dsl.DataCollection;
+import org.jdag.dsl.ShardedDataCollection;
+import org.jdag.dsl.impl.DataProcessor;
 import org.jdag.function.HashSplitter;
 import org.jdag.function.SimpleInterpreter;
 import org.jdag.graph.Graph;

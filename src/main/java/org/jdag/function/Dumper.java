@@ -1,7 +1,7 @@
 package org.jdag.function;
 
-import org.jdag.data.Input;
-import org.jdag.data.Output;
+import org.jdag.dsl.Input;
+import org.jdag.dsl.Output;
 
 /**
  * A helper class to support dumping the contents of a <code>DataCollection</code>

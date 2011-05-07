@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jdag.data.Input;
-import org.jdag.data.Output;
+import org.jdag.dsl.Input;
+import org.jdag.dsl.Output;
 import org.jdag.function.MergerBase;
 
 /**
@@ -24,7 +24,7 @@ public class WordCountMerger extends MergerBase<Map<String,Integer>>
      */
     @Override
     public void merge(List<Input<Map<String, Integer>>> shards,
-                              Output<Map<String, Integer>> output)
+                      Output<Map<String, Integer>> output)
     {
         Map<String,Integer> resultMap = new HashMap<String, Integer>();
         com.google.common.base.Function<String,Integer> lookupFunction =
@@ -34,7 +34,8 @@ public class WordCountMerger extends MergerBase<Map<String,Integer>>
             Map<String,Integer> splitWcMap = shard.getIterator().next();
             for (Map.Entry<String, Integer> entry : splitWcMap.entrySet()) {
                 resultMap.put(entry.getKey(),
-                                       lookupFunction.apply(entry.getKey()) + entry.getValue());
+                              lookupFunction.apply(
+                                  entry.getKey()) + entry.getValue());
             }
         }
         output.write(resultMap);

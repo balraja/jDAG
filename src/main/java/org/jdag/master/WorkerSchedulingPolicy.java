@@ -17,6 +17,6 @@ public interface WorkerSchedulingPolicy
      * Returns the identifier for a worker node to which graph vertices
      * can be scheduled or null if a worker is not free.
      */
-    public HostID getWorkerNode(VertexID graphVertexID,
+    public HostID getWorkerNode(VertexID          graphVertexID,
                                 ExecutionRegistry executionStateRegistry);
 }

@@ -1,6 +1,7 @@
-package org.jdag.data;
+package org.jdag.dsl;
 
 import java.util.List;
+
 
 /**
  * Defines the function that can be used for merging data from different

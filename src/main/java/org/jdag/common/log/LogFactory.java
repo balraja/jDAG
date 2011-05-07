@@ -1,5 +1,6 @@
 package org.jdag.common.log;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
@@ -16,14 +17,19 @@ public final class LogFactory
 {
     /** The property that defines the log file */
     public static final String PROP_LOG_FILE =
-        "org.jdag.logfile";
+        "org.jdag.logfileName";
 
     private static final FileHandler ourLogFileHandler;
 
     static {
         String fileName = System.getProperty(PROP_LOG_FILE);
         if (fileName == null) {
-            throw new RuntimeException("Log file not specified");
+            String basedir = System.getProperty("basedir");
+            if (basedir == null) {
+                throw new RuntimeException("Base dir not specified");
+            }
+            String appName = System.getProperty("app.name");
+            fileName = basedir + File.separator + appName + ".log";
         }
         try {
             ourLogFileHandler = new FileHandler(fileName);

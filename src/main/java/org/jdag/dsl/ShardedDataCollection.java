@@ -1,4 +1,5 @@
-package org.jdag.data;
+package org.jdag.dsl;
+
 
 /**
  * Defines the state where data is split into multiple partitions primarily to
@@ -10,7 +11,7 @@ package org.jdag.data;
 public interface ShardedDataCollection<T>
 {
     /**
-     * The sufiix to be appended to the file name in which data is stored.
+     * The suffix to be appended to the file name in which data is stored.
      */
     public static final String FILE_SUFFIX = "_shard";
 

@@ -1,4 +1,4 @@
-package org.jdag.data;
+package org.jdag.dsl;
 
 /**
  * Type that defines the o/p of a job that executed on a vertex.

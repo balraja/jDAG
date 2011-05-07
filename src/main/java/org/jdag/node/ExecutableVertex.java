@@ -9,7 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jdag.common.log.LogFactory;
-import org.jdag.data.Executable;
+import org.jdag.dsl.Executable;
 import org.jdag.graph.ExecutionContext;
 import org.jdag.graph.ExecutionResult;
 import org.jdag.graph.Vertex;

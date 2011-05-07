@@ -1,4 +1,4 @@
-package org.jdag.data;
+package org.jdag.dsl.impl;
 
 /**
  * A checked exception thrown in case of computational failures.

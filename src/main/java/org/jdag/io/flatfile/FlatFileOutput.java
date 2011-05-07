@@ -6,7 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import org.jdag.data.Output;
+import org.jdag.dsl.Output;
 
 /**
  * Implements <code>FunctionOutput</code> that writes data to a flat file.

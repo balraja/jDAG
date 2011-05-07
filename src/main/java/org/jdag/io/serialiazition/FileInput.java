@@ -10,7 +10,7 @@ import java.util.Iterator;
 import java.util.logging.Logger;
 
 import org.jdag.common.log.LogFactory;
-import org.jdag.data.Input;
+import org.jdag.dsl.Input;
 import org.jdag.io.IOKey;
 import org.jdag.io.PersistenceException;
 

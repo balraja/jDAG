@@ -1,6 +1,7 @@
-package org.jdag.data;
+package org.jdag.dsl;
 
 import java.util.List;
+
 
 /**
  * A splitter is used for splitting a <code>DataCollection</code> into multiple

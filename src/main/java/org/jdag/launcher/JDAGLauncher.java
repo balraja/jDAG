@@ -1,11 +1,8 @@
 package org.jdag.launcher;
 
-import com.google.common.io.Files;
-import com.google.common.io.LineProcessor;
-
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
@@ -43,49 +40,24 @@ public class JDAGLauncher
 
     private static final String WORKER_CLASS_NAME =
         "org.jdag.node.NodeExecutor";
+    
+    private static final String PROPERTY_BASE_DIR = "basedir";
+    
+    private static final String PROPERTY_APP_NAME = "app.name";
 
     private static final String TOPOLOGY_FILE = "topology.xml";
 
-    private static final String OPTION_CLASSPATH_FILE_NAME = "classPathFile";
+    private static final String OPTION_JDAG_HOME = "JDAG_HOME";
+    
+    private static final String LIB_DIR = "lib";
+    
+    private static final String CONF_DIR = "conf";
 
     private final XMLConfiguration myTopologyConfiguration;
 
     private final String myClassPath;
-
-    /**
-     * Reads lines of class path file and builds them to a single string.
-     */
-    private static class ClassPathLineProcessor implements LineProcessor<String>
-    {
-        private final StringBuilder myStringBuilder;
-
-        /**
-         * CTOR
-         */
-        public ClassPathLineProcessor()
-        {
-            myStringBuilder = new StringBuilder();
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String getResult()
-        {
-            return myStringBuilder.toString();
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public boolean processLine(String line) throws IOException
-        {
-            myStringBuilder.append(line);
-            return true;
-        }
-    }
+    
+    private final String myJavaCommand;
 
     /**
      * CTOR
@@ -97,32 +69,65 @@ public class JDAGLauncher
             Option classPathFileOption =
                 OptionBuilder.withDescription("<the file containing class path>")
                              .hasArg()
-                             .create(OPTION_CLASSPATH_FILE_NAME);
+                             .create(OPTION_JDAG_HOME);
 
             Options options = new Options();
             options.addOption(classPathFileOption);
             CommandLineParser commandLineParser = new GnuParser();
             CommandLine commandLine = commandLineParser.parse(options, args);
 
-            if (!commandLine.hasOption(OPTION_CLASSPATH_FILE_NAME)) {
+            if (!commandLine.hasOption(OPTION_JDAG_HOME)) {
                 LOG.severe("The file containing class path is not specified"
                            + " Hence aborting");
             }
 
-
-            File classPathFile =
-                new File(commandLine.getOptionValue(OPTION_CLASSPATH_FILE_NAME));
-
-            myClassPath =
-                Files.readLines(classPathFile,
-                                Charset.defaultCharset(),
-                                new ClassPathLineProcessor());
-
+            File libDir =
+                new File(commandLine.getOptionValue(OPTION_JDAG_HOME)
+                        + File.separator
+                        + LIB_DIR);
+            
+            if (!libDir.exists()) {
+                throw new RuntimeException(
+                    "Not able to resolve the library directory"
+                    + " Please check " + libDir.getAbsolutePath()
+                    + " exists");
+            }
+            
+            File[] dependentLibraries = libDir.listFiles();
+            if (dependentLibraries.length == 0) {
+                throw new RuntimeException("Not able to locate dependent jars "
+                                           + " in " + libDir);
+            }
+            
+            StringBuilder builder = new StringBuilder();
+            File confDir = 
+                new File(commandLine.getOptionValue(OPTION_JDAG_HOME)
+                         + File.separator
+                         + CONF_DIR);
+            if (!confDir.exists()) {
+                throw new RuntimeException("Unable to locate the conf directory"
+                                           + "  " + confDir.getAbsolutePath());
+            }
+            builder.append(confDir.getAbsolutePath());
+            for (File f : dependentLibraries) {
+                builder.append(File.pathSeparator);
+                builder.append(f.getAbsolutePath());
+            }
+            myClassPath = builder.toString();
+            
+            String cmd = System.getenv("JAVA_HOME") 
+                         + File.separator 
+                         + "bin" 
+                         + File.separator
+                         + JAVA_COMMAND;
+            
+            myJavaCommand = cmd.replaceAll("Program Files", 
+                                           "\"Program Files\"");
             File f =
                 new File(ClassLoader.getSystemClassLoader()
                                     .getResource(TOPOLOGY_FILE)
                                     .getFile());
-            LOG.info("Parsing topology from " + f.toString());
+           
             myTopologyConfiguration = new XMLConfiguration(f);
         }
         catch (ConfigurationException e) {
@@ -135,41 +140,40 @@ public class JDAGLauncher
                     e);
             throw new RuntimeException(e);
         }
-        catch (IOException e) {
-            LOG.log(Level.SEVERE,
-                    "Exception while reading class path file",
-                    e);
-             throw new RuntimeException(e);
-        }
     }
 
     /** Starts the master server */
     public void startMaster()
     {
         StringBuilder cmdBuilder = new StringBuilder();
-        cmdBuilder.append(JAVA_COMMAND);
+        cmdBuilder.append(myJavaCommand);
         cmdBuilder.append(" ");
         cmdBuilder.append(" -cp " + myClassPath);
         String name =
             myTopologyConfiguration.getString("master.name");
-        cmdBuilder.append(addProperty("augur.communicator.clientName", name));
+        cmdBuilder.append(addProperty("jdag.communicator.clientName", name));
         String logFile =
             myTopologyConfiguration.getString("master.logfile");
         cmdBuilder.append(addProperty(LogFactory.PROP_LOG_FILE, logFile));
         String stateDir =
             myTopologyConfiguration.getString("master.statedir");
         cmdBuilder.append(addProperty("jdag.persistentds.rootDir", stateDir));
+        cmdBuilder.append(addProperty(PROPERTY_BASE_DIR, 
+                                      System.getProperty(PROPERTY_BASE_DIR)));
+        cmdBuilder.append(addProperty(PROPERTY_APP_NAME, name));
         cmdBuilder.append(MASTER_CLASS_NAME);
         LOG.info("starting master");
-        LOG.info(cmdBuilder.toString());
-
-      /* try {
-            new ProcessBuilder(cmdBuilder.toString()).start();
+        String cmd = cmdBuilder.toString();
+        LOG.info(cmd);
+        
+        try {
+            new ProcessBuilder(Collections.<String>singletonList(cmd)).start();
         }
         catch (IOException e) {
              LOG.log(Level.SEVERE, "Unable to start master", e);
+             e.printStackTrace();
              throw new RuntimeException(e);
-        }*/
+        }
     }
 
     /** Starts the workers */
@@ -182,28 +186,31 @@ public class JDAGLauncher
         while (it.hasNext())
         {
             StringBuilder cmdBuilder = new StringBuilder();
-            cmdBuilder.append(JAVA_COMMAND);
+            cmdBuilder.append(myJavaCommand);
             cmdBuilder.append(" ");
-
             cmdBuilder.append(" -cp " + myClassPath);
             cmdBuilder.append(addProperty("augur.node.masterHostID",
-                    myTopologyConfiguration.getString("master.name")));
+                                           myTopologyConfiguration.getString(
+                                               "master.name")));
             HierarchicalConfiguration worker =
                 (HierarchicalConfiguration) it.next();
             String name = worker.getString("name");
-            cmdBuilder.append(addProperty("augur.communicator.clientName", name));
+            cmdBuilder.append(addProperty("jdag.communicator.clientName", name));
             String logFile = worker.getString("logfile");
             cmdBuilder.append(addProperty(LogFactory.PROP_LOG_FILE, logFile));
+            cmdBuilder.append(addProperty(PROPERTY_BASE_DIR, 
+                                          System.getProperty(PROPERTY_BASE_DIR)));
+            cmdBuilder.append(addProperty(PROPERTY_APP_NAME, name));
             cmdBuilder.append(WORKER_CLASS_NAME);
             LOG.info("Starting worker " + name );
             LOG.info(cmdBuilder.toString());
-          /*  try {
+            try {
                 new ProcessBuilder(cmdBuilder.toString()).start();
             }
             catch (IOException e) {
                  LOG.log(Level.SEVERE, "Unable to start worker", e);
                  throw new RuntimeException(e);
-            }*/
+            }
         }
     }
 
@@ -218,6 +225,6 @@ public class JDAGLauncher
     {
         JDAGLauncher launcher = new JDAGLauncher(args);
         launcher.startMaster();
-        launcher.startWorkers();
+        //launcher.startWorkers();
     }
 }

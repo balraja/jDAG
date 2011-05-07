@@ -23,7 +23,7 @@ public class ExecuteVertexCommandStatus implements Serializable,Message
       * CTOR
       */
     public ExecuteVertexCommandStatus(VertexID executedVertex,
-                                                                  ExecutionResult result)
+                                      ExecutionResult result)
     {
         myExecutedVertex = executedVertex;
         myResult = result;

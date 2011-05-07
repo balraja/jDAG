@@ -4,8 +4,8 @@ import com.google.common.base.Functions;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.jdag.data.Input;
-import org.jdag.data.Output;
+import org.jdag.dsl.Input;
+import org.jdag.dsl.Output;
 import org.jdag.function.FunctionBase;
 import org.jdag.function.IteratorWrapper;
 

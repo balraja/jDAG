@@ -2,8 +2,8 @@ package org.jdag.io.flatfile;
 
 import com.google.common.base.Preconditions;
 
-import org.jdag.data.Input;
-import org.jdag.data.Output;
+import org.jdag.dsl.Input;
+import org.jdag.dsl.Output;
 import org.jdag.io.IOFactory;
 import org.jdag.io.IOKey;
 

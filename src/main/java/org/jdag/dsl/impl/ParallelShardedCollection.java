@@ -1,4 +1,4 @@
-package org.jdag.data;
+package org.jdag.dsl.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,6 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.jdag.dsl.DataCollection;
+import org.jdag.dsl.Function;
+import org.jdag.dsl.Merger;
+import org.jdag.dsl.ShardedDataCollection;
 import org.jdag.graph.Edge;
 import org.jdag.graph.Graph;
 import org.jdag.graph.SimpleVertex;

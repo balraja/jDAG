@@ -1,7 +1,8 @@
-package org.jdag.data;
+package org.jdag.dsl.impl;
 
 import java.util.UUID;
 
+import org.jdag.dsl.DataCollection;
 import org.jdag.graph.Graph;
 import org.jdag.graph.GraphID;
 import org.jdag.graph.InputVertex;
