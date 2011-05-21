@@ -80,12 +80,12 @@ public class HashSplitter<T> implements Splitter<T>
                    .makeInput(inputKey);
 
         List<Output<T>> outputs = new ArrayList<Output<T>>();
-       for (IOKey outputKey : outputKeys) {
-           outputs.add(
+        for (IOKey outputKey : outputKeys) {
+            outputs.add(
                 context.makeIOFactory(outputKey.getSourceType())
-                           .<T>makeOutput(outputKey)
-           );
-       }
+                       .<T>makeOutput(outputKey)
+            );
+        }
 
         split(input, outputs);
     }

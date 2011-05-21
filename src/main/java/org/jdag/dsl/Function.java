@@ -2,7 +2,6 @@ package org.jdag.dsl;
 
 import java.io.Serializable;
 
-
 /**
  * Type that defines a function that gets shipped to a remote execution engine.
  *
@@ -15,5 +14,5 @@ public interface Function<I,O>
     /**
      * The definition of the function that needs to be executed on a vertex.
      */
-    public void process( Input<I> input,  Output<O> output);
+    public void process(Input<I> input, Output<O> output);
 }

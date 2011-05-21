@@ -14,7 +14,7 @@ import org.jdag.communicator.HostID;
 import org.jdag.graph.GraphID;
 import org.jdag.graph.Vertex;
 import org.jdag.graph.VertexID;
-import org.jdag.graph.scheduler.Schedule;
+import org.jdag.graph.scheduler.VertexSchedule;
 
 /**
  * The registry to be used for maintaining the state of the executions.
@@ -30,7 +30,7 @@ public class ExecutionRegistry implements PersistentDS
 
     private final Map<VertexID, HostID> myVertex2HostMap;
 
-    private final Map<GraphID, Schedule> myGraph2ScheduleMap;
+    private final Map<GraphID, VertexSchedule> myGraph2ScheduleMap;
 
     /**
      * CTOR
@@ -39,7 +39,7 @@ public class ExecutionRegistry implements PersistentDS
     {
         myWorkerNodes = new HashSet<HostID>();
         myVertex2HostMap = new HashMap<VertexID, HostID>();
-        myGraph2ScheduleMap = new HashMap<GraphID, Schedule>();
+        myGraph2ScheduleMap = new HashMap<GraphID, VertexSchedule>();
     }
 
     /** Adds a worker */
@@ -112,7 +112,7 @@ public class ExecutionRegistry implements PersistentDS
 
     /** Updates the mapping between graph and its schedule */
     @Persist
-    public void addSchedule(GraphID graphID, Schedule schedule)
+    public void addSchedule(GraphID graphID, VertexSchedule schedule)
     {
         myGraph2ScheduleMap.put(graphID, schedule);
     }
@@ -127,7 +127,7 @@ public class ExecutionRegistry implements PersistentDS
     public boolean markDone(VertexID graphVertexID)
     {
         myVertex2HostMap.remove(graphVertexID);
-        Schedule schedule = myGraph2ScheduleMap.get(graphVertexID.getGraphID());
+        VertexSchedule schedule = myGraph2ScheduleMap.get(graphVertexID.getGraphID());
         schedule.notifyDone(graphVertexID);
         if (schedule.isCompleted()) {
             myGraph2ScheduleMap.remove(graphVertexID.getGraphID());
@@ -141,7 +141,7 @@ public class ExecutionRegistry implements PersistentDS
     /** Returns a vertex for execution */
     public Vertex getVertexForExecution(GraphID graphID)
     {
-        Schedule schedule = myGraph2ScheduleMap.get(graphID);
+        VertexSchedule schedule = myGraph2ScheduleMap.get(graphID);
         Preconditions.checkNotNull(schedule);
         return schedule.getVertexForExecution();
     }
@@ -175,7 +175,7 @@ public class ExecutionRegistry implements PersistentDS
             executionRegistryState = 
                 new ExecutionRegistryState(new HashSet<HostID>(),
                                            new HashMap<VertexID, HostID>(),
-                                           new HashMap<GraphID, Schedule>());
+                                           new HashMap<GraphID, VertexSchedule>());
         }
     }
 

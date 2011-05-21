@@ -4,7 +4,7 @@ import org.jdag.graph.ExecutionContext;
 import org.jdag.io.IOFactory;
 import org.jdag.io.IOSource;
 import org.jdag.io.flatfile.FlatFileIOFactory;
-import org.jdag.io.serialiazition.FileIOFactory;
+import org.jdag.io.serialiazedfile.FileIOFactory;
 
 public class SimpleExecutionContext implements ExecutionContext
 {

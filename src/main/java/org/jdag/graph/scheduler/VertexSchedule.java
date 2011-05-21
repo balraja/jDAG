@@ -11,7 +11,7 @@ import org.jdag.graph.VertexID;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-public interface Schedule extends Externalizable
+public interface VertexSchedule extends Externalizable
 {
     /**
      * When called returns the next vertex to be executed. If all the
@@ -23,7 +23,7 @@ public interface Schedule extends Externalizable
     /**
      * Notifies that the given vertex id has been successfully executed.
      * Based on these notifications that the scheduler will give appropriate
-     * vertices when {@link Schedule#getVertexForExecution()} is called
+     * vertices when {@link VertexSchedule#getVertexForExecution()} is called
      * next.
      */
     public void notifyDone(VertexID vertexID);

@@ -8,6 +8,8 @@ import org.jdag.common.persistentds.PersistentDSManagerAccessor;
 import org.jdag.communicator.Communicator;
 import org.jdag.communicator.impl.AbstractCommModule;
 import org.jdag.communicator.impl.HornetqCommunicator;
+import org.jdag.graph.scheduler.BoundedWorkerSchedulingPolicy;
+import org.jdag.graph.scheduler.WorkerSchedulingPolicy;
 
 /**
  * Implements GUICE module to support dependency injection.

@@ -1,6 +1,4 @@
-package org.jdag.function;
-
-import org.jdag.io.flatfile.Interpreter;
+package org.jdag.io.flatfile;
 
 /**
  * A simple interpreter which returns the line as is.

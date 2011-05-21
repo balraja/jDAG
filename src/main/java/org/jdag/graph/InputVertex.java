@@ -25,6 +25,9 @@ public class InputVertex extends SimpleVertex
      */
       public InputVertex(VertexID id, IOKey key)
       {
-          super(id,  "", Collections.<IOKey>emptyList(), Collections.singletonList(key));
+          super(id,  
+                "", 
+                Collections.<IOKey>emptyList(), 
+                Collections.singletonList(key));
       }
 }

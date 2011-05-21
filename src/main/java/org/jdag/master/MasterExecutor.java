@@ -28,8 +28,9 @@ import org.jdag.graph.Graph;
 import org.jdag.graph.GraphID;
 import org.jdag.graph.ExecutionResult;
 import org.jdag.graph.Vertex;
-import org.jdag.graph.scheduler.Schedule;
+import org.jdag.graph.scheduler.VertexSchedule;
 import org.jdag.graph.scheduler.TopologicalSortSchedule;
+import org.jdag.graph.scheduler.WorkerSchedulingPolicy;
 import org.jdag.node.NodeExecutor;
 
 /**
@@ -227,7 +228,7 @@ public class MasterExecutor implements Application
     {
         LOG.info("Received graph with id " + graph.getID()
                  + " for execution");
-        Schedule schedule = new TopologicalSortSchedule(graph);
+        VertexSchedule schedule = new TopologicalSortSchedule(graph);
         myStateRegistry.addSchedule(graph.getID(), schedule);
         myScheduler.schedule(
             new VertexSchedulingTask(graph.getID()),

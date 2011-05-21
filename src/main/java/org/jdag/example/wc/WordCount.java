@@ -6,10 +6,10 @@ import org.jdag.dsl.DataCollection;
 import org.jdag.dsl.ShardedDataCollection;
 import org.jdag.dsl.impl.DataProcessor;
 import org.jdag.function.HashSplitter;
-import org.jdag.function.SimpleInterpreter;
 import org.jdag.graph.Graph;
 import org.jdag.graph.GraphID;
 import org.jdag.io.FilePathGenerator;
+import org.jdag.io.flatfile.SimpleInterpreter;
 
 /**
  * Defines the contract of a class that can be used for performing the word count

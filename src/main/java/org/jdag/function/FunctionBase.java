@@ -29,12 +29,12 @@ public abstract class FunctionBase<I,O> implements Function<I, O>
         IOKey inputKey = inputKeys.get(0);
         Input<I> input =
             context.makeIOFactory(inputKey.getSourceType())
-                      .makeInput(inputKey);
+                   .makeInput(inputKey);
 
         IOKey outputKey = outputKeys.get(0);
         Output<O> output =
             context.makeIOFactory(outputKey.getSourceType())
-                       .makeOutput(outputKey);
+                   .makeOutput(outputKey);
 
         process(input, output);
     }

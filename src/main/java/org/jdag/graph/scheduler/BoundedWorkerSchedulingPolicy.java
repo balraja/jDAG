@@ -1,4 +1,4 @@
-package org.jdag.master;
+package org.jdag.graph.scheduler;
 
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.jdag.communicator.HostID;
 import org.jdag.graph.VertexID;
+import org.jdag.master.ExecutionRegistry;
 
 /**
  * A simple scheduling policy that says at a given point of time only one

@@ -23,7 +23,7 @@ import org.jdag.graph.VertexID;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-public class TopologicalSortSchedule implements Schedule
+public class TopologicalSortSchedule implements VertexSchedule
 {
     /**
      * The serial version id.

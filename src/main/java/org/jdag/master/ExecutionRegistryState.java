@@ -10,7 +10,7 @@ import org.jdag.common.persistentds.Snapshot;
 import org.jdag.communicator.HostID;
 import org.jdag.graph.GraphID;
 import org.jdag.graph.VertexID;
-import org.jdag.graph.scheduler.Schedule;
+import org.jdag.graph.scheduler.VertexSchedule;
 
 /**
  * The state that needs to be persisted.
@@ -21,7 +21,7 @@ public class ExecutionRegistryState implements Snapshot
 
     private Map<VertexID, HostID> myVertex2HostMap;
 
-    private Map<GraphID, Schedule> myGraph2ScheduleMap;
+    private Map<GraphID, VertexSchedule> myGraph2ScheduleMap;
 
     /**
      * CTOR
@@ -37,7 +37,7 @@ public class ExecutionRegistryState implements Snapshot
     public ExecutionRegistryState(
         Set<HostID> workerNodes,
         Map<VertexID, HostID> vertex2HostMap,
-        Map<GraphID, Schedule> graph2ScheduleMap)
+        Map<GraphID, VertexSchedule> graph2ScheduleMap)
     {
         super();
         myWorkerNodes = workerNodes;
@@ -64,7 +64,7 @@ public class ExecutionRegistryState implements Snapshot
     /**
      * Returns the value of graph2ScheduleMap
      */
-    public Map<GraphID, Schedule> getGraph2ScheduleMap()
+    public Map<GraphID, VertexSchedule> getGraph2ScheduleMap()
     {
         return myGraph2ScheduleMap;
     }
@@ -78,7 +78,7 @@ public class ExecutionRegistryState implements Snapshot
             ClassNotFoundException
     {
         myGraph2ScheduleMap =
-            (Map<GraphID, Schedule>) in.readObject();
+            (Map<GraphID, VertexSchedule>) in.readObject();
         myVertex2HostMap =
             (Map<VertexID, HostID>) in.readObject();
         myWorkerNodes = (Set<HostID>) in.readObject();

@@ -1,4 +1,4 @@
-package org.jdag.io.serialiazition;
+package org.jdag.io.serialiazedfile;
 
 /**
  * Class to denote the constants related to using file as input or

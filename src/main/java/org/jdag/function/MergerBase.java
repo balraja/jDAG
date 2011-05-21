@@ -23,8 +23,9 @@ public abstract class MergerBase<T> implements Merger<T>
      */
     @Override
     public void execute(ExecutionContext context,
-                                      List<IOKey> inputKeys,
-                                      List<IOKey> outputKeys) throws ComputeFailedException
+                        List<IOKey> inputKeys,
+                        List<IOKey> outputKeys) 
+        throws ComputeFailedException
     {
         List<Input<T>> inputs =  new ArrayList<Input<T>>();
 
@@ -36,7 +37,7 @@ public abstract class MergerBase<T> implements Merger<T>
         IOKey outputKey = outputKeys.get(0);
         Output<T> output =
             context.makeIOFactory(outputKey.getSourceType())
-                       .makeOutput(outputKey);
+                   .makeOutput(outputKey);
 
         merge(inputs, output);
     }

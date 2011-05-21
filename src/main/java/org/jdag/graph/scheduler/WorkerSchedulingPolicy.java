@@ -1,7 +1,8 @@
-package org.jdag.master;
+package org.jdag.graph.scheduler;
 
 import org.jdag.communicator.HostID;
 import org.jdag.graph.VertexID;
+import org.jdag.master.ExecutionRegistry;
 
 /**
  * The type that defines the contract for scheduling vertices over the

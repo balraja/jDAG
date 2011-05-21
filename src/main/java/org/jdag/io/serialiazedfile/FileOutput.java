@@ -1,4 +1,4 @@
-package org.jdag.io.serialiazition;
+package org.jdag.io.serialiazedfile;
 
 import java.io.File;
 import java.io.FileNotFoundException;

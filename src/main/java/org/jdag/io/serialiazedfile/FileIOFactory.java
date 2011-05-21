@@ -1,4 +1,4 @@
-package org.jdag.io.serialiazition;
+package org.jdag.io.serialiazedfile;
 
 import org.jdag.dsl.Input;
 import org.jdag.dsl.Output;
