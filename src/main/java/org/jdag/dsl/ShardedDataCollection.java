@@ -1,6 +1,5 @@
 package org.jdag.dsl;
 
-
 /**
  * Defines the state where data is split into multiple partitions primarily to
  * enable processing of data in parallel.

@@ -1,11 +1,11 @@
 package org.jdag.io.flatfile;
 
-import com.google.common.base.Preconditions;
-
 import org.jdag.dsl.Input;
 import org.jdag.dsl.Output;
 import org.jdag.io.IOFactory;
 import org.jdag.io.IOKey;
+
+import com.google.common.base.Preconditions;
 
 /**
  * Implements <code>IOFactory</code> that reads data from flat files.
@@ -29,7 +29,7 @@ public class FlatFileIOFactory implements IOFactory
             FlatFileIOKey flatFileKey = (FlatFileIOKey) key;
             Interpreter<T> lineInterpreter =
                 (Interpreter<T>) Class.forName(flatFileKey.getInterpreterClassName())
-                                               .newInstance();
+                                                          .newInstance();
             return new FlatFileInput<T>(lineInterpreter, key.getIdentifier());
         }
         catch (InstantiationException e) {

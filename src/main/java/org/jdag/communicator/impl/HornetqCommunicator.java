@@ -1,9 +1,5 @@
 package org.jdag.communicator.impl;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-import com.google.inject.Inject;
-
 import java.io.IOException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
@@ -21,7 +17,6 @@ import org.hornetq.api.core.client.ClientSession;
 import org.hornetq.api.core.client.ClientSessionFactory;
 import org.hornetq.api.core.client.HornetQClient;
 import org.hornetq.api.core.client.MessageHandler;
-
 import org.jdag.common.NamedThreadFactory;
 import org.jdag.common.Pair;
 import org.jdag.common.log.LogFactory;
@@ -31,12 +26,16 @@ import org.jdag.communicator.Message;
 import org.jdag.communicator.MessageMarshaller;
 import org.jdag.communicator.Reactor;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+import com.google.inject.Inject;
+
 /**
  * A simple implementation of communicator using jboss HornetQ messaging
  * server. The idea is each node has a message queue. The queue is made
  * persistent. This way the messages sent to an application is persisted in the
  * message quque's journal and when started again it can process the messages
- * from the quque. This is our first level of defense against failover.
+ * from the queue. This is our first level of defense against failover.
  *
  * I am contemplating about replacing the hornetq with our own custom
  * protocol implementation using jboss netty. But that can wait for sometime.

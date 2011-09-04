@@ -33,7 +33,7 @@ public class JDAGLauncher
     private static final Logger LOG =  LogFactory.getLogger(JDAGLauncher.class);
 
     private static final String JAVA_COMMAND =
-        "java";
+        "C:\\cygwin\\usr\\share\\jdk\\bin\\java";
 
     private static final String MASTER_CLASS_NAME =
         "org.jdag.master.MasterExecutor";
@@ -115,11 +115,7 @@ public class JDAGLauncher
             }
             myClassPath = builder.toString();
             
-            String cmd = System.getenv("JAVA_HOME") 
-                         + File.separator 
-                         + "bin" 
-                         + File.separator
-                         + JAVA_COMMAND;
+            String cmd =  JAVA_COMMAND;
             
             myJavaCommand = cmd.replaceAll("Program Files", 
                                            "\"Program Files\"");
@@ -148,7 +144,7 @@ public class JDAGLauncher
         StringBuilder cmdBuilder = new StringBuilder();
         cmdBuilder.append(myJavaCommand);
         cmdBuilder.append(" ");
-        cmdBuilder.append(" -cp " + myClassPath);
+        cmdBuilder.append(" -classpath " + myClassPath);
         String name =
             myTopologyConfiguration.getString("master.name");
         cmdBuilder.append(addProperty("jdag.communicator.clientName", name));
@@ -164,7 +160,7 @@ public class JDAGLauncher
         cmdBuilder.append(MASTER_CLASS_NAME);
         LOG.info("starting master");
         String cmd = cmdBuilder.toString();
-        LOG.info(cmd);
+        //LOG.info(cmd);
         
         try {
             new ProcessBuilder(Collections.<String>singletonList(cmd)).start();

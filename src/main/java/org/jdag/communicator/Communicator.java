@@ -26,8 +26,8 @@ public interface Communicator
      * type arrives, the reactor will be executed in the given executor thread.
      */
     public void attachReactor(Class<? extends Message> type,
-                                         Reactor r,
-                                         Executor executor);
+                              Reactor r,
+                              Executor executor);
 
     /** Starts the communicator */
     public void start();

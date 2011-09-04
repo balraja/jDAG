@@ -1,13 +1,14 @@
 package org.jdag.example.wc;
 
-import com.google.common.base.Functions;
-
 import java.util.HashMap;
 import java.util.Map;
+
 import org.jdag.dsl.Input;
 import org.jdag.dsl.Output;
 import org.jdag.function.FunctionBase;
 import org.jdag.function.IteratorWrapper;
+
+import com.google.common.base.Functions;
 
 /**
  * The function to be used for computing the number of words in a file.
@@ -23,7 +24,7 @@ public class CountWords extends FunctionBase<String, Map<String,Integer>>
      */
     @Override
     public void process(Input<String> input,
-                                      Output<Map<String, Integer>> output)
+                        Output<Map<String, Integer>> output)
     {
          Map<String, Integer> wordcountMap = new HashMap<String, Integer>();
          com.google.common.base.Function<String,Integer> lookupFunction =
