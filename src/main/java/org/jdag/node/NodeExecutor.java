@@ -1,3 +1,19 @@
+/*******************************************************************************
+ * jDAG is a project to build acyclic dataflow graphs for processing massive datasets.
+ *
+ *     Copyright (C) 2011, Author: Balraja,Subbiah
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ */
+
 package org.jdag.node;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
@@ -82,6 +98,7 @@ public class NodeExecutor implements Application
             Heartbeat heartbeat =
                 new Heartbeat(myCommunicator.getMyHostID(),
                               System.currentTimeMillis() - myStartTime);
+
             myCommunicator.sendMessage(new HostID(myConfig.getMasterHostID()),
                                        heartbeat);
         }
@@ -92,8 +109,9 @@ public class NodeExecutor implements Application
         public void start()
         {
         	myStartTime = System.currentTimeMillis();
+            LOG.info("sending heart beat to " + myConfig.getMasterHostID());
         	myScheduler.scheduleAtFixedRate(
-        	    PaceMaker.this, 1, 1, TimeUnit.SECONDS);
+        	    PaceMaker.this, 10, 90, TimeUnit.SECONDS);
         }
     }
 

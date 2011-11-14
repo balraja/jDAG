@@ -1,3 +1,19 @@
+/*******************************************************************************
+ * jDAG is a project to build acyclic dataflow graphs for processing massive datasets.
+ *
+ *     Copyright (C) 2011, Author: Balraja,Subbiah
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ */
+
 package org.jdag.dsl.impl;
 
 import java.util.ArrayList;
@@ -65,9 +81,9 @@ public class ParallelShardedCollection<T> implements ShardedDataCollection<T>
                myKeyGenerator.generateIdentifier(myGraph.getID(),  id + FILE_SUFFIX);
             SimpleVertex vertex =
                 new SimpleVertex(id,
-                                         function.getClass().getName(),
-                                         Collections.singletonList(entry.getValue()),
-                                         Collections.singletonList(outputFileKey));
+                                 function.getClass().getName(),
+                                 Collections.singletonList(entry.getValue()),
+                                 Collections.singletonList(outputFileKey));
             Edge edge = new Edge(inVertex, id);
             myGraph.addVertex(vertex);
             myGraph.addEdge(edge);
@@ -89,9 +105,9 @@ public class ParallelShardedCollection<T> implements ShardedDataCollection<T>
         List<IOKey> inputKeys = new ArrayList<IOKey>(myVertexToFileMap.values());
         SimpleVertex vertex =
             new SimpleVertex(id,
-                                     merger.getClass().getName(),
-                                     inputKeys,
-                                     Collections.singletonList(outputFileKey));
+                             merger.getClass().getName(),
+                             inputKeys,
+                             Collections.singletonList(outputFileKey));
         myGraph.addVertex(vertex);
 
         for (VertexID src : myVertexToFileMap.keySet()) {

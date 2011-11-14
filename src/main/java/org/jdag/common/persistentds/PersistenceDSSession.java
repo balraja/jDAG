@@ -1,3 +1,19 @@
+/*******************************************************************************
+ * jDAG is a project to build acyclic dataflow graphs for processing massive datasets.
+ *
+ *     Copyright (C) 2011, Author: Balraja,Subbiah
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ */
+
 package org.jdag.common.persistentds;
 
 import com.google.common.base.Preconditions;
@@ -22,9 +38,6 @@ import org.jdag.common.log.LogFactory;
  */
 public class PersistenceDSSession
 {
-    /** The logger */
-    private final Logger LOG =
-        LogFactory.getLogger(PersistenceDSSession.class);
 
     private final PersistentDSManagerConfig myConfig;
 
@@ -41,7 +54,6 @@ public class PersistenceDSSession
         Preconditions.checkNotNull(config, "Config is empty");
         myConfig = config;
         myDirectoryName = myConfig.getRootDirectory() + File.separator + id;
-        LOG.info("Initializing state directory as " + myDirectoryName);
         File directory = new File(myDirectoryName);
         if (!directory.exists()) {
             directory.mkdirs();
@@ -66,12 +78,8 @@ public class PersistenceDSSession
                                        + File.separator
                                        + Long.toString(System.nanoTime()));
 
-             LOG.info("Writing state to file " + mySnapshotFile);
-
              ObjectOutputStream oOut =
                  new ObjectOutputStream(new FileOutputStream(mySnapshotFile));
-             LOG.info(snapshot.getClass().getName());
-             LOG.info(snapshot.toString());
              oOut.writeObject(snapshot);
              oOut.close();
         }

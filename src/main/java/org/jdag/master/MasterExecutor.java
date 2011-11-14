@@ -1,3 +1,19 @@
+/*******************************************************************************
+ * jDAG is a project to build acyclic dataflow graphs for processing massive datasets.
+ *
+ *     Copyright (C) 2011, Author: Balraja,Subbiah
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ */
+
 package org.jdag.master;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
@@ -69,6 +85,7 @@ public class MasterExecutor implements Application
             HostID fromHost = hearbeat.getNodeID();
             if (!myStateRegistry.hasWorker(fromHost)) {
                 myStateRegistry.addWorker(fromHost);
+
             }
         }
     }
@@ -89,7 +106,6 @@ public class MasterExecutor implements Application
             ExecutionResult result = status.getResult();
 
             if (result == ExecutionResult.SUCCESS) {
-
                 boolean isGraphCompleted =
                     myStateRegistry.markDone(status.getExecutedVertex());
                 if (!isGraphCompleted) {
@@ -104,6 +120,9 @@ public class MasterExecutor implements Application
                             status.getExecutedVertex().getGraphID()
                             + " is completed ");
                 }
+            }
+            else {
+                LOG.info("The execution of " + status.getExecutedVertex() + " failed");
             }
         }
     }
@@ -154,7 +173,8 @@ public class MasterExecutor implements Application
             }
             LOG.info("Trying to schedule " + myToBeScheduledVertex);
             if (myToBeScheduledVertex != null) {
-                HostID hostID = myWorkerSchedulingPolicy.getWorkerNode(
+                HostID hostID =
+                    myWorkerSchedulingPolicy.getWorkerNode(
                         myToBeScheduledVertex.getID(), myStateRegistry);
                 if (hostID != null) {
                     myStateRegistry.updateVertex2HostMapping(
@@ -197,18 +217,15 @@ public class MasterExecutor implements Application
     public void start()
     {
         LOG.info("Starting the master");
-        myStateRegistry.initFromSnapshot(
-           PersistentDSManagerAccessor.getPersistentDSManager()
-                                      .getSnapshot(myStateRegistry.id()));
+        WordCount count = new WordCount("C:\\temp\\wcjournal.txt");
+        Graph graph = count.getGraph();
+        execute(graph);
+        LOG.info("STarting communicator");
         myCommunicator.attachReactor(Heartbeat.class,
                                      new UpAndALiveReactor());
         myCommunicator.attachReactor(ExecuteVertexCommandStatus.class,
                                      new ExecuteVertexStatusReactor());
         myCommunicator.start();
-
-        WordCount count = new WordCount("C:\\temp\\wcjournal.txt");
-        Graph graph = count.getGraph();
-        execute(graph);
     }
 
     /**
@@ -226,14 +243,15 @@ public class MasterExecutor implements Application
      */
     public void execute(Graph graph)
     {
-        LOG.info("Received graph with id " + graph.getID()
-                 + " for execution");
+        LOG.info("Received graph with id " + graph.getID() + " for execution");
         VertexSchedule schedule = new TopologicalSortSchedule(graph);
         myStateRegistry.addSchedule(graph.getID(), schedule);
         myScheduler.schedule(
             new VertexSchedulingTask(graph.getID()),
-            10,
+            5,
             TimeUnit.SECONDS);
+         LOG.info("Added schedule for  " + graph.getID()
+                  + " for execution");
     }
 
     /** The starting point of the application */

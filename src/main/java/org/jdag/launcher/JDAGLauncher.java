@@ -1,10 +1,25 @@
+/*******************************************************************************
+ * jDAG is a project to build acyclic dataflow graphs for processing massive datasets.
+ *
+ *     Copyright (C) 2011, Author: Balraja,Subbiah
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ */
+
 package org.jdag.launcher;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.io.*;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,6 +33,8 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
+import org.jdag.common.Application;
+import org.jdag.common.ApplicationExecutor;
 import org.jdag.common.log.LogFactory;
 
 /**
@@ -27,13 +44,13 @@ import org.jdag.common.log.LogFactory;
  * @author Balraja Subbiah
  * @version $Id:$
  */
-public class JDAGLauncher
+public class JDAGLauncher implements Application
 {
     /** The logger */
     private static final Logger LOG =  LogFactory.getLogger(JDAGLauncher.class);
 
     private static final String JAVA_COMMAND =
-        "C:\\cygwin\\usr\\share\\jdk\\bin\\java";
+      "C:\\\"Program Files\"\\Java\\jdk1.6.0_21\\bin\\java.exe";
 
     private static final String MASTER_CLASS_NAME =
         "org.jdag.master.MasterExecutor";
@@ -53,11 +70,11 @@ public class JDAGLauncher
     
     private static final String CONF_DIR = "conf";
 
+    private static final String LOG_DIR = "log";
+
     private final XMLConfiguration myTopologyConfiguration;
 
     private final String myClassPath;
-    
-    private final String myJavaCommand;
 
     /**
      * CTOR
@@ -114,17 +131,13 @@ public class JDAGLauncher
                 builder.append(f.getAbsolutePath());
             }
             myClassPath = builder.toString();
-            
-            String cmd =  JAVA_COMMAND;
-            
-            myJavaCommand = cmd.replaceAll("Program Files", 
-                                           "\"Program Files\"");
             File f =
                 new File(ClassLoader.getSystemClassLoader()
                                     .getResource(TOPOLOGY_FILE)
                                     .getFile());
            
             myTopologyConfiguration = new XMLConfiguration(f);
+
         }
         catch (ConfigurationException e) {
              LOG.log(Level.SEVERE, "Exception when loading the topology file", e);
@@ -142,7 +155,7 @@ public class JDAGLauncher
     public void startMaster()
     {
         StringBuilder cmdBuilder = new StringBuilder();
-        cmdBuilder.append(myJavaCommand);
+        cmdBuilder.append(JAVA_COMMAND);
         cmdBuilder.append(" ");
         cmdBuilder.append(" -classpath " + myClassPath);
         String name =
@@ -154,22 +167,25 @@ public class JDAGLauncher
         String stateDir =
             myTopologyConfiguration.getString("master.statedir");
         cmdBuilder.append(addProperty("jdag.persistentds.rootDir", stateDir));
-        cmdBuilder.append(addProperty(PROPERTY_BASE_DIR, 
+        cmdBuilder.append(addProperty(PROPERTY_BASE_DIR,
                                       System.getProperty(PROPERTY_BASE_DIR)));
         cmdBuilder.append(addProperty(PROPERTY_APP_NAME, name));
         cmdBuilder.append(MASTER_CLASS_NAME);
-        LOG.info("starting master");
         String cmd = cmdBuilder.toString();
-        //LOG.info(cmd);
-        
-        try {
-            new ProcessBuilder(Collections.<String>singletonList(cmd)).start();
-        }
-        catch (IOException e) {
-             LOG.log(Level.SEVERE, "Unable to start master", e);
-             e.printStackTrace();
-             throw new RuntimeException(e);
-        }
+        LOG.info("starting master");
+        LOG.info(cmd.toString());
+        runCommand(cmd);
+    }
+    private void runCommand(final String command)
+    {
+            try {
+                ProcessBuilder builder = new ProcessBuilder(Arrays.<String>asList("cmd", "/c", command));
+                builder.start();
+            }
+            catch(Exception e) {
+                LOG.log(Level.SEVERE, "Exception while executing " + command, e);
+            }
+
     }
 
     /** Starts the workers */
@@ -182,10 +198,10 @@ public class JDAGLauncher
         while (it.hasNext())
         {
             StringBuilder cmdBuilder = new StringBuilder();
-            cmdBuilder.append(myJavaCommand);
+            cmdBuilder.append(JAVA_COMMAND);
             cmdBuilder.append(" ");
             cmdBuilder.append(" -cp " + myClassPath);
-            cmdBuilder.append(addProperty("augur.node.masterHostID",
+            cmdBuilder.append(addProperty("jdag.node.masterHostID",
                                            myTopologyConfiguration.getString(
                                                "master.name")));
             HierarchicalConfiguration worker =
@@ -200,13 +216,8 @@ public class JDAGLauncher
             cmdBuilder.append(WORKER_CLASS_NAME);
             LOG.info("Starting worker " + name );
             LOG.info(cmdBuilder.toString());
-            try {
-                new ProcessBuilder(cmdBuilder.toString()).start();
-            }
-            catch (IOException e) {
-                 LOG.log(Level.SEVERE, "Unable to start worker", e);
-                 throw new RuntimeException(e);
-            }
+            String cmd = cmdBuilder.toString();
+            runCommand(cmd);
         }
     }
 
@@ -220,7 +231,19 @@ public class JDAGLauncher
     public static void main(String[] args)
     {
         JDAGLauncher launcher = new JDAGLauncher(args);
-        launcher.startMaster();
-        //launcher.startWorkers();
+        launcher.start();
+        System.exit(0);
+    }
+
+    @Override
+    public void start()
+    {
+         startMaster();
+         startWorkers();
+    }
+
+    @Override
+    public void stop()
+    {
     }
 }

@@ -61,22 +61,57 @@
 		</testResource>
 	</testResources>
     <plugins>
-    <plugin>
-	   <artifactId>maven-clean-plugin</artifactId>
-	   <version>2.4.1</version>
-	   <configuration>
-	    </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
-          <excludes> 
-              <exclude>**/*Netty*.java</exclude>                
-          </excludes>
-        </configuration>
-      </plugin>
+	      <plugin>
+			   <artifactId>maven-clean-plugin</artifactId>
+			   <version>2.4.1</version>
+			   <configuration>
+			   </configuration>
+	      </plugin>
+	      <plugin>
+		        <artifactId>maven-compiler-plugin</artifactId>
+		        <configuration>
+		          <source>1.6</source>
+		          <target>1.6</target>
+		          <excludes> 
+		              <exclude>**/*Netty*.java</exclude>                
+		          </excludes>
+		        </configuration>
+	      </plugin>
+      	  <plugin>
+	        <groupId>org.codehaus.mojo</groupId>
+	        <artifactId>appassembler-maven-plugin</artifactId>
+	        <version>1.1.1</version>
+	        <executions>
+            <execution>
+            <id>copy-installed</id>
+            <phase>install</phase>
+            <goals>
+              <goal>assemble</goal>
+            </goals>
+	        <configuration>
+	          <configurationDirectory>conf</configurationDirectory>
+	          <configurationSourceDirectory>${project.basedir}/src/main/resources</configurationSourceDirectory>
+	          <copyConfigurationDirectory>true</copyConfigurationDirectory>
+	          <includeConfigurationDirectoryInClasspath>true</includeConfigurationDirectoryInClasspath>
+	          <binPrefix>jDAG</binPrefix>
+	          <assembleDirectory>${project.build.directory}</assembleDirectory>
+	          <extraJvmArguments>-Xms128m</extraJvmArguments>
+	          <repositoryLayout>flat</repositoryLayout>
+	          <repositoryName>lib</repositoryName>
+	          <platforms>
+	            <platform>windows</platform>
+	            <platform>unix</platform>
+	          </platforms>
+	          <programs>
+	            <program>
+	              <mainClass>org.jdag.launcher.JDAGLauncher</mainClass>
+	              <name>Launcher</name>
+	            </program>
+	          </programs>
+	        </configuration>
+	         </execution>
+        </executions>
+        </plugin>
     </plugins>
   </build>
 
@@ -127,7 +162,7 @@
 	<dependency>
 		<groupId>org.jboss.netty</groupId>
 		<artifactId>netty</artifactId>
-		<version>3.1.0.GA</version>
+		<version>3.2.1.Final</version>
 	</dependency>  
 	<dependency>
 		<groupId>org.hornetq</groupId>
@@ -149,5 +184,10 @@
         <artifactId>commons-cli</artifactId>
         <version>1.1</version>
     </dependency>
-  </dependencies>
+   <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-core</artifactId>
+        <version>0.20.2</version>
+    </dependency>
+</dependencies>
 </project>
